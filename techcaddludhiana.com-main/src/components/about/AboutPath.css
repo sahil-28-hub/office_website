@@ -1,0 +1,127 @@
+/* ==================================================================
+   §7 — Learn → Practice → Build → Grow.
+================================================================== */
+
+.appath { text-align: center; }
+
+/* the four words with arrows between them */
+.appath-words {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 4px;
+  margin-top: 20px;
+  font-size: clamp(1.8rem, 4.2vw, 3.1rem);
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.038em;
+  color: var(--ap-title);
+}
+
+.appath-words > span { display: inline-flex; align-items: center; gap: 4px; }
+
+.appath-words i {
+  display: inline-grid;
+  place-items: center;
+  padding-inline: clamp(6px, 1vw, 14px);
+  color: var(--electric);
+}
+
+/* ----------------------------- steps ------------------------------ */
+.appath-track {
+  position: relative;
+  margin-top: clamp(42px, 5.4vw, 74px);
+}
+
+.appath-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* the rail behind the nodes, drawn in once the section is reached */
+.appath-rail {
+  position: absolute;
+  top: 30px;
+  left: 12%;
+  right: 12%;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--electric), var(--violet), transparent);
+  transform-origin: 0 50%;
+}
+
+/* it uses the shared reveal, but draws sideways instead of rising */
+.appath-rail[data-reveal] {
+  opacity: 0.35;
+  transform: scaleX(0);
+  transition: transform 1.4s var(--ease) 0.2s;
+}
+
+.appath-rail[data-reveal].is-in { transform: scaleX(1); }
+
+.appath-steps li {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+}
+
+.appath-node {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  color: var(--indigo);
+  background: var(--paper);
+  border: 1px solid var(--ap-line);
+  box-shadow: 0 16px 32px -20px rgba(11, 26, 77, 0.6);
+  transition: transform 0.45s var(--ease), color 0.45s var(--ease),
+    box-shadow 0.45s var(--ease), border-color 0.45s var(--ease);
+}
+
+.appath-steps li:hover .appath-node {
+  transform: translateY(-4px) scale(1.05);
+  color: var(--white);
+  background: var(--grad-pill);
+  border-color: transparent;
+  box-shadow: 0 22px 40px -18px rgba(37, 99, 235, 0.9);
+}
+
+.appath-steps h3 {
+  font-size: 1.22rem;
+  letter-spacing: -0.03em;
+  color: var(--ap-title);
+}
+
+.appath-steps p {
+  max-width: 30ch;
+  font-size: 0.925rem;
+  line-height: 1.62;
+  color: var(--ap-muted);
+}
+
+.appath-note {
+  max-width: 64ch;
+  margin: clamp(30px, 3.6vw, 46px) auto 0;
+}
+
+/* --------------------------- responsive --------------------------- */
+@media (max-width: 900px) {
+  .appath-steps { grid-template-columns: repeat(2, 1fr); row-gap: 34px; }
+  .appath-rail { display: none; }
+}
+
+@media (max-width: 520px) {
+  .appath-steps { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .appath-rail[data-reveal] { transform: scaleX(1); transition: none; }
+}

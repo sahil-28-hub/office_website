@@ -1,0 +1,414 @@
+/* ==================================================================
+   One article, and the three notices that stand in for it.
+
+   Everything here is measured against the page kit's tokens rather
+   than raw colours, so an article sits inside a light band exactly
+   like every other section on the site. The only genuinely new
+   problem is the body: it is HTML written in the CMS editor, so the
+   headings, lists, quotes and links inside it have to be styled by
+   element rather than by class — there is no way to put a class on
+   markup somebody else typed.
+================================================================== */
+
+.tc-page--post .tc-article .shell { max-width: 820px; }
+
+/* the back link, above the title rather than beside it, so the
+   article's first line is the article's own */
+.tc-article-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: clamp(24px, 3vw, 38px);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ap-muted);
+  transition: color 0.25s var(--ease);
+}
+
+.tc-article-back svg {
+  width: 16px;
+  height: 16px;
+  transform: rotate(180deg);
+  transition: transform 0.25s var(--ease);
+}
+
+.tc-article-back:hover { color: var(--electric); }
+.tc-article-back:hover svg { transform: rotate(180deg) translateX(3px); }
+
+.tc-article-head { margin-bottom: clamp(26px, 3vw, 40px); }
+
+.tc-article-tag {
+  display: inline-block;
+  margin-bottom: 16px;
+  padding: 6px 14px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--ap-line);
+  background: var(--paper-tint);
+  font-family: var(--font-mono);
+  font-size: 0.69rem;
+  letter-spacing: 0.06em;
+  color: var(--electric);
+}
+
+.tc-article-head h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.4vw, 3.1rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--ap-title);
+}
+
+.tc-article-head .tc-post-meta { margin-top: 16px; }
+
+.tc-article-lead {
+  margin-top: 18px;
+  font-size: var(--step-lead);
+  line-height: 1.62;
+  color: var(--ap-text);
+}
+
+.tc-article-cover {
+  margin: 0 0 clamp(28px, 3.4vw, 44px);
+  border-radius: var(--ap-r-lg);
+  overflow: hidden;
+  border: 1px solid var(--ap-line);
+  box-shadow: var(--ap-shadow);
+}
+
+.tc-article-cover img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+/* ------------------------------------------------------------------
+   The body. Styled by element, because the CMS supplies the markup.
+------------------------------------------------------------------ */
+.tc-article-body {
+  font-size: var(--step-body);
+  line-height: 1.78;
+  color: var(--ap-text);
+}
+
+.tc-article-body > * + * { margin-top: 1.15em; }
+
+.tc-article-body h2,
+.tc-article-body h3,
+.tc-article-body h4 {
+  margin-top: 1.9em;
+  font-family: var(--font-display);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--ap-title);
+}
+
+.tc-article-body h2 { font-size: clamp(1.4rem, 2.4vw, 1.85rem); }
+.tc-article-body h3 { font-size: clamp(1.18rem, 1.9vw, 1.4rem); }
+.tc-article-body h4 { font-size: 1.08rem; }
+
+.tc-article-body a {
+  color: var(--electric);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.tc-article-body a:hover { color: var(--violet); }
+
+.tc-article-body strong { color: var(--ap-title); }
+
+.tc-article-body ul,
+.tc-article-body ol { padding-left: 1.4em; }
+.tc-article-body li + li { margin-top: 0.5em; }
+.tc-article-body ul { list-style: disc; }
+.tc-article-body ol { list-style: decimal; }
+
+.tc-article-body blockquote {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 4px 0 4px 22px;
+  border-left: 2px solid var(--electric);
+  font-size: var(--step-lead);
+  line-height: 1.6;
+  color: var(--ap-title);
+}
+
+.tc-article-body img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--ap-r);
+  border: 1px solid var(--ap-line);
+}
+
+.tc-article-body code {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--paper-tint);
+  border: 1px solid var(--rule-soft);
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  color: var(--ink-strong);
+}
+
+.tc-article-body pre {
+  padding: 18px 20px;
+  border-radius: var(--ap-r);
+  background: var(--ink);
+  color: var(--mist);
+  /* a long line scrolls inside the block rather than widening the page */
+  overflow-x: auto;
+}
+
+.tc-article-body pre code {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+}
+
+.tc-article-body hr {
+  border: 0;
+  border-top: 1px solid var(--ap-line);
+  margin: 2.2em 0;
+}
+
+.tc-article-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95em;
+}
+
+.tc-article-body th,
+.tc-article-body td {
+  padding: 10px 12px;
+  border: 1px solid var(--ap-line);
+  text-align: left;
+}
+
+.tc-article-body th { background: var(--paper-tint); color: var(--ap-title); }
+
+/* ------------------------------------------------------------------
+   Loading, unreachable, not published.
+------------------------------------------------------------------ */
+.tc-post-notice { min-height: 52vh; display: grid; align-items: center; }
+
+.tc-post-notice-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+/* the retry control is a button, not a link, so it needs the pill
+   chrome the .ap-btn anchors get from about-base */
+.tc-post-notice-actions button.ap-btn {
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+/* a post published with only a summary — see BlogPostPage.jsx */
+.tc-article-stub {
+  padding: 22px 24px;
+  border-radius: var(--ap-r);
+  border: 1px dashed var(--ap-line);
+  background: var(--paper-tint);
+  font-size: var(--step-body);
+  line-height: 1.7;
+  color: var(--ap-muted);
+}
+
+/* ==================================================================
+   The article page's own banner and panel.
+
+   Same construction as the blog index's banner — dark navy, a glass
+   pill, a display headline, a grey standfirst — so clicking a card
+   lands somewhere that plainly belongs to the same site.
+
+   The typography of the article body itself is above this block and
+   unchanged; this is only what sits around it.
+================================================================== */
+
+.tcp-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--bg-ink);
+  color: var(--mist);
+  padding-block: clamp(96px, 11vw, 150px) clamp(52px, 6vw, 84px);
+  padding-top: calc(var(--nav-h) + clamp(52px, 6vw, 86px));
+}
+
+/* the periwinkle grid every dark band on the site carries */
+.tcp-hero-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(rgba(147, 197, 253, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(147, 197, 253, 0.07) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(120% 90% at 20% 0%, #000 30%, transparent 78%);
+}
+
+.tcp-hero-orb {
+  position: absolute;
+  z-index: -1;
+  top: -18%;
+  right: -6%;
+  width: min(560px, 52vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.42), transparent 68%);
+  filter: blur(30px);
+}
+
+.tcp-hero-inner { position: relative; }
+
+/* back to the index, above the pill — the article page's only
+   navigation, and it reads as a step back rather than a button */
+.tcp-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: clamp(22px, 2.6vw, 32px);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--mist-dim);
+  transition: color 0.3s var(--ease);
+}
+
+.tcp-back svg {
+  width: 16px;
+  height: 16px;
+  transform: rotate(180deg);
+  transition: transform 0.3s var(--ease);
+}
+
+.tcp-back:hover { color: var(--white); }
+.tcp-back:hover svg { transform: rotate(180deg) translateX(3px); }
+
+/* the tag, as the glass pill the index banner uses */
+.tcp-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 17px;
+  border-radius: var(--r-pill);
+  background: var(--glass);
+  border: 1px solid var(--hairline);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  font-size: 0.813rem;
+  font-weight: 500;
+  color: #dfe4ff;
+}
+
+.tcp-title {
+  margin-top: clamp(20px, 2.4vw, 30px);
+  max-width: 18ch;
+  font-family: var(--font-display);
+  font-size: clamp(2.1rem, 5.4vw, 4.1rem);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  text-wrap: balance;
+}
+
+.tcp-meta {
+  margin-top: clamp(18px, 2vw, 24px);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mist-dim);
+}
+
+.tcp-lead {
+  margin-top: 16px;
+  max-width: 60ch;
+  font-size: var(--step-lead);
+  line-height: 1.62;
+  color: var(--mist);
+}
+
+/* ---------------------------- the body ---------------------------- */
+.tcp-body {
+  background: var(--paper);
+  padding-block: clamp(48px, 5.6vw, 88px);
+}
+
+.tc-page--post .tcp-body .shell { max-width: 880px; }
+
+/* ------------------------- the empty panel ------------------------
+   One shape for every "there is nothing to read here": an article
+   whose body is not written yet, and the three ways a slug can fail
+   to resolve. Dashed, because a dashed border reads as a placeholder
+   in a way a solid one does not — this is a gap, not a card.
+------------------------------------------------------------------ */
+.tcp-empty {
+  padding: clamp(44px, 6vw, 84px) clamp(24px, 4vw, 56px);
+  border-radius: var(--r-lg);
+  border: 1px dashed var(--rule);
+  background: var(--paper-tint);
+  text-align: center;
+}
+
+.tcp-empty h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.4vw, 1.6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink-strong);
+}
+
+.tcp-empty p {
+  max-width: 56ch;
+  margin: 14px auto 0;
+  font-size: 0.975rem;
+  line-height: 1.72;
+  color: var(--ink-muted);
+}
+
+.tcp-empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: clamp(24px, 3vw, 34px);
+}
+
+/* the dark pill in the screenshot — the page's own button, distinct
+   from the brand-gradient primary the CTA band below uses */
+.ap-btn--dark {
+  background: var(--ink-strong);
+  border-color: transparent;
+  color: var(--white);
+}
+
+.ap-btn--dark:hover {
+  background: var(--indigo);
+  color: var(--white);
+}
+
+.ap-btn--dark svg { color: currentColor; }
+
+/* --------------------------- responsive --------------------------- */
+@media (max-width: 720px) {
+  .tcp-title { max-width: none; }
+  .tcp-empty-actions .ap-btn { width: 100%; justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tcp-back,
+  .tcp-back svg { transition: none; }
+  .tcp-back:hover svg { transform: rotate(180deg); }
+}

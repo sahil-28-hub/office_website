@@ -1,0 +1,222 @@
+/* =================================================================
+   Campus gallery — an editorial masonry wall that scrolls itself.
+
+   Deliberately contained: the wall is a band the height of one
+   section, not a full-screen takeover. The columns are taller than
+   the band and drift through it, so you always see the middle of
+   something rather than the start and end of everything.
+================================================================= */
+
+.gal {
+  position: relative;
+  overflow: hidden;
+  /* lifts over the dark Community panel above, the same seam every
+     light-on-dark transition on this page uses */
+  margin-top: calc(-1 * clamp(24px, 3.2vw, 46px));
+  border-radius: clamp(24px, 3.2vw, 46px) clamp(24px, 3.2vw, 46px) 0 0;
+  padding: clamp(3.25rem, 5.5vw, 4.75rem) 0 clamp(3rem, 5vw, 4.25rem);
+  background-color: var(--paper);
+  color: var(--ink-body);
+}
+
+/* ------------------------------ head ------------------------------
+   Kept plain and left-aligned. The photographs are the section; the
+   type should introduce them and then get out of the way.
+------------------------------------------------------------------ */
+.gal-head { max-width: 640px; }
+
+.gal-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--step-eyebrow);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--indigo);
+}
+
+.gal-title {
+  margin-top: 14px;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3.6vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--ink-strong);
+}
+
+.gal-sub {
+  margin-top: 14px;
+  max-width: 54ch;
+  font-size: var(--step-body);
+  line-height: 1.65;
+  color: var(--ink-muted);
+}
+
+/* ----------------------------- stage ------------------------------
+   One section's worth of height, and nothing more. The mask fades the
+   photographs out at the top and bottom edges so the band has no hard
+   cut — that fade is what makes the movement read as intentional
+   rather than as a page that failed to stop scrolling.
+------------------------------------------------------------------ */
+.gal-stage {
+  --gap: clamp(12px, 1.2vw, 20px);
+
+  position: relative;
+  height: clamp(440px, 74vh, 820px);
+  margin-top: clamp(2rem, 3.6vw, 3rem);
+  overflow: hidden;
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    #000 9%,
+    #000 91%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    #000 9%,
+    #000 91%,
+    transparent 100%
+  );
+}
+
+/* full-bleed inside the stage: the wall runs past the shell margins,
+   which is what stops it looking like a boxed-in widget */
+/* The column count comes from Gallery.jsx, which reads the same
+   breakpoints and deals every photograph across however many columns
+   there are. It used to be a fixed five here with the media queries
+   below hiding the last three — which meant a phone visitor was shown
+   six of the fourteen photographs and never knew the rest existed. */
+.gal-columns {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 5), minmax(0, 1fr));
+  gap: var(--gap);
+  padding-inline: var(--gutter);
+  height: 100%;
+}
+
+.gal-col { overflow: hidden; }
+
+/* ---------------------------- the drift ---------------------------
+   The track holds its photographs twice and travels exactly half its
+   own height, so the second pass lands where the first began.
+
+   The spacing is margin on each frame rather than a flex gap — with a
+   gap, half the track height falls half a gap short of one full pass
+   and the loop visibly jumps every cycle.
+------------------------------------------------------------------ */
+.gal-track {
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+  animation: gal-drift var(--dur, 70s) linear infinite;
+}
+
+.gal-track--rev { animation-direction: reverse; }
+
+/* the duplicate pass sits in the same flow as the first */
+.gal-loop { display: contents; }
+
+@keyframes gal-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(0, -50%, 0); }
+}
+
+/* a negative delay starts each column part-way through its own cycle,
+   which is what produces the staggered, unaligned look */
+.gal-col:nth-child(1) .gal-track { animation-delay: -6s; }
+.gal-col:nth-child(2) .gal-track { animation-delay: -31s; }
+.gal-col:nth-child(3) .gal-track { animation-delay: -17s; }
+.gal-col:nth-child(4) .gal-track { animation-delay: -44s; }
+.gal-col:nth-child(5) .gal-track { animation-delay: -25s; }
+
+/* hovering anywhere on the wall holds all four columns still */
+.gal-stage:hover .gal-track { animation-play-state: paused; }
+
+/* --------------------------- the frames --------------------------- */
+.gal-frame {
+  position: relative;
+  margin: 0 0 var(--gap);
+}
+
+.gal-thumb {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: var(--ratio, 3 / 4);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--paper-tint);
+  transition: box-shadow 0.5s var(--ease);
+}
+
+.gal-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s var(--ease), filter 0.5s var(--ease);
+}
+
+.gal-frame:hover .gal-thumb {
+  box-shadow: 0 22px 48px -26px rgba(11, 26, 77, 0.6);
+}
+.gal-frame:hover .gal-thumb img { transform: scale(1.035); }
+
+/* The brand tile a frame shows while its photograph loads, and keeps
+   if the file is not in public/gallery/ yet. It used to carry a label
+   naming the file it was waiting for; that is gone with the captions,
+   so an empty frame is a plain tile and the wall never shows text
+   over a photograph. The shot list lives in public/gallery/README.txt,
+   which is a better home for it than the page itself. */
+.gal-thumb--blue   { background: linear-gradient(145deg, #7fb6ff, #2563eb 58%, #2b47c8); }
+.gal-thumb--violet { background: linear-gradient(145deg, #bb9bff, #1c53d1 55%, #4f3ccf); }
+.gal-thumb--cyan   { background: linear-gradient(145deg, #74e6f7, #3aa4ff 52%, #2450d6); }
+
+/* ---------------------------- reveal ------------------------------ */
+.gal-head,
+.gal-stage {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+}
+.gal.is-visible .gal-head,
+.gal.is-visible .gal-stage { opacity: 1; transform: none; }
+.gal.is-visible .gal-stage { transition-delay: 0.1s; }
+
+/* --------------------------- responsive ---------------------------
+   Columns drop one at a time on the way down — five columns on a
+   1000px screen would be 170px each, which is a contact sheet rather
+   than a gallery.
+
+   The count itself is set by Gallery.jsx on --cols, off the same
+   breakpoints, and it deals every photograph across whatever columns
+   survive. Nothing is hidden any more: a narrower screen shows the
+   same fourteen photographs in fewer, taller columns. The rules here
+   only adjust the stage height to match.
+------------------------------------------------------------------ */
+@media (max-width: 980px) {
+  .gal-stage { height: clamp(420px, 66vh, 620px); }
+}
+
+@media (max-width: 720px) {
+  .gal-stage { height: clamp(360px, 56vh, 500px); }
+}
+
+/* Motion off: the wall stops being a wall and becomes a plain masonry
+   grid of every photograph, which is the same content standing still. */
+@media (prefers-reduced-motion: reduce) {
+  .gal-stage {
+    height: auto;
+    overflow: visible;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+  .gal-track { animation: none; }
+  .gal-loop { display: none; }
+  .gal-col { overflow: visible; }
+  .gal-head,
+  .gal-stage { opacity: 1; transform: none; transition: none; }
+  .gal-thumb img { transition: none; }
+}

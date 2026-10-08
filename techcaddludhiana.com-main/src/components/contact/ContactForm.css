@@ -1,0 +1,346 @@
+/* ==================================================================
+   The message form on /contact.
+
+   Two columns on a wide screen — the reason to write on the left, the
+   form itself on the right — collapsing to one column below 900px so
+   the copy introduces the form rather than sitting beside it in a
+   squeezed pair.
+
+   The band is tinted rather than dark: the card above it is white and
+   the desks below it are white, so a flat --paper here would leave
+   three white bands in a row with nothing separating them.
+================================================================== */
+
+.cform {
+  padding-block: clamp(56px, 7vw, 96px);
+  background: var(--paper-tint);
+}
+
+.cform-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(32px, 5vw, 68px);
+  align-items: start;
+}
+
+/* ------------------------------ copy ------------------------------ */
+.cform-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--indigo);
+  margin-bottom: 12px;
+}
+
+.cform-title {
+  font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+  line-height: 1.1;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+.cform-blurb {
+  color: var(--ink-body);
+  line-height: 1.65;
+  max-width: 44ch;
+}
+
+.cform-points {
+  list-style: none;
+  margin: 26px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.cform-points li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.938rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.cform-points svg {
+  color: var(--indigo);
+  flex: none;
+}
+
+.cform-call {
+  margin-top: 24px;
+  font-size: 0.938rem;
+  color: var(--ink-soft, var(--ink-body));
+}
+
+.cform-call a {
+  font-weight: 700;
+  color: var(--indigo);
+  white-space: nowrap;
+}
+
+/* ------------------------------ form ------------------------------ */
+.cform-form {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 22px;
+  padding: clamp(22px, 3vw, 34px);
+  display: grid;
+  gap: 18px;
+  box-shadow: 0 24px 60px -38px rgba(16, 20, 60, 0.4);
+}
+
+/* Off-screen rather than display:none — a bot that reads the DOM
+   fills it either way, but a field that is display:none is a known
+   tell, and some password managers skip hidden inputs entirely. */
+.cform-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.cform-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.cform-group {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+
+.cform-group label {
+  font-size: 0.813rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.cform-optional {
+  font-weight: 500;
+  color: var(--ink-body);
+  opacity: 0.7;
+}
+
+.cform-group input,
+.cform-group textarea,
+.cform-select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--r-md, 12px);
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.938rem;
+  transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+
+.cform-group textarea {
+  resize: vertical;
+  min-height: 118px;
+  line-height: 1.6;
+}
+
+.cform-group input::placeholder,
+.cform-group textarea::placeholder {
+  color: var(--ink-body);
+  opacity: 0.55;
+}
+
+.cform-group input:focus,
+.cform-group textarea:focus,
+.cform-select:focus {
+  outline: none;
+  border-color: var(--indigo);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16);
+}
+
+/* the arrow is drawn here rather than left to the platform, so the
+   control matches the text inputs beside it on every browser */
+.cform-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 38px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%234c6fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 13px center;
+  background-size: 17px;
+  cursor: pointer;
+}
+
+/* the field the form or the server rejected */
+.cform-group input[aria-invalid='true'],
+.cform-group textarea[aria-invalid='true'] {
+  border-color: #c0392b;
+  background: rgba(192, 57, 43, 0.04);
+}
+
+.cform-error {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #c0392b;
+}
+
+/* ---------------------------- submit ------------------------------ */
+.cform-submit {
+  justify-self: start;
+  padding: 13px 30px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--indigo);
+  color: var(--white);
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.938rem;
+  cursor: pointer;
+  transition: transform 0.25s var(--ease), background 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
+}
+
+.cform-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px -18px rgba(37, 99, 235, 0.75);
+}
+
+.cform-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.cform-status {
+  min-height: 1.25em;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.cform-status .is-ok {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #1c7a4a;
+}
+
+.cform-status .is-bad {
+  color: #c0392b;
+}
+
+.cform-status a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+/* --------------------------- responsive --------------------------- */
+@media (max-width: 900px) {
+  .cform-inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .cform-blurb {
+    max-width: none;
+  }
+}
+
+@media (max-width: 560px) {
+  /* two inputs side by side stop being readable well before the copy
+     column does, so this breaks later and on its own */
+  .cform-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .cform-submit {
+    justify-self: stretch;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cform-submit {
+    transition: none;
+  }
+  .cform-submit:hover:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* ------------------------- security check -------------------------
+   SecurityCheck.css dresses the control for the dark sections it was
+   built on - white label, glass fill, translucent note. On this form
+   the ground is light paper, so all three washed out to near-white on
+   near-white. Repainted here in the form's own palette, scoped to
+   .cform so the dark-section copies of the control are untouched.
+------------------------------------------------------------------ */
+.cform .seccheck--panel {
+  background: var(--paper-tint);
+  border-color: var(--rule);
+}
+
+.cform .seccheck > label {
+  font-size: 0.813rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.cform .seccheck-row input {
+  padding: 12px 14px;
+  border-radius: var(--r-md, 12px);
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 0.938rem;
+}
+
+.cform .seccheck-row input::placeholder {
+  color: var(--ink-body);
+  opacity: 0.55;
+}
+
+.cform .seccheck-row input:hover {
+  border-color: var(--indigo);
+}
+
+.cform .seccheck-row input:focus {
+  background: var(--paper);
+  border-color: var(--indigo);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16);
+}
+
+.cform .seccheck-row input[aria-invalid='true'] {
+  border-color: #c0392b;
+  background: rgba(192, 57, 43, 0.04);
+}
+
+.cform .seccheck.is-solved .seccheck-row input {
+  border-color: #1c7a4a;
+  background: rgba(28, 122, 74, 0.06);
+}
+
+.cform .seccheck-new {
+  color: var(--indigo);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+}
+.cform .seccheck-new:hover {
+  color: var(--white);
+  background: var(--indigo);
+  border-color: var(--indigo);
+}
+
+.cform .seccheck-note,
+.cform .seccheck-wait {
+  color: var(--ink-body);
+}
+.cform .seccheck-wait button {
+  color: var(--indigo);
+}
+
+.cform .seccheck-error {
+  font-weight: 600;
+  color: #c0392b;
+}

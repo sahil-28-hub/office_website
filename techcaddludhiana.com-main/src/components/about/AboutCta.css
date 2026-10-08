@@ -1,0 +1,178 @@
+/* ==================================================================
+   §15 — start building your career today.
+================================================================== */
+
+.apcta { text-align: center; }
+
+/* a slow bloom behind the block */
+.apcta-glow {
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  translate: -50% 0;
+  width: min(760px, 90vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.34), transparent 62%);
+  filter: blur(70px);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.apcta-inner { position: relative; }
+
+.apcta-title {
+  max-width: 16ch;
+  margin: 22px auto 0;
+  font-size: clamp(2rem, 4.6vw, 3.4rem);
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.042em;
+  color: var(--white);
+}
+
+.apcta-lead {
+  max-width: 54ch;
+  margin: 18px auto 0;
+  font-size: var(--step-lead);
+  line-height: 1.65;
+  color: var(--mist-dim);
+}
+
+/* ------------------------------ form ------------------------------ */
+.apcta-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  max-width: 620px;
+  margin: clamp(28px, 3.4vw, 42px) auto 0;
+}
+
+.apcta-form input {
+  flex: 1 1 260px;
+  padding: 16px 24px;
+  border-radius: var(--r-pill);
+  background: rgba(6, 8, 26, 0.55);
+  border: 1px solid var(--ap-line);
+  color: var(--white);
+  font: inherit;
+  font-size: 1rem;
+  transition: border-color 0.35s var(--ease), background 0.35s var(--ease),
+    box-shadow 0.35s var(--ease);
+}
+
+.apcta-form input::placeholder { color: rgba(180, 190, 225, 0.5); }
+
+.apcta-form input:focus {
+  outline: none;
+  background: rgba(6, 8, 26, 0.75);
+  border-color: rgba(120, 160, 255, 0.55);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.16);
+}
+
+.apcta-form input[aria-invalid='true'] { border-color: #ff8098; }
+.apcta-form button:disabled { opacity: 0.65; cursor: progress; transform: none; }
+
+/* off-screen, not display:none — see the comment in Cta.css */
+.apcta-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.apcta-status {
+  min-height: 1.4em;
+  margin-top: 12px;
+  font-size: var(--step-small);
+}
+
+.apcta-status .is-ok {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #8ef0c4;
+}
+
+.apcta-status .is-bad { color: #ff9db0; }
+
+/* ---------------------------- call link --------------------------- */
+.apcta-call {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 24px;
+  padding: 12px 26px 12px 12px;
+  border-radius: var(--r-pill);
+  text-align: left;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid var(--ap-line);
+  transition: background 0.4s var(--ease), border-color 0.4s var(--ease);
+}
+
+.apcta-call:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--ap-line-lift);
+}
+
+.apcta-call-ico {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border-radius: 50%;
+  background: linear-gradient(145deg, rgba(37, 99, 235, 0.4), rgba(28, 83, 209, 0.2));
+  border: 1px solid rgba(160, 190, 255, 0.3);
+  color: #e2eaff;
+}
+
+.apcta-call-ico svg { width: 19px; height: 19px; }
+
+.apcta-call small {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.688rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mist-dim);
+}
+
+.apcta-call b {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--font-display);
+  font-size: 1.14rem;
+  letter-spacing: -0.02em;
+  color: var(--white);
+}
+
+/* --------------------------- assurances --------------------------- */
+.apcta-assurances {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 28px;
+  margin: clamp(26px, 3vw, 38px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.apcta-assurances li {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.9rem;
+  color: #d5ddff;
+}
+
+.apcta-assurances svg { flex: none; color: var(--cyan); }
+
+@media (max-width: 520px) {
+  .apcta-form input,
+  .apcta-form button { flex: 1 1 100%; }
+}
+
+

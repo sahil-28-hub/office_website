@@ -1,0 +1,140 @@
+.ctes-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.ctes-controls { display: flex; gap: 10px; }
+
+.ctes-nav {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  color: var(--indigo);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  transition: background 0.3s var(--ease), color 0.3s var(--ease),
+    border-color 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.ctes-nav:hover {
+  background: var(--grad-pill);
+  color: var(--white);
+  border-color: transparent;
+  transform: translateY(-2px);
+}
+
+.ctes-stage { margin-top: clamp(32px, 4vw, 46px); }
+
+.ctes-viewport { overflow: hidden; border-radius: var(--card-r); }
+
+.ctes-track {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transition: transform 0.65s var(--ease);
+}
+
+.ctes-slide { flex: 0 0 100%; min-width: 0; }
+
+.ctes-card {
+  position: relative;
+  margin: 0;
+  padding: clamp(30px, 4vw, 48px);
+  border-radius: var(--card-r);
+  background: var(--paper);
+  border: 1px solid var(--rule-soft);
+  box-shadow: var(--shadow-lift);
+}
+
+.ctes-quote {
+  position: absolute;
+  right: clamp(24px, 4vw, 44px);
+  top: clamp(24px, 4vw, 40px);
+  color: rgba(37, 99, 235, 0.14);
+}
+
+.ctes-rating { display: flex; gap: 3px; color: var(--py-gold); }
+
+.ctes-card blockquote {
+  margin: 20px 0 0;
+  max-width: 62ch;
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  font-weight: 500;
+  line-height: 1.55;
+  letter-spacing: -0.02em;
+  color: var(--ink-strong);
+}
+
+.ctes-card figcaption {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 30px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule-soft);
+}
+
+.ctes-avatar {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex: none;
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 0.938rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--white);
+  background: var(--grad-ink);
+}
+
+.ctes-who { display: grid; gap: 2px; }
+.ctes-who strong { font-size: 1rem; color: var(--ink-strong); }
+.ctes-who span { font-size: 0.813rem; color: var(--indigo); }
+.ctes-who em { font-style: normal; font-size: 0.813rem; color: var(--ink-muted); }
+
+.ctes-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 26px;
+}
+
+.ctes-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(12, 31, 108, 0.18);
+  transition: width 0.4s var(--ease), background 0.4s var(--ease);
+}
+.ctes-dot.is-on { width: 30px; background: var(--grad-pill); }
+
+.skel-quote {
+  padding: clamp(30px, 4vw, 48px);
+  border-radius: var(--card-r);
+  background: var(--paper);
+  border: 1px solid var(--rule-soft);
+}
+.skel-quote-foot {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 30px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ctes-track { transition: none; }
+}
+
+@media (max-width: 640px) {
+  .ctes-head { flex-direction: column; align-items: flex-start; }
+  .ctes-card blockquote { font-size: 1.063rem; }
+}

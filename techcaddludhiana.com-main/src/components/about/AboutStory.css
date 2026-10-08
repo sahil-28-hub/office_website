@@ -1,0 +1,110 @@
+/* ==================================================================
+   §3 — who we are.
+================================================================== */
+
+.apstory-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+}
+
+.apstory-copy .ap-title { max-width: 17ch; }
+.apstory-copy .ap-body p:first-child { font-size: var(--step-lead); color: var(--ink-strong); }
+
+/* --------------------------- photo wall --------------------------- */
+.apstory-wall {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.apstory-frame--1 .ap-shot,
+.apstory-frame--2 .ap-shot { aspect-ratio: 4 / 5; }
+.apstory-frame--2 { margin-top: clamp(22px, 5vw, 54px); }
+.apstory-frame--3 { grid-column: 1 / -1; }
+.apstory-frame--3 .ap-shot { aspect-ratio: 16 / 7; }
+
+/* ----------------------------- chips ------------------------------ */
+.apstory-chips {
+  margin-top: clamp(40px, 5vw, 70px);
+  padding-top: clamp(28px, 3.4vw, 42px);
+  border-top: 1px solid var(--ap-line);
+}
+
+.apstory-chips-title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ap-muted);
+}
+
+/* --------------------------- the marquee --------------------------
+   Two rails of chips sliding past in opposite directions, faded out
+   at both edges and paused while the pointer is over them so anything
+   catching the eye can actually be read.
+------------------------------------------------------------------ */
+.apstory-marquee {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
+.apstory-rail { overflow: hidden; }
+
+.apstory-track {
+  display: flex;
+  gap: 10px;
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  animation: apstory-run 42s linear infinite;
+}
+
+/* the lower rail travels the other way, and a little slower */
+.apstory-rail[data-row='1'] .apstory-track {
+  animation-duration: 52s;
+  animation-direction: reverse;
+}
+
+.apstory-marquee:hover .apstory-track,
+.apstory-marquee:focus-within .apstory-track { animation-play-state: paused; }
+
+@keyframes apstory-run {
+  to { transform: translateX(-50%); }
+}
+
+.apstory-caption {
+  margin-top: clamp(26px, 3vw, 38px);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ap-muted);
+}
+
+/* --------------------------- responsive --------------------------- */
+@media (max-width: 900px) {
+  .apstory-top { grid-template-columns: minmax(0, 1fr); }
+  .apstory-copy .ap-title { max-width: none; }
+}
+
+@media (max-width: 520px) {
+  .apstory-frame--2 { margin-top: 0; }
+  .apstory-wall { gap: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .apstory-track { animation: none; }
+  .apstory-marquee {
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+  .apstory-rail { overflow-x: auto; }
+}

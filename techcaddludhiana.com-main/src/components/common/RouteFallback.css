@@ -1,0 +1,53 @@
+/* The shape every route on this site opens with: a dark banner over a
+   light body. See RouteFallback.jsx. */
+
+.route-fallback { display: block; }
+
+.route-fallback-hero {
+  background: var(--bg-ink-deep);
+  padding-top: calc(var(--nav-h) + clamp(66px, 10vh, 126px));
+  padding-bottom: clamp(58px, 8vh, 104px);
+}
+
+.route-fallback-head {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  text-align: center;
+}
+
+.route-fallback-rail {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(18px, 3vw, 46px);
+  width: min(100%, 900px);
+  margin-top: clamp(22px, 4vh, 48px);
+}
+
+.route-fallback-stat { display: grid; gap: 10px; justify-items: center; }
+
+/* the light half. Without an explicit background this sits on the
+   body's dark canvas, and the paper-toned shimmer plates below are
+   then invisible against it. */
+.route-fallback-body {
+  padding-block: clamp(3rem, 6vw, 5rem) clamp(6rem, 14vw, 12rem);
+  background: var(--paper);
+}
+
+.route-fallback-body-inner {
+  display: grid;
+  justify-items: start;
+  gap: 16px;
+}
+
+.route-fallback-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: clamp(16px, 2vw, 26px);
+  width: 100%;
+  margin-top: clamp(14px, 2vw, 26px);
+}
+
+@media (max-width: 720px) {
+  .route-fallback-rail { grid-template-columns: repeat(2, 1fr); }
+}

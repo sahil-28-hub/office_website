@@ -1,0 +1,298 @@
+/* ==================================================================
+   The comment thread under an article.
+
+   Built from the same tokens as every other band — no new colours, no
+   new radii, no new type scale. It sits on `--paper-tint` so it reads
+   as a separate section from the white article above it without
+   needing a rule between them.
+================================================================== */
+
+.cmt {
+  background: var(--paper-tint);
+  border-top: 1px solid var(--rule-soft);
+  padding: clamp(3rem, 7vw, 5.5rem) 0;
+}
+
+.cmt-inner {
+  max-width: 46rem;
+}
+
+.cmt-lede {
+  margin-bottom: 2rem;
+}
+
+.cmt-note {
+  color: var(--ink-muted);
+  font-size: 0.95rem;
+}
+
+.cmt-note--small {
+  font-size: 0.85rem;
+  margin-top: 0.9rem;
+}
+
+/* ---- the thread ------------------------------------------------- */
+
+.cmt-list,
+.cmt-replies {
+  list-style: none;
+  margin: 0 0 2.5rem;
+  padding: 0;
+}
+
+.cmt-replies {
+  margin: 0.75rem 0 0;
+  /* One step of indent, with a rule marking the thread. Replies only
+     nest one level — see the note in Comments.tsx. */
+  padding-left: clamp(1rem, 4vw, 2.25rem);
+  border-left: 2px solid var(--rule-soft);
+}
+
+.cmt-item + .cmt-item {
+  margin-top: 1rem;
+}
+
+.cmt-card {
+  background: #fff;
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--r-md);
+  padding: 1.15rem 1.25rem;
+}
+
+/* A reply from the institute, marked so it is not mistaken for
+   another visitor's opinion. */
+.cmt-card--staff {
+  border-color: color-mix(in srgb, var(--indigo) 35%, var(--rule-soft));
+  background: color-mix(in srgb, var(--indigo) 4%, #fff);
+}
+
+.cmt-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.7rem;
+}
+
+.cmt-avatar {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--grad-accent);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.cmt-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--ink-strong);
+  font-size: 0.98rem;
+}
+
+.cmt-badge {
+  border-radius: var(--r-pill);
+  background: var(--indigo);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.15rem 0.5rem;
+  text-transform: lowercase;
+}
+
+.cmt-date {
+  margin: 0.1rem 0 0;
+  color: var(--ink-muted);
+  font-size: 0.8rem;
+}
+
+.cmt-body {
+  margin: 0;
+  color: var(--ink-body);
+  line-height: 1.65;
+  /* A comment is arbitrary text: a pasted URL must not push the card
+     wider than the page. */
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.cmt-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.85rem;
+}
+
+.cmt-actions button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: var(--ink-muted);
+  font: inherit;
+  font-size: 0.83rem;
+  transition: color 0.2s var(--ease);
+}
+
+.cmt-actions button:hover:not(:disabled) {
+  color: var(--indigo);
+}
+
+.cmt-actions button:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* ---- the form --------------------------------------------------- */
+
+.cmt-form {
+  background: #fff;
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--r-lg);
+  padding: clamp(1.25rem, 3vw, 1.85rem);
+}
+
+.cmt-replying {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 1rem;
+  font-size: 0.88rem;
+  color: var(--ink-body);
+}
+
+.cmt-replying button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: var(--indigo);
+  font: inherit;
+  text-decoration: underline;
+}
+
+.cmt-row {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 640px) {
+  .cmt-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cmt-form label {
+  display: block;
+}
+
+.cmt-form label > span {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-strong);
+}
+
+.cmt-form label > span em {
+  font-style: normal;
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+
+.cmt-field {
+  margin-top: 1rem;
+}
+
+.cmt-form input,
+.cmt-form textarea {
+  width: 100%;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  padding: 0.65rem 0.8rem;
+  color: var(--ink-strong);
+  font: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+
+.cmt-form textarea {
+  resize: vertical;
+  min-height: 7rem;
+}
+
+.cmt-form input:focus-visible,
+.cmt-form textarea:focus-visible {
+  outline: none;
+  border-color: var(--indigo);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--indigo) 18%, transparent);
+}
+
+/*
+  The honeypot.
+
+  `display: none` is what a bot looks for, so this is hidden by
+  position instead — off-canvas, zero-size and non-interactive. The
+  element is also aria-hidden and tabIndex -1 in the component, so no
+  assistive technology and no keyboard ever reaches it.
+*/
+.cmt-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.cmt-submit {
+  margin-top: 1.15rem;
+}
+
+.cmt-error {
+  margin: 1rem 0 0;
+  color: #b3261e;
+  font-size: 0.88rem;
+}
+
+.cmt-sent {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 1.15rem 0 0;
+  color: var(--ink-strong);
+  font-size: 0.92rem;
+}
+
+/*
+  An explicit size, because an inline <svg> without width/height
+  attributes has no intrinsic size and stretches to fill its container.
+  Inside a flex row that made the tick fill the whole panel and squeeze
+  the message into a one-word column.
+
+  Every other icon rule in this codebase sets both for the same reason
+  — see `.tc-post-more svg`, `.tcp-back svg`, `.ap-btn svg`.
+*/
+.cmt-sent svg {
+  width: 18px;
+  height: 18px;
+  color: var(--indigo);
+  flex: 0 0 auto;
+}
+
+.cmt-submit svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}

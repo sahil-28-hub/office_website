@@ -1,0 +1,156 @@
+/* ==================================================================
+   Get in touch.
+
+   One card, pulled up so it overlaps the banner above — which is what
+   the banner's empty lower third and diagonal edge are there for.
+   With the message form gone the three addresses run across the full
+   width of the card instead of stacking down one side of it.
+================================================================== */
+
+.git {
+  position: relative;
+  background: var(--paper);
+  padding-bottom: clamp(56px, 7vw, 96px);
+}
+
+.git-card {
+  margin-top: clamp(-190px, -14vw, -110px);
+  padding: clamp(30px, 3.6vw, 54px);
+  border-radius: 20px;
+  background: var(--paper);
+  box-shadow: 0 40px 80px -40px rgba(11, 26, 77, 0.5), 0 2px 6px rgba(11, 26, 77, 0.05);
+}
+
+/* ----------------------------- heading ---------------------------- */
+.git-head { max-width: 62ch; }
+
+.git-title {
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  color: var(--ink-strong);
+}
+
+.git-blurb {
+  margin-top: 14px;
+  font-size: 0.975rem;
+  line-height: 1.65;
+  color: var(--ink-muted);
+}
+
+/* ---------------------------- addresses --------------------------- */
+.git-blocks {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(20px, 2.6vw, 40px);
+  margin: clamp(28px, 3.2vw, 44px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.git-blocks li {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+/* the round blue plate beside each address */
+.git-badge {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--grad-pill);
+  color: var(--white);
+  box-shadow: 0 14px 28px -14px rgba(37, 99, 235, 0.9);
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+
+.git-badge svg { width: 22px; height: 22px; }
+
+.git-blocks li:hover .git-badge {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 36px -16px rgba(37, 99, 235, 1);
+}
+
+.git-block-body { min-width: 0; }
+
+.git-block-body h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink-strong);
+}
+
+.git-block-body p {
+  margin-top: 5px;
+  font-size: 0.925rem;
+  line-height: 1.55;
+  color: var(--ink-body);
+  overflow-wrap: anywhere;
+}
+
+.git-block-body a { transition: color 0.3s var(--ease); }
+.git-block-body a:hover { color: var(--electric); text-decoration: underline; }
+
+/* ------------------------------ social ---------------------------- */
+.git-rule {
+  height: 1px;
+  margin: clamp(26px, 3.2vw, 40px) 0 0;
+  border: 0;
+  background: var(--rule);
+}
+
+.git-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding-top: clamp(20px, 2.4vw, 30px);
+}
+
+.git-social-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink-strong);
+}
+
+.git-socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.git-socials a {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--grad-pill);
+  color: var(--white);
+  box-shadow: 0 12px 22px -14px rgba(37, 99, 235, 0.9);
+  transition: transform 0.35s var(--ease), filter 0.35s var(--ease);
+}
+
+.git-socials a:hover { transform: translateY(-3px); filter: brightness(1.08); }
+
+/* --------------------------- responsive --------------------------- */
+@media (max-width: 860px) {
+  .git-blocks { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+}
+
+/* the banner is shorter on a phone, so the card climbs less far into
+   it — otherwise the overlap eats the subtitle */
+@media (max-width: 640px) {
+  .git-card { margin-top: -72px; }
+  .git-foot { justify-content: flex-start; }
+}

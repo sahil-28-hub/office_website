@@ -1,0 +1,53 @@
+/* ==================================================================
+   Mission and Vision — the handful of adjustments this page needs on
+   top of the shared kit. Everything structural lives in page-kit.css.
+================================================================== */
+
+.tc-mv-statement {
+  margin-top: 26px;
+  max-width: 30ch;
+}
+
+@media (min-width: 700px) {
+  .tc-mv-statement { max-width: 26ch; }
+}
+
+.tc-mv-split {
+  margin-top: clamp(40px, 5vw, 68px);
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+}
+
+.tc-mv-pledges { margin-top: 0; }
+
+/* a single brand glow behind the vision band, drifting on scroll */
+.tc-mv-vision { overflow: hidden; }
+
+.tc-mv-glow {
+  position: absolute;
+  right: -14%;
+  top: 8%;
+  width: min(620px, 62vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(90px);
+  opacity: 0.4;
+  background: radial-gradient(circle, rgba(28, 83, 209, 0.6), transparent 68%);
+}
+
+.tc-mv-measure {
+  margin-top: clamp(38px, 4.4vw, 58px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+}
+
+/* the figure rail sits inside the grid here rather than under a
+   banner, so it loses the banner's top margin */
+.tc-mv-figures { margin-top: 0; align-content: center; }
+
+.tc-mv-measure .tc-kv { margin-top: 0; }
+
+@media (max-width: 900px) {
+  .tc-mv-split,
+  .tc-mv-measure { grid-template-columns: minmax(0, 1fr); }
+}

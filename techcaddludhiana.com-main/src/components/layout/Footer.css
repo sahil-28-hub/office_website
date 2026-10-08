@@ -1,0 +1,287 @@
+/* =================================================================
+   Footer — light panel, giant wordmark watermark, floating back-to-top
+================================================================= */
+
+.ft {
+  position: relative;
+  overflow: hidden;
+  margin-top: calc(-1 * clamp(24px, 3.2vw, 46px));
+  border-radius: clamp(24px, 3.2vw, 46px) clamp(24px, 3.2vw, 46px) 0 0;
+  padding: clamp(3.5rem, 6vw, 5.5rem) 0 clamp(1.5rem, 2.5vw, 2rem);
+  background-color: #f8fafc;
+  color: var(--ink-body);
+}
+
+/* the oversized wordmark sitting behind everything */
+.ft-watermark {
+  position: absolute;
+  left: 50%;
+  bottom: -1.5%;
+  translate: -50% 0;
+  width: min(1500px, 122%);
+  height: auto;
+  opacity: 0.055;
+  user-select: none;
+  pointer-events: none;
+}
+
+.ft-inner {
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------------- columns ---------------- */
+.ft-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 5vw, 4rem);
+}
+
+.ft-logo {
+  display: block;
+  width: 172px;
+  margin-bottom: 22px;
+}
+.ft-logo img {
+  width: 100%;
+  height: auto;
+}
+
+.ft-blurb {
+  max-width: 42ch;
+  font-size: 0.938rem;
+  line-height: 1.65;
+  color: var(--ink-body);
+}
+
+.ft-mail {
+  display: inline-block;
+  margin-top: 26px;
+  padding: 15px 30px;
+  border-radius: var(--r-pill);
+  background: var(--indigo);
+  color: var(--white);
+  font-weight: 600;
+  font-size: 0.938rem;
+  box-shadow: 0 22px 40px -20px rgba(12, 31, 108, 0.7);
+  transition:
+    background 0.3s var(--ease),
+    transform 0.3s var(--ease),
+    box-shadow 0.3s var(--ease);
+}
+.ft-mail:hover {
+  background: var(--electric);
+  transform: translateY(-2px);
+  box-shadow: 0 26px 46px -20px rgba(37, 99, 235, 0.8);
+}
+
+.ft-phone {
+  display: block;
+  margin-top: 20px;
+  font-size: 0.938rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  transition: color 0.3s var(--ease);
+}
+.ft-phone:hover {
+  color: var(--indigo);
+}
+
+/* ---------------- link columns ---------------- */
+.ft-col ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.ft-col-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ink-strong);
+  margin: 0 0 24px;
+  letter-spacing: -0.02em;
+}
+
+.ft-col a {
+  position: relative;
+  font-size: 0.938rem;
+  color: var(--ink-body);
+  transition: color 0.25s var(--ease);
+}
+.ft-col a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1px;
+  background: var(--electric);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.3s var(--ease);
+}
+.ft-col a:hover {
+  color: var(--electric);
+}
+.ft-col a:hover::after {
+  transform: scaleX(1);
+}
+
+/* ---------------- base row ---------------- */
+.ft-rule {
+  margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+  border: 0;
+  border-top: 1px solid var(--rule-soft);
+}
+
+.ft-base {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 22px 0 0;
+}
+
+.ft-legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 22px;
+  margin-top: 14px;
+}
+
+.ft-legal a,
+.ft-legal-btn {
+  font-size: 0.813rem;
+  color: var(--ink-muted);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.2s var(--ease);
+}
+
+.ft-legal a:hover,
+.ft-legal-btn:hover { color: var(--electric); }
+
+.ft-copy {
+  font-size: 0.875rem;
+  color: var(--ink-muted);
+}
+.ft-copy span,
+.ft-copy a {
+  color: var(--electric);
+  font-weight: 600;
+}
+.ft-copy a:hover { text-decoration: underline; }
+
+.ft-socials {
+  display: flex;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ft-socials a {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink-strong);
+  transition:
+    color 0.25s var(--ease),
+    background 0.25s var(--ease),
+    border-color 0.25s var(--ease),
+    transform 0.25s var(--ease);
+}
+.ft-socials svg {
+  width: 17px;
+  height: 17px;
+}
+.ft-socials a:hover {
+  color: var(--white);
+  background: var(--indigo);
+  border-color: transparent;
+  transform: translateY(-2px);
+}
+
+/* ---------------- back to top ---------------- */
+.ft-top {
+  position: fixed;
+  right: clamp(16px, 3vw, 32px);
+  bottom: clamp(16px, 3vw, 32px);
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--grad-pill);
+  color: var(--white);
+  box-shadow: 0 20px 40px -14px rgba(37, 99, 235, 0.85);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px) scale(0.9);
+  transition:
+    opacity 0.35s var(--ease),
+    transform 0.35s var(--ease),
+    visibility 0s linear 0.35s;
+}
+.ft-top.is-shown {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0s;
+}
+.ft-top:hover {
+  transform: translateY(-3px);
+}
+.ft-top svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ---------------- responsive ---------------- */
+@media (max-width: 940px) {
+  .ft-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    row-gap: 2.75rem;
+  }
+  .ft-brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .ft-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ft-base {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .ft-col-title {
+    font-size: 1.125rem;
+    margin-bottom: 18px;
+  }
+  .ft-watermark {
+    width: 170%;
+  }
+  .ft-mail { padding: 14px 24px; font-size: 0.875rem; }
+  .ft-socials a { width: 34px; height: 34px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ft-top {
+    transition: opacity 0.2s linear, visibility 0s;
+  }
+}

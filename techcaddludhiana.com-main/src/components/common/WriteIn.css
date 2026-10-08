@@ -1,0 +1,69 @@
+/* ==================================================================
+   Write-in.
+
+   Text that types itself as it scrolls into view: each word lands in
+   turn, blurred and slightly low, so a heading reads as being written
+   rather than simply fading in.
+
+   Everything animates on opacity / transform / filter only, and each
+   word is its own inline-block, so a heading writing itself never
+   reflows the page — the layout is already final while the words are
+   still invisible.
+================================================================== */
+
+/* Words are VISIBLE by default and hidden only by .is-armed, which the
+   component adds from a layout effect once it knows an observer is
+   actually attached. If JS never runs, or the observer never fires,
+   the heading is simply readable — the failure mode of an animation
+   should never be invisible text. */
+.wr-w {
+  display: inline-block;
+  /* a nested gradient <span> must not clip the descenders of the words
+     it now contains */
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+
+.wr.is-armed .wr-w {
+  opacity: 0;
+  transform: translateY(0.4em);
+  /* No blur. A filter on every word of every heading is a layer per
+     word, re-rasterised each frame of its entrance; opacity and a
+     small rise say the same thing and stay on the compositor. */
+  will-change: opacity, transform;
+}
+
+.wr.is-writing .wr-w {
+  animation: wr-word 0.52s var(--ease) both;
+  animation-delay: calc(var(--i) * var(--wr-step, 52ms) + var(--wr-lead, 0ms));
+}
+
+@keyframes wr-word {
+  from { opacity: 0; transform: translateY(0.4em); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* once finished, drop the animation and the compositor hint so a long
+   page isn't holding dozens of promoted layers */
+.wr.is-written .wr-w {
+  animation: none;
+  opacity: 1;
+  transform: none;
+  filter: none;
+  will-change: auto;
+}
+
+/* ------------------------------------------------------------------
+   Reduced motion, and the no-JS / observer-less path: the text is
+   simply there. Nothing about the layout depends on the animation
+   having run.
+------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .wr.is-armed .wr-w,
+  .wr.is-writing .wr-w {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    animation: none !important;
+  }
+}

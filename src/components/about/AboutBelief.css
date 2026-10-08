@@ -1,0 +1,109 @@
+/* ==================================================================
+   §14 — technology changes. skills evolve. learning never stops.
+================================================================== */
+
+.apbel-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+  gap: clamp(28px, 4vw, 66px);
+  align-items: end;
+}
+
+.apbel-lines h2 {
+  margin-top: 20px;
+  font-size: clamp(1.9rem, 4.2vw, 3.1rem);
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.038em;
+  color: var(--ap-title);
+}
+
+.apbel-lines h2 span { display: block; }
+
+/* the last line is the point of the section, so it steps in */
+.apbel-lines h2 span:last-child { padding-left: clamp(12px, 2.2vw, 38px); }
+
+.apbel-copy {
+  display: grid;
+  gap: 16px;
+  padding-bottom: 6px;
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: var(--ap-muted);
+}
+
+/* ----------------------------- the card --------------------------- */
+.apbel-card {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  max-width: 720px;
+  margin: clamp(40px, 5vw, 76px) auto 0;
+  padding: clamp(30px, 4vw, 52px);
+  text-align: center;
+  border-radius: var(--ap-r-lg);
+  background: var(--paper);
+  border: 1px solid var(--ap-line);
+  box-shadow: 0 40px 80px -44px rgba(11, 26, 77, 0.55);
+  transition: transform 0.6s var(--ease), box-shadow 0.6s var(--ease);
+}
+
+.apbel-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 50px 96px -44px rgba(11, 26, 77, 0.62);
+}
+
+.apbel-card blockquote {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 24px;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.2vw, 2.3rem);
+  font-weight: 700;
+  letter-spacing: -0.038em;
+  color: var(--ink-strong);
+}
+
+/* each word underlines itself, in sequence, once the card is in view */
+.apbel-card blockquote span {
+  position: relative;
+  padding-bottom: 6px;
+}
+
+.apbel-card blockquote span::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--grad-ink);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.7s var(--ease);
+}
+
+.apbel-card.is-in blockquote span::after { transform: scaleX(1); }
+.apbel-card.is-in blockquote span:nth-child(2)::after { transition-delay: 0.22s; }
+.apbel-card.is-in blockquote span:nth-child(3)::after { transition-delay: 0.44s; }
+
+.apbel-card > p {
+  max-width: 52ch;
+  font-size: 0.975rem;
+  line-height: 1.7;
+  color: var(--ink-muted);
+}
+
+.apbel-card figcaption {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  color: var(--indigo);
+}
+
+@media (max-width: 900px) {
+  .apbel-top { grid-template-columns: minmax(0, 1fr); }
+}

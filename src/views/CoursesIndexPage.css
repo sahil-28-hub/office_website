@@ -1,0 +1,21 @@
+/* ==================================================================
+   All courses — page-specific adjustments on top of the shared kit.
+================================================================== */
+
+/* the whole course card is a link */
+a.tc-course { color: inherit; }
+
+.tc-courses > li { display: flex; }
+.tc-courses > li > .tc-course { width: 100%; }
+
+/* the three suggested courses inside a starting-point card */
+.tc-ci-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: auto 0 0;
+  padding-top: 6px;
+  list-style: none;
+}
+
+.tc-ci-links .ap-chip { font-size: 0.72rem; padding: 6px 12px; }

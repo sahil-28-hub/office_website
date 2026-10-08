@@ -1,0 +1,297 @@
+/* ==================================================================
+   The brochure gate.
+
+   One panel, dark, sized to the content. Deliberately not a two-column
+   marketing modal: the visitor clicked a download button, so the
+   shortest honest path from that click to the file is the whole job.
+
+   The panel is built from the site's own ink tokens, so it reads as
+   the page lifting a layer rather than as a dialog from somewhere
+   else.
+================================================================== */
+
+.bgate-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  padding: clamp(14px, 4vw, 32px);
+  background: rgba(4, 5, 20, 0.72);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  animation: bgate-fade 0.25s var(--ease) both;
+  overflow-y: auto;
+}
+
+@keyframes bgate-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.bgate {
+  position: relative;
+  width: min(100%, 470px);
+  padding: clamp(26px, 3.4vw, 38px);
+  border-radius: 26px;
+  background:
+    radial-gradient(120% 80% at 80% 0%, rgba(37, 99, 235, 0.22), transparent 60%),
+    linear-gradient(165deg, var(--bg-ink-card) 0%, var(--bg-ink-deep) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 50px 110px -40px rgba(0, 0, 0, 0.95);
+  color: var(--mist);
+  animation: bgate-rise 0.35s var(--ease) both;
+}
+
+@keyframes bgate-rise {
+  from { opacity: 0; transform: translateY(18px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+.bgate-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: var(--mist-dim);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--hairline);
+  cursor: pointer;
+  transition: color 0.25s var(--ease), background 0.25s var(--ease);
+}
+.bgate-close:hover {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* ------------------------------- copy ------------------------------ */
+.bgate-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.bgate-title {
+  margin-top: 12px;
+  padding-right: 40px;
+  font-size: clamp(1.375rem, 2.6vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--white);
+}
+
+.bgate-lead {
+  margin-top: 12px;
+  font-size: 0.938rem;
+  line-height: 1.6;
+  color: var(--mist);
+}
+
+.bgate-contents {
+  display: grid;
+  gap: 8px;
+  margin: 18px 0 0;
+  padding: 14px 16px;
+  list-style: none;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--hairline);
+}
+.bgate-contents li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.875rem;
+  color: var(--mist);
+}
+.bgate-contents svg { flex: none; color: var(--cyan); }
+
+/* ------------------------------- form ------------------------------ */
+.bgate-form {
+  display: grid;
+  gap: 16px;
+  margin-top: 22px;
+}
+
+/* --------------------------- the honeypot --------------------------
+   Off-screen rather than display:none. A bot that checks for the
+   obvious tricks will skip a hidden field but happily fill one that
+   is technically in the layout - and no sighted or screen-reader
+   visitor can reach it either way, because the wrapper is aria-hidden
+   and the input is out of the tab order.
+------------------------------------------------------------------ */
+.bgate-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.bgate-field {
+  display: grid;
+  gap: 8px;
+}
+
+.bgate-field > label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.bgate-field input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-family: var(--font-body);
+  font-size: 0.938rem;
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  transition: border-color 0.25s var(--ease), background 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.bgate-field input::placeholder { color: rgba(219, 224, 250, 0.5); }
+.bgate-field input:hover { border-color: rgba(255, 255, 255, 0.3); }
+.bgate-field input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.14);
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2);
+}
+.bgate-field input[aria-invalid='true'] { border-color: #ff8aa4; }
+
+/* the course, filled from the page and not the visitor's to change */
+.bgate-locked {
+  position: relative;
+  display: grid;
+}
+.bgate-locked input {
+  padding-right: 44px;
+  font-weight: 600;
+  background: rgba(37, 99, 235, 0.24);
+  border-color: rgba(96, 165, 250, 0.42);
+  cursor: default;
+}
+.bgate-locked svg {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  translate: 0 -50%;
+  pointer-events: none;
+  color: var(--cyan);
+}
+
+.bgate-error {
+  font-size: 0.813rem;
+  color: #ff8aa4;
+}
+
+.bgate-failure {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #ff8aa4;
+}
+
+/* ------------------------------ button ----------------------------- */
+.bgate-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 17px 22px;
+  border: 0;
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: 0.938rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  background: var(--grad-pill);
+  box-shadow: 0 20px 44px -20px rgba(37, 99, 235, 0.9);
+  cursor: pointer;
+  transition: transform 0.25s var(--ease), filter 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.bgate-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+}
+.bgate-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.bgate-foot {
+  text-align: center;
+  font-size: 0.813rem;
+  color: rgba(200, 209, 245, 0.6);
+}
+
+/* ------------------------------- done ------------------------------ */
+.bgate-done {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  text-align: center;
+  padding-top: 8px;
+}
+
+.bgate-tick {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.14);
+  border: 1px solid rgba(74, 222, 128, 0.34);
+  animation: bgate-pop 0.45s var(--ease) both;
+}
+
+@keyframes bgate-pop {
+  from { opacity: 0; scale: 0.7; }
+  to { opacity: 1; scale: 1; }
+}
+
+.bgate-done h2 {
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--white);
+}
+
+.bgate-done p {
+  font-size: 0.938rem;
+  line-height: 1.6;
+  color: var(--mist);
+}
+
+.bgate-done-note {
+  font-size: 0.813rem !important;
+  color: var(--mist-dim) !important;
+}
+.bgate-done-note a {
+  color: var(--white);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.bgate-done .bgate-submit { margin-top: 6px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .bgate-overlay,
+  .bgate,
+  .bgate-tick { animation: none; }
+  .bgate-submit:hover:not(:disabled) { transform: none; }
+}

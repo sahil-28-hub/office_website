@@ -1,0 +1,270 @@
+/* =================================================================
+   Salary outlook — the table, and the five questions a table cannot
+   answer. Dark band, between the paper careers section above and the
+   paper future-scope section below.
+================================================================= */
+
+.csal-table-wrap {
+  margin-top: clamp(28px, 3.5vw, 44px);
+  border-radius: var(--card-r);
+  border: 1px solid var(--hairline);
+  background: rgba(255, 255, 255, 0.045);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  overflow: hidden;
+}
+
+.csal-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.938rem;
+}
+
+/* the caption carries the table's meaning for a screen reader; the
+   heading above it is doing that job visually */
+.csal-caption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.csal-table thead th {
+  padding: 16px clamp(12px, 1.4vw, 20px);
+  border-bottom: 1px solid var(--hairline);
+  background: rgba(255, 255, 255, 0.05);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  text-align: left;
+  white-space: nowrap;
+}
+.csal-table thead th:first-child { color: var(--mist-dim); }
+
+.csal-table tbody tr + tr th,
+.csal-table tbody tr + tr td {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.csal-table tbody tr {
+  transition: background 0.25s var(--ease);
+}
+.csal-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.csal-table tbody th {
+  padding: 16px clamp(12px, 1.4vw, 20px);
+  text-align: left;
+  font-weight: 400;
+}
+
+.csal-role {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.csal-level {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.563rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mist-dim);
+}
+
+.csal-table td {
+  padding: 16px clamp(12px, 1.4vw, 20px);
+  color: var(--mist);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.csal-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 80ch;
+  margin-top: 16px;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--mist-dim);
+}
+.csal-note svg {
+  flex: none;
+  margin-top: 3px;
+  color: var(--py-gold);
+}
+
+/* ---------------- the five questions ---------------- */
+.csal-qa {
+  list-style: none;
+  margin: clamp(34px, 4vw, 52px) 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.csal-item {
+  border-radius: 16px;
+  border: 1px solid var(--hairline);
+  background: rgba(255, 255, 255, 0.04);
+  transition: border-color 0.3s var(--ease), background 0.3s var(--ease);
+}
+.csal-item.is-open {
+  border-color: rgba(34, 211, 238, 0.35);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.csal-trigger {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 1.6vw, 20px);
+  width: 100%;
+  padding: 18px clamp(16px, 1.8vw, 24px);
+  background: none;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+}
+
+.csal-no {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 0.688rem;
+  letter-spacing: 0.1em;
+  color: var(--cyan);
+}
+
+.csal-q {
+  flex: 1;
+  font-family: var(--font-display);
+  font-size: clamp(0.938rem, 1.3vw, 1.094rem);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--white);
+}
+
+.csal-sign {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--hairline);
+  color: var(--mist);
+  transition: background 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+.csal-item.is-open .csal-sign {
+  background: var(--grad-pill);
+  border-color: transparent;
+  color: var(--white);
+}
+
+/* grid-template-rows, not max-height: the panel opens to exactly the
+   height of its copy rather than to a guessed ceiling */
+.csal-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.36s var(--ease);
+}
+.csal-item.is-open .csal-panel { grid-template-rows: 1fr; }
+
+.csal-panel-inner {
+  overflow: hidden;
+  visibility: hidden;
+  transition: visibility 0s linear 0.36s;
+}
+.csal-item.is-open .csal-panel-inner {
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.csal-panel-inner p {
+  padding: 0 clamp(16px, 1.8vw, 24px) 20px clamp(46px, 4.4vw, 62px);
+  max-width: 82ch;
+  font-size: 0.938rem;
+  line-height: 1.65;
+  color: var(--mist);
+}
+
+/* =================================================================
+   Below 760px the table becomes one card per role. A salary table is
+   the last thing anyone wants to swipe sideways, so each cell is
+   relabelled from its column header instead.
+================================================================= */
+@media (max-width: 760px) {
+  .csal-table-wrap {
+    border: 0;
+    background: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    overflow: visible;
+  }
+  .csal-table,
+  .csal-table tbody,
+  .csal-table tr,
+  .csal-table th,
+  .csal-table td {
+    display: block;
+  }
+  .csal-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .csal-table tbody tr {
+    margin-bottom: 12px;
+    padding: 16px 18px;
+    border-radius: 16px;
+    border: 1px solid var(--hairline);
+    background: rgba(255, 255, 255, 0.045);
+  }
+  .csal-table tbody th,
+  .csal-table td {
+    padding: 0;
+    white-space: normal;
+  }
+  .csal-table tbody tr + tr th,
+  .csal-table tbody tr + tr td {
+    border-top: 0;
+  }
+  .csal-table td {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .csal-table td::before {
+    content: attr(data-label);
+    font-family: var(--font-mono);
+    font-size: 0.563rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mist-dim);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .csal-panel,
+  .csal-panel-inner,
+  .csal-table tbody tr { transition: none; }
+}

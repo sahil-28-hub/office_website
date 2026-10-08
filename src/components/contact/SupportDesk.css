@@ -1,0 +1,253 @@
+/* ==================================================================
+   Support & Assistance.
+
+   A blue rail carrying the two desks, and a white panel showing the
+   one that is selected. Self-contained: it reads the site tokens and
+   nothing else, so it can sit anywhere on the page.
+================================================================== */
+
+.sdesk {
+  position: relative;
+  padding-block: clamp(56px, 7vw, 104px);
+  background: var(--paper-tint);
+  overflow: hidden;
+}
+
+/* the outlined circle that sits off the top-left corner */
+.sdesk-ring {
+  position: absolute;
+  top: 26px;
+  left: clamp(14px, 3vw, 46px);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid rgba(37, 99, 235, 0.35);
+  pointer-events: none;
+  animation: sdesk-bob 7s ease-in-out infinite;
+}
+
+@keyframes sdesk-bob {
+  50% { transform: translateY(-10px); border-color: rgba(34, 211, 238, 0.55); }
+}
+
+/* ---------------------------- heading ----------------------------- */
+.sdesk-head { text-align: center; }
+
+.sdesk-title {
+  font-size: clamp(1.9rem, 3.6vw, 2.85rem);
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  color: var(--electric);
+}
+
+.sdesk-sub {
+  margin-top: 12px;
+  font-size: 1.05rem;
+  color: var(--ink-muted);
+}
+
+/* ------------------------------ card ------------------------------ */
+.sdesk-card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.33fr) minmax(0, 0.67fr);
+  margin-top: clamp(32px, 4.4vw, 56px);
+  border-radius: 28px;
+  background: var(--paper);
+  border: 1px solid rgba(12, 31, 108, 0.08);
+  box-shadow: 0 34px 70px -40px rgba(11, 26, 77, 0.45);
+  overflow: hidden;
+}
+
+/* ------------------------------ rail ------------------------------ */
+.sdesk-rail {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: clamp(20px, 2.2vw, 28px);
+  background: linear-gradient(160deg, #1d4ed8 0%, #3f8bff 55%, #35a8ef 100%);
+}
+
+.sdesk-tab {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  text-align: left;
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: background 0.35s var(--ease), border-color 0.35s var(--ease),
+    transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+
+.sdesk-tab:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
+
+.sdesk-tab.is-active {
+  background: rgba(255, 255, 255, 0.24);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 16px 30px -18px rgba(2, 12, 60, 0.7);
+}
+
+.sdesk-tab-ico {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  transition: background 0.35s var(--ease);
+}
+
+.sdesk-tab.is-active .sdesk-tab-ico { background: rgba(255, 255, 255, 0.34); }
+
+.sdesk-tab-body { display: grid; gap: 4px; }
+
+.sdesk-tab-body b {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.sdesk-tab-body i {
+  font-style: normal;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+/* ----------------------------- panel ------------------------------ */
+.sdesk-panel {
+  display: flex;
+  align-items: center;
+  gap: clamp(24px, 3.4vw, 52px);
+  padding: clamp(28px, 3.6vw, 52px);
+  background: var(--paper);
+  animation: sdesk-in 0.5s var(--ease) both;
+}
+
+@keyframes sdesk-in {
+  from { opacity: 0; transform: translateY(10px); }
+}
+
+.sdesk-avatar {
+  display: grid;
+  place-items: center;
+  width: clamp(104px, 10vw, 132px);
+  aspect-ratio: 1;
+  flex: none;
+  border-radius: 50%;
+  background: linear-gradient(150deg, #1d4ed8, #35a8ef);
+  box-shadow: 0 0 0 9px rgba(37, 99, 235, 0.1), 0 22px 42px -20px rgba(37, 99, 235, 0.85);
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 2.4vw, 2.15rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--white);
+}
+
+.sdesk-detail { min-width: 0; }
+
+.sdesk-name {
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  color: var(--ink-strong);
+}
+
+.sdesk-role {
+  margin-top: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--electric);
+}
+
+/* ------------------------------ rows ------------------------------ */
+.sdesk-rows {
+  display: grid;
+  gap: 12px;
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sdesk-rows li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1rem;
+  color: var(--ink-body);
+  animation: sdesk-row 0.5s var(--ease) both;
+  animation-delay: calc(var(--i) * 70ms + 100ms);
+  overflow-wrap: anywhere;
+}
+
+@keyframes sdesk-row {
+  from { opacity: 0; transform: translateX(-8px); }
+}
+
+.sdesk-rows svg { flex: none; color: var(--electric); }
+
+.sdesk-rows a { transition: color 0.3s var(--ease); }
+.sdesk-rows a:hover { color: var(--electric); text-decoration: underline; }
+
+/* ---------------------------- actions ----------------------------- */
+.sdesk-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.sdesk-act {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-size: 0.938rem;
+  font-weight: 600;
+  color: var(--white);
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), filter 0.3s var(--ease);
+}
+
+.sdesk-act:hover { transform: translateY(-2px); filter: brightness(1.06); }
+
+.sdesk-act--call {
+  background: #1d4ed8;
+  box-shadow: 0 14px 28px -14px rgba(37, 99, 235, 0.9);
+}
+
+.sdesk-act--wa {
+  background: #22c55e;
+  box-shadow: 0 14px 28px -14px rgba(34, 197, 94, 0.85);
+}
+
+.sdesk-act--mail {
+  background: #f59e0b;
+  box-shadow: 0 14px 28px -14px rgba(245, 158, 11, 0.85);
+}
+
+/* --------------------------- responsive --------------------------- */
+@media (max-width: 900px) {
+  .sdesk-card { grid-template-columns: minmax(0, 1fr); }
+  .sdesk-rail { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 620px) {
+  .sdesk-rail { grid-template-columns: minmax(0, 1fr); }
+  .sdesk-panel { flex-direction: column; align-items: flex-start; }
+  .sdesk-act { flex: 1 1 auto; justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sdesk-ring,
+  .sdesk-panel,
+  .sdesk-rows li { animation: none; }
+}

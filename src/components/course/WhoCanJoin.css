@@ -1,0 +1,201 @@
+/* ==================================================================
+   Who can join this course.
+
+   Six people-shaped cards, then the requirements as one panel. The
+   cards are equal weight on purpose - the moment "working
+   professionals" looks more important than "after 12th", half the
+   readership stops looking for themselves.
+
+   The band itself is left to .c-sec--dark in course-base.css, so this
+   section sits on exactly the same ink as every other dark section on
+   the page and the theme stays defined in one file.
+================================================================== */
+
+.cwho { position: relative; }
+
+.cwho-glow {
+  position: absolute;
+  left: 50%;
+  top: 6%;
+  translate: -50% 0;
+  width: min(760px, 84vw);
+  aspect-ratio: 2 / 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.26), transparent 68%);
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+/* ------------------------------- cards ----------------------------- */
+.cwho-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 1.6vw, 18px);
+  margin: clamp(32px, 4vw, 52px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cwho-grid li {
+  display: grid;
+  align-content: start;
+  gap: 11px;
+  height: 100%;
+  padding: clamp(20px, 2.2vw, 26px);
+  border-radius: var(--card-r);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--hairline);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  transition: transform 0.35s var(--ease), border-color 0.35s var(--ease), background 0.35s var(--ease);
+}
+
+.cwho-grid li:hover {
+  transform: translateY(-4px);
+  border-color: rgba(96, 165, 250, 0.46);
+  background: linear-gradient(160deg, rgba(37, 99, 235, 0.15), rgba(255, 255, 255, 0.03));
+}
+
+.cwho-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  color: var(--cyan);
+  background: rgba(34, 211, 238, 0.1);
+  border: 1px solid rgba(34, 211, 238, 0.24);
+}
+
+.cwho-grid h3 {
+  font-family: var(--font-display);
+  font-size: 1.063rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+  color: var(--white);
+}
+
+.cwho-grid p {
+  font-size: 0.938rem;
+  line-height: 1.6;
+  color: var(--mist);
+}
+
+.cwho-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  justify-self: start;
+  margin-top: 2px;
+  padding: 6px 13px 6px 10px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 216, 73, 0.1);
+  border: 1px solid rgba(255, 216, 73, 0.26);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.06em;
+  color: var(--py-gold);
+}
+.cwho-tag svg { flex: none; }
+
+/* --------------------------- requirements -------------------------- */
+.cwho-need {
+  margin-top: clamp(18px, 2.4vw, 28px);
+  padding: clamp(22px, 2.8vw, 34px);
+  border-radius: var(--card-r);
+  background: rgba(9, 10, 32, 0.5);
+  border: 1px solid var(--hairline);
+}
+
+.cwho-need-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.cwho-need-head h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.063rem, 1.9vw, 1.25rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--white);
+}
+
+.cwho-need-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.688rem;
+  letter-spacing: 0.06em;
+  color: var(--mist-dim);
+}
+.cwho-need-meta svg { color: var(--cyan); }
+
+.cwho-need ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px clamp(20px, 3vw, 40px);
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cwho-need li {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  font-size: 0.938rem;
+  line-height: 1.6;
+  color: var(--mist);
+}
+.cwho-need li svg {
+  flex: none;
+  margin-top: 4px;
+  color: #4ade80;
+}
+
+/* ------------------------------- note ------------------------------ */
+.cwho-note {
+  max-width: 70ch;
+  margin: clamp(22px, 2.6vw, 30px) auto 0;
+  text-align: center;
+  font-size: var(--step-body);
+  line-height: 1.65;
+  color: var(--mist-dim);
+}
+
+.cwho-note a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 4px;
+  font-weight: 600;
+  color: var(--white);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--cyan);
+  white-space: nowrap;
+}
+.cwho-note a svg { transition: translate 0.3s var(--ease); }
+.cwho-note a:hover svg { translate: 3px 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cwho-grid li:hover { transform: none; }
+  .cwho-note a:hover svg { translate: 0 0; }
+}
+
+/* --------------------------- responsive ---------------------------- */
+@media (max-width: 960px) {
+  .cwho-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 620px) {
+  .cwho-grid { grid-template-columns: 1fr; }
+  .cwho-need ul { grid-template-columns: 1fr; }
+}

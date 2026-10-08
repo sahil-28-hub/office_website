@@ -1,0 +1,129 @@
+/* ==================================================================
+   The video dialog.
+
+   Sits above everything — the navbar's own layer included — because it
+   is portalled to <body> and is the only thing the visitor is meant to
+   be looking at while it is open.
+================================================================== */
+
+.vm {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: clamp(12px, 4vw, 40px);
+  background: rgba(4, 5, 15, 0.82);
+  backdrop-filter: blur(6px);
+  animation: vm-in 0.22s var(--ease) both;
+}
+
+@keyframes vm-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.vm-panel {
+  position: relative;
+  width: 100%;
+  /*
+    As wide as the viewport allows, capped so it never outgrows a
+    1080p source. The height cap is what stops a landscape phone or a
+    short laptop window pushing the close button off screen — the
+    width then follows from the aspect ratio below.
+  */
+  max-width: min(1040px, 100%);
+  animation: vm-rise 0.28s var(--ease) both;
+}
+
+.vm-panel:focus-visible {
+  outline: none;
+}
+
+@keyframes vm-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+}
+
+.vm-frame-wrap {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  /* Keeps the whole dialog inside a short window; the width shrinks to
+     match rather than the video being cropped. */
+  max-height: calc(100vh - 150px);
+  margin-inline: auto;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  background: #000;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+}
+
+.vm-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.vm-title {
+  margin: 14px auto 0;
+  max-width: 60ch;
+  text-align: center;
+  color: var(--mist);
+  font-size: 0.9rem;
+}
+
+.vm-close {
+  position: absolute;
+  top: -46px;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  transition: background 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.vm-close:hover,
+.vm-close:focus-visible {
+  background: rgba(255, 255, 255, 0.18);
+  transform: scale(1.06);
+}
+
+.vm-close:focus-visible {
+  outline: 2px solid var(--electric);
+  outline-offset: 2px;
+}
+
+/* On a small screen there is no room above the video, so the button
+   moves inside the top-right corner of the frame. */
+@media (max-width: 640px) {
+  .vm-close {
+    top: 8px;
+    right: 8px;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.55);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vm,
+  .vm-panel {
+    animation: none;
+  }
+
+  .vm-close:hover,
+  .vm-close:focus-visible {
+    transform: none;
+  }
+}

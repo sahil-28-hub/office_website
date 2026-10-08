@@ -1,0 +1,50 @@
+/* ==================================================================
+   §5 — preparing learners for a changing digital world.
+================================================================== */
+
+.apout { text-align: center; }
+
+.apout-title { max-width: 20ch; margin-inline: auto; }
+
+.apout-body {
+  display: grid;
+  gap: 16px;
+  max-width: 64ch;
+  margin: clamp(20px, 2.6vw, 30px) auto 0;
+  font-size: var(--step-lead);
+  line-height: 1.68;
+  color: var(--ap-muted);
+}
+
+/* the callout — a tinted panel, wide enough to feel like a plaque
+   rather than another paragraph */
+.apout-quote {
+  position: relative;
+  max-width: 860px;
+  margin: clamp(34px, 4.4vw, 56px) auto 0;
+  padding: clamp(28px, 3.4vw, 46px) clamp(26px, 4vw, 62px);
+  border-radius: var(--ap-r-lg);
+  background: linear-gradient(150deg, rgba(37, 99, 235, 0.13), rgba(28, 83, 209, 0.08));
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  overflow: hidden;
+}
+
+.apout-quote > svg {
+  width: 30px;
+  height: 30px;
+  margin-inline: auto;
+  color: var(--electric);
+  opacity: 0.6;
+}
+
+.apout-quote p {
+  margin-top: 16px;
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1.9vw, 1.5rem);
+  line-height: 1.5;
+  letter-spacing: -0.025em;
+  color: var(--ink-strong);
+}
+
+

@@ -1,0 +1,102 @@
+# ==================================================================
+#  Builds the site and publishes it to GitHub Pages.
+#
+#  This repository is a USER site (Dishant1-git.github.io), so Pages
+#  serves it from the domain root. That matters more than it looks:
+#  69 image paths in src/ are absolute ('/gallery/2.png'), as are the
+#  favicon links in index.html. At the root they are correct as
+#  written. Served from a project sub-path they would every one 404,
+#  and the fix would be a base-aware helper wrapped around all 69.
+#  So: if this is ever moved to a project repo, `base` in
+#  vite.config.js and those paths have to be dealt with together.
+#
+#  Pages is static hosting. There is no Node process here, so
+#  server/index.js and the MySQL database are not part of this
+#  deployment and /api/leads does not exist. VITE_LEADS_TRANSPORT
+#  below is what keeps the forms honest about that — see the comment
+#  on it. DEPLOYMENT.md Option A is the deployment that keeps the
+#  database.
+# ==================================================================
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # so a rebuild can be triggered without an empty commit — needed
+  # whenever a VITE_* value below changes, because Vite inlines those
+  # at build time and nothing re-reads them afterwards
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time. `cancel-in-progress: false` because cancelling
+# a half-finished Pages deployment is how you get a site serving a
+# mix of two builds.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # --ignore-scripts skips the `postinstall` hook, which runs
+      # `prisma generate`. prisma.config.ts reads DATABASE_URL, and
+      # there is no database in CI — but nothing in the browser bundle
+      # imports the Prisma client either, so generating it here would
+      # be a failure with no upside.
+      - run: npm ci --ignore-scripts
+
+      - name: Build
+        env:
+          # Pages cannot run the API. Without this the forms would
+          # POST to /api/leads, get the 404 page back, and show the
+          # visitor "something went wrong" — a form that looks live
+          # and silently loses every enquiry. `mailto` makes each one
+          # open a pre-filled email to the address below instead.
+          # Nothing is written to MySQL on this deployment.
+          VITE_LEADS_TRANSPORT: mailto
+          VITE_ENQUIRY_INBOX: info@techcadd.com
+        run: npm run build
+
+      # The app is a single-page router with clean URLs. GitHub Pages
+      # has no rewrite rules — vercel.json and public/_redirects are
+      # both ignored here — so a visitor opening /courses/python
+      # directly asks Pages for a file that does not exist. Pages
+      # serves 404.html for those, at the requested URL, so making it
+      # a copy of index.html boots the app and the router reads the
+      # path and renders the right page.
+      - run: cp dist/index.html dist/404.html
+
+      # Without this Pages runs the output through Jekyll, which
+      # discards files and folders whose names begin with an
+      # underscore. Vite has no reason to emit one today; this costs
+      # nothing and removes the whole class of "one asset silently
+      # missing in production" bug.
+      - run: touch dist/.nojekyll
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

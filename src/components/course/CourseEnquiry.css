@@ -1,0 +1,348 @@
+/* ==================================================================
+   Enquiry section — the form above the footer.
+
+   The panel is a frosted card floating on the section's own band:
+   labels above their inputs, generous hit areas, one full-width send
+   button and a single line of reassurance under it. Everything is
+   sized for a thumb first — this is the last thing a visitor touches
+   before they decide whether to bother.
+
+   The band itself is the page's ink gradient, unchanged, so this
+   section sits in the same alternation as every other dark block.
+================================================================== */
+
+.cenq {
+  position: relative;
+  background: linear-gradient(160deg, var(--bg-ink-deep) 0%, var(--bg-ink) 58%, #102463 100%);
+  overflow: hidden;
+}
+
+.cenq-field {
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(520px 320px at 20% 30%, rgba(37, 99, 235, 0.5), transparent 65%),
+    radial-gradient(460px 300px at 78% 70%, rgba(34, 211, 238, 0.32), transparent 65%),
+    radial-gradient(420px 300px at 60% 12%, rgba(28, 83, 209, 0.35), transparent 65%);
+  filter: blur(20px);
+  animation: cenq-shift 22s var(--ease) infinite alternate;
+}
+
+@keyframes cenq-shift {
+  from { transform: translate3d(-3%, -2%, 0) scale(1); }
+  to { transform: translate3d(4%, 3%, 0) scale(1.08); }
+}
+
+.cenq-particles {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+.cenq-particles li {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+  animation: cenq-drift 9s var(--ease) infinite alternate;
+  animation-delay: var(--d);
+  opacity: 0.5;
+}
+
+@keyframes cenq-drift {
+  from { transform: translateY(0); opacity: 0.25; }
+  to { transform: translateY(-26px); opacity: 0.75; }
+}
+
+.cenq-inner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(32px, 4.5vw, 64px);
+  align-items: center;
+}
+
+/* ------------------------------- copy ------------------------------ */
+.cenq-title {
+  margin-top: 16px;
+  font-size: clamp(1.875rem, 3.6vw, 2.875rem);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  color: var(--white);
+  max-width: 15ch;
+}
+
+.cenq-text {
+  margin-top: 16px;
+  max-width: 44ch;
+  font-size: var(--step-body);
+  line-height: 1.6;
+  color: rgba(226, 231, 255, 0.86);
+}
+
+.cenq-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+  border-radius: var(--card-r);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.cenq-facts li {
+  display: grid;
+  gap: 5px;
+  padding: 16px 18px;
+  background: rgba(9, 10, 32, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.cenq-facts span {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.cenq-facts strong {
+  font-family: var(--font-display);
+  font-size: 0.938rem;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: -0.02em;
+}
+
+.cenq-call {
+  margin-top: 20px;
+  font-size: 0.938rem;
+  color: rgba(200, 209, 245, 0.75);
+}
+.cenq-call a {
+  color: var(--white);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------- form ------------------------------ */
+.cenq-form {
+  position: relative;
+  display: grid;
+  gap: 20px;
+  padding: clamp(24px, 3vw, 38px);
+  border-radius: 26px;
+  background: rgba(9, 10, 32, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(26px) saturate(160%);
+  -webkit-backdrop-filter: blur(26px) saturate(160%);
+  box-shadow: 0 46px 100px -44px rgba(3, 4, 20, 0.95);
+}
+
+/* --------------------------- the honeypot --------------------------
+   Off-screen rather than display:none. A bot that checks for the
+   obvious tricks will skip a hidden field but happily fill one that
+   is technically in the layout — and no sighted or screen-reader
+   visitor can reach it either way, because the wrapper is
+   aria-hidden and the input is out of the tab order.
+------------------------------------------------------------------ */
+.cenq-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.cenq-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.cenq-field-group {
+  display: grid;
+  gap: 9px;
+  min-width: 0;
+}
+
+.cenq-field-group > label {
+  font-family: var(--font-body);
+  font-size: 0.938rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--white);
+}
+
+.cenq-field-group input,
+.cenq-field-group textarea {
+  width: 100%;
+  padding: 15px 17px;
+  border-radius: 14px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition:
+    border-color 0.25s var(--ease),
+    background 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
+}
+
+.cenq-field-group textarea {
+  resize: vertical;
+  min-height: 150px;
+  line-height: 1.6;
+}
+
+.cenq-field-group input::placeholder,
+.cenq-field-group textarea::placeholder {
+  color: rgba(219, 224, 250, 0.55);
+}
+
+.cenq-field-group input:hover,
+.cenq-field-group textarea:hover {
+  border-color: rgba(255, 255, 255, 0.34);
+}
+
+.cenq-field-group input:focus,
+.cenq-field-group textarea:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.19);
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2);
+}
+
+.cenq-field-group input[aria-invalid='true'] {
+  border-color: #ff8aa4;
+}
+
+/* ------------------------- the locked field -------------------------
+   "Course or Service", filled from the page. It reads as a stated
+   fact rather than an empty box: brighter fill, a tick at the end,
+   and a caret that never appears because there is nothing to type.
+------------------------------------------------------------------ */
+.cenq-locked {
+  position: relative;
+  display: grid;
+}
+
+.cenq-locked input {
+  padding-right: 46px;
+  font-weight: 600;
+  color: var(--white);
+  background: rgba(37, 99, 235, 0.26);
+  border-color: rgba(96, 165, 250, 0.45);
+  cursor: default;
+}
+.cenq-locked input:focus {
+  background: rgba(37, 99, 235, 0.32);
+  border-color: var(--cyan);
+}
+
+.cenq-locked svg {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  translate: 0 -50%;
+  pointer-events: none;
+  color: var(--cyan);
+}
+
+.cenq-note {
+  font-size: 0.813rem;
+  line-height: 1.5;
+  color: rgba(200, 209, 245, 0.65);
+}
+
+/* The security check itself lives in components/SecurityCheck.css —
+   it is the same control on both forms and is styled once there. */
+
+.cenq-error {
+  font-size: 0.813rem;
+  color: #ff8aa4;
+}
+
+/* ---------------------------- send button --------------------------- */
+.cenq-submit {
+  width: 100%;
+  margin-top: 4px;
+  padding: 19px 24px;
+  border: 0;
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--grad-pill);
+  box-shadow: 0 20px 44px -20px rgba(37, 99, 235, 0.9);
+  cursor: pointer;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), filter 0.25s var(--ease);
+}
+.cenq-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+  box-shadow: 0 26px 54px -20px rgba(37, 99, 235, 1);
+}
+.cenq-submit:active:not(:disabled) { transform: translateY(0); }
+.cenq-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.cenq-status {
+  min-height: 1.2em;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  text-align: center;
+}
+.cenq-status span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+.cenq-status svg { flex: none; }
+.cenq-status .is-ok { color: #86efac; }
+.cenq-status .is-bad { color: #ff8aa4; }
+.cenq-status a { text-decoration: underline; text-underline-offset: 3px; }
+
+.cenq-foot {
+  margin-top: -6px;
+  text-align: center;
+  font-size: 0.875rem;
+  color: rgba(200, 209, 245, 0.62);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cenq-field,
+  .cenq-particles li { animation: none; }
+  .cenq-submit:hover:not(:disabled) { transform: none; }
+}
+
+/* --------------------------- responsive ---------------------------- */
+@media (max-width: 960px) {
+  .cenq-inner { grid-template-columns: 1fr; }
+  .cenq-title,
+  .cenq-text { max-width: none; }
+}
+
+@media (max-width: 560px) {
+  .cenq-row { grid-template-columns: 1fr; }
+  .cenq-facts { grid-template-columns: 1fr; }
+}

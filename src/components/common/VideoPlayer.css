@@ -1,0 +1,94 @@
+/* ==================================================================
+   The in-page video player.
+
+   Built from the same tokens as everything else — the card radius,
+   the brand gradient for the play button, the standard easing. It is
+   deliberately shape-only: whatever mounts it decides the width.
+================================================================== */
+
+/*
+  The preview is the button — one element, not a wrapper with an
+  absolutely positioned child. It opens the dialog; the video itself
+  never plays in here, so there is no iframe to position against.
+*/
+.vp {
+  position: relative;
+  display: grid;
+  place-items: center;
+  /* Reserved before the thumbnail loads, so nothing below jumps when
+     it arrives. Every provider here is 16:9. */
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--r-md);
+  background: var(--bg-ink);
+}
+
+.vp-thumb {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /*
+    YouTube's hqdefault is 4:3 with black bars top and bottom. Scaling
+    it to cover a 16:9 box crops those off, which is why this is not
+    `contain` — otherwise every still would sit inside its own letterbox
+    inside our letterbox.
+  */
+  object-fit: cover;
+  transition: transform 0.5s var(--ease), opacity 0.3s var(--ease);
+}
+
+.vp:hover .vp-thumb,
+.vp:focus-visible .vp-thumb {
+  transform: scale(1.04);
+  opacity: 0.85;
+}
+
+.vp-play {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: var(--grad-accent);
+  color: #fff;
+  box-shadow: var(--shadow-glow);
+  transition: transform 0.3s var(--ease);
+}
+
+/* the triangle reads as centred only when nudged off centre */
+.vp-play svg {
+  margin-left: 3px;
+}
+
+.vp:hover .vp-play,
+.vp:focus-visible .vp-play {
+  transform: scale(1.08);
+}
+
+.vp:focus-visible {
+  outline: 2px solid var(--electric);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vp-thumb,
+  .vp-play {
+    transition: none;
+  }
+
+  .vp:hover .vp-thumb,
+  .vp:focus-visible .vp-thumb {
+    transform: none;
+  }
+
+  .vp:hover .vp-play,
+  .vp:focus-visible .vp-play {
+    transform: none;
+  }
+}

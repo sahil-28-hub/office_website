@@ -1,0 +1,113 @@
+/* ==================================================================
+   §4 — a skill-building ecosystem.
+================================================================== */
+
+.apeco-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+}
+
+.apeco-copy .ap-title { max-width: 15ch; }
+
+/* ----------------------------- media ------------------------------ */
+.apeco-media { position: relative; }
+.apeco-shot { aspect-ratio: 5 / 4; }
+
+/* the glass panel overlapping the photograph — one translucent layer
+   sitting on a busy one is what makes the frosting read */
+.apeco-panel {
+  position: absolute;
+  right: clamp(-24px, -1.6vw, -8px);
+  bottom: clamp(-22px, -1.6vw, -10px);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: 290px;
+  padding: 16px 20px;
+  border-radius: var(--ap-r);
+}
+
+.apeco-panel-body { display: grid; gap: 2px; }
+
+.apeco-panel-body small {
+  font-family: var(--font-mono);
+  font-size: 0.688rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ap-muted);
+}
+
+.apeco-panel-body b {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ap-title);
+}
+
+.apeco-panel-body i {
+  font-style: normal;
+  font-size: 0.813rem;
+  color: var(--ap-muted);
+}
+
+/* ---------------------------- pillars ----------------------------- */
+.apeco-pillars {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: clamp(40px, 5vw, 72px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.apeco-pillar {
+  padding: 26px 24px 28px;
+  overflow: hidden;
+}
+
+.apeco-pillar h3 {
+  margin-top: 20px;
+  font-size: 1.08rem;
+  letter-spacing: -0.025em;
+  color: var(--ap-title);
+  transition: transform 0.4s var(--ease);
+}
+
+.apeco-pillar:hover h3 { transform: translateX(3px); }
+
+.apeco-pillar p {
+  margin-top: 10px;
+  font-size: 0.925rem;
+  line-height: 1.62;
+  color: var(--ap-muted);
+}
+
+.apeco-index {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--ap-muted);
+  opacity: 0.5;
+}
+
+/* --------------------------- responsive --------------------------- */
+@media (max-width: 1080px) {
+  .apeco-pillars { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .apeco-top { grid-template-columns: minmax(0, 1fr); }
+  .apeco-copy .ap-title { max-width: none; }
+  .apeco-panel { right: 8px; bottom: -18px; }
+}
+
+@media (max-width: 560px) {
+  .apeco-pillars { grid-template-columns: minmax(0, 1fr); }
+  .apeco-panel { position: static; max-width: none; margin-top: 16px; }
+}
+
+

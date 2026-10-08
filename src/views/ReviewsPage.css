@@ -1,0 +1,183 @@
+/* ==================================================================
+   Reviews — page-specific adjustments on top of the shared kit.
+================================================================== */
+
+/* the rails run full-bleed, so the section keeps its own padding but
+   the marquee ignores the shell */
+.tc-rv-rails { overflow: hidden; }
+
+.tc-rv-breakdown {
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  align-items: center;
+  gap: clamp(30px, 5vw, 80px);
+}
+
+.tc-rv-breakdown .tc-score { margin-top: 20px; }
+.tc-rv-breakdown .tc-stars { margin-top: 14px; }
+.tc-rv-total { margin-top: 14px; }
+
+/* before → after, inside a story step */
+.tc-rv-arc {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  color: var(--ap-muted);
+}
+
+.tc-rv-arc svg { width: 16px; height: 16px; color: var(--ap-accent); }
+
+.tc-rv-arc span {
+  padding: 6px 13px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--ap-line);
+  background: var(--ap-surface);
+}
+
+.tc-rv-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: clamp(16px, 1.8vw, 22px);
+  margin-top: clamp(28px, 3.2vw, 42px);
+  padding: 0;
+  list-style: none;
+}
+
+.tc-rv-grid > li { display: flex; }
+
+/* ------------------------- the course filter ----------------------
+   A native <select> under the site's glass pill: the list of courses
+   is long enough that a row of chips would wrap into three lines, and
+   the native control brings keyboard and touch behaviour with it.
+------------------------------------------------------------------ */
+.tc-select {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 1 340px;
+  padding: 13px 18px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--ap-line);
+  background: var(--ap-surface);
+  cursor: pointer;
+  transition: border-color 0.3s var(--ease), background 0.3s var(--ease),
+    transform 0.3s var(--ease);
+}
+
+.tc-select:hover {
+  transform: translateY(-2px);
+  border-color: var(--ap-line-lift);
+  background: var(--ap-surface-lift);
+}
+
+.tc-select:focus-within { border-color: var(--ap-line-lift); background: var(--ap-surface-lift); }
+
+.tc-select > svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  color: var(--ap-accent);
+}
+
+.tc-select select {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  padding: 0;
+  background: none;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--ap-title);
+  cursor: pointer;
+}
+
+/* the drop-down list itself is painted by the OS, so it needs a
+   surface of its own rather than the band's translucent one */
+.tc-select option {
+  background: var(--paper);
+  color: var(--ink-strong);
+}
+
+.tc-select-caret {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  color: var(--ap-muted);
+  transition: transform 0.3s var(--ease);
+}
+
+.tc-select:hover .tc-select-caret { transform: translateY(2px); }
+
+/* ---------------------------- pagination -------------------------- */
+.tc-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: clamp(30px, 3.4vw, 44px);
+}
+
+.tc-pager ul {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tc-pager button {
+  display: grid;
+  place-items: center;
+  min-width: 42px;
+  height: 42px;
+  padding: 0 12px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--ap-line);
+  background: var(--ap-surface);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--ap-text);
+  font-variant-numeric: tabular-nums;
+  transition: transform 0.3s var(--ease), border-color 0.3s var(--ease),
+    background 0.3s var(--ease), color 0.3s var(--ease), opacity 0.3s var(--ease);
+}
+
+.tc-pager button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: var(--ap-line-lift);
+  background: var(--ap-surface-lift);
+  color: var(--ap-title);
+}
+
+.tc-pager button[aria-current='page'] {
+  color: var(--white);
+  border-color: transparent;
+  background: var(--grad-pill);
+  box-shadow: var(--shadow-glow);
+}
+
+.tc-pager button:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.tc-pager-step svg { width: 17px; height: 17px; }
+
+/* the previous arrow is the next arrow, turned round */
+.tc-pager-step:first-child svg { transform: rotate(180deg); }
+
+@media (max-width: 900px) {
+  .tc-rv-breakdown { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .tc-select { flex: 1 1 100%; }
+  .tc-pager { flex-wrap: wrap; }
+}

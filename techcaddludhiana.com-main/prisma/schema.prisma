@@ -1,0 +1,190 @@
+// ==================================================================
+//  Two tables, one database, one connection.
+//
+//    leads              every enquiry the site takes — six forms
+//    team_applications  applications to work here — /team
+//
+//  Both are reached through the same PrismaClient in server/lib/db.js
+//  and the same DATABASE_URL in .env. Adding the second table did not
+//  add a second credential, a second pool or a second env file.
+//
+//  EVERY row in both tables carries `source`, naming the form that
+//  produced it. Seven forms, seven values:
+//
+//    leads              course-enquiry    the course enquiry section
+//                       course-brochure   the brochure download gate
+//                       book-demo         the book-a-demo modal
+//                       home-cta          the home page CTA
+//                       about-cta         the about page CTA
+//                       contact           the message form on /contact
+//    team_applications  team-application  the form on /team
+//
+//  The list is enforced at both ends: LEAD_SOURCES in
+//  src/lib/submitLead.js, SOURCES in server/lib/validate.js. A row can
+//  never arrive with a source nobody recognises.
+//
+//  database/schema.sql defines an `all_form_submissions` view that
+//  unions the two tables, so "every submission, newest first, with the
+//  form named" is one SELECT rather than two.
+// ==================================================================
+
+// ==================================================================
+//  Every enquiry the site takes, in one table.
+//
+//  Six forms feed it — the course enquiry, the brochure gate, the
+//  book-a-demo modal, the home CTA, the about CTA and the contact
+//  form — and they all arrive through POST /api/leads. One table
+//  rather than six means the counselling team has one place to look
+//  and one export to run, and `source` says which form it came from.
+//
+//  Nothing here is ever assembled as a SQL string. Prisma sends every
+//  write as a parameterised statement, so a name of
+//  "Robert'; DROP TABLE leads;--" is stored as those literal
+//  characters and is never parsed as SQL. See server/routes/leads.js
+//  for the validation that runs before it gets this far.
+// ==================================================================
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Lead {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  /// which form this came from — "course-enquiry", "course-brochure",
+  /// "book-demo", "home-cta", "about-cta", "contact"
+  source String @db.VarChar(40)
+
+  /// The home CTA and the about CTA ask for a number and nothing
+  /// else, so a lead can genuinely arrive without one. Which forms
+  /// require it is in server/lib/validate.js.
+  name String? @db.VarChar(120)
+
+  /// stored as the ten digits, so two spellings of the same number are
+  /// one number when the team searches for it
+  phone String  @db.VarChar(15)
+  email String? @db.VarChar(190)
+
+  /// the course the enquiry is about, where there is one
+  course     String? @db.VarChar(160)
+  courseSlug String? @db.VarChar(120)
+
+  message String? @db.Text
+
+  /// whatever else the form carried — category, duration, centre,
+  /// preferred mode. JSON so a new field on one form does not need a
+  /// migration for all five.
+  details Json?
+
+  /// which page it was sent from, for seeing what actually converts
+  page String? @db.VarChar(500)
+
+  /// operational, not marketing: enough to rate-limit and to trace a
+  /// spam run, and nothing that identifies a person on its own
+  ip        String? @db.VarChar(45)
+  userAgent String? @db.VarChar(400)
+
+  /// the counselling team's own workflow
+  status LeadStatus @default(NEW)
+  notes  String?    @db.Text
+
+  @@index([createdAt])
+  @@index([source, createdAt])
+  @@index([phone])
+  @@map("leads")
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  ENROLLED
+  CLOSED
+}
+
+// ==================================================================
+//  Applications to work here — the form at the bottom of /team.
+//
+//  A second table in the SAME database, not a sixth `source` on
+//  `leads`. An application carries a role and an experience figure a
+//  lead has no columns for, it is read by different people, and
+//  mixing the two would leave the counselling desk filtering CVs out
+//  of their morning call list.
+//
+//  Same connection, same pool, same DATABASE_URL — one Prisma client
+//  serves both models. See server/routes/team.js.
+//
+//  Every row in BOTH tables carries `source`, naming the form that
+//  produced it. Seven forms, seven values:
+//
+//    leads              course-enquiry    the course enquiry section
+//                       course-brochure   the brochure download gate
+//                       book-demo         the book-a-demo modal
+//                       home-cta          the home page CTA
+//                       about-cta         the about page CTA
+//                       contact           the message form on /contact
+//    team_applications  team-application  the form on /team
+// ==================================================================
+
+model TeamApplication {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  /// Which form produced the row — the same column, the same name and
+  /// the same job as `Lead.source`. There is only one form writing
+  /// here today, so this is nearly always "team-application"; it
+  /// exists so that EVERY row in the database names its own origin
+  /// without the reader having to know which table they are looking
+  /// at. It is what makes the all_form_submissions view honest, and
+  /// what a second form on this page would fill in differently.
+  source String @default("team-application") @db.VarChar(40)
+
+  name String @db.VarChar(120)
+  phone String @db.VarChar(15)
+
+  /// optional on the form, because a good trainer who only answers
+  /// their phone should not be turned away by a required field
+  email String? @db.VarChar(190)
+
+  /// the role applied for, from the list in src/data/team.js
+  role String @db.VarChar(120)
+
+  /// free text on purpose — "6 years", "fresher", "2.5 yrs agency"
+  experience String? @db.VarChar(60)
+
+  /// a portfolio, GitHub, LinkedIn — whatever they want read
+  portfolio String? @db.VarChar(500)
+
+  /// what they teach and where they have done it
+  message String? @db.Text
+
+  /// which page it was sent from, for the same reason `leads` keeps it
+  page String? @db.VarChar(500)
+
+  /// operational only: enough to rate-limit and trace a spam run
+  ip        String? @db.VarChar(45)
+  userAgent String? @db.VarChar(400)
+
+  /// the hiring side's own workflow
+  status TeamApplicationStatus @default(NEW)
+  notes  String?               @db.Text
+
+  @@index([createdAt])
+  @@index([source, createdAt])
+  @@index([role, createdAt])
+  @@index([phone])
+  @@map("team_applications")
+}
+
+enum TeamApplicationStatus {
+  NEW
+  REVIEWING
+  INTERVIEW
+  HIRED
+  CLOSED
+}

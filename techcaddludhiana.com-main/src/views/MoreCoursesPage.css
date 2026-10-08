@@ -1,0 +1,143 @@
+/* ==================================================================
+   "More Courses" category pages. Everything else comes from
+   page-kit.css; these are the pieces only this page has.
+================================================================== */
+
+/* ---------------- §2 intro ---------------- */
+.mc-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: start;
+}
+.mc-intro .ap-head { max-width: none; }
+.mc-intro .ap-lead + .ap-lead { margin-top: 14px; }
+
+.mc-points {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: clamp(20px, 2.4vw, 28px);
+  list-style: none;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  background: var(--paper-tint);
+}
+.mc-points li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ink-strong);
+}
+.mc-points svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  padding: 3px;
+  border-radius: 50%;
+  background: var(--electric);
+  color: var(--white);
+}
+
+@media (max-width: 900px) {
+  .mc-intro { grid-template-columns: 1fr; }
+}
+
+/* ---------------- jump bar ---------------- */
+.mc-jump {
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 5;
+  padding-block: 14px;
+  border-block: 1px solid var(--rule-soft);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.mc-jump ul {
+  display: flex;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.mc-jump ul::-webkit-scrollbar { display: none; }
+.mc-jump .ap-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.mc-jump .ap-chip b {
+  padding: 1px 8px;
+  border-radius: var(--r-pill);
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--electric);
+  font-size: 0.75rem;
+}
+
+/* anchors land below the nav and the sticky jump bar */
+.mc-group { scroll-margin-top: calc(var(--nav-h) + 64px); }
+
+/* ---------------- cards ---------------- */
+/* Two letters standing in for a course photograph. */
+.mc-mark {
+  position: absolute;
+  inset: 0 0 18%;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 5vw, 4.25rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 12px 34px rgba(6, 14, 43, 0.35);
+}
+
+.mc-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin: 2px 0 6px;
+  padding: 0;
+  list-style: none;
+}
+.mc-topics li {
+  position: relative;
+  padding-left: 12px;
+  font-size: 0.78rem;
+  color: rgba(214, 221, 246, 0.85);
+}
+.mc-topics li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--cyan);
+}
+
+/* the pill is a <button> on cards with no course page yet */
+button.tc-course-more {
+  width: 100%;
+  border: 0;
+  cursor: pointer;
+}
+
+/* ---------------- §5 FAQ ---------------- */
+.mc-faq {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .mc-faq { grid-template-columns: 1fr; }
+}

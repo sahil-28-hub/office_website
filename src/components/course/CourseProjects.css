@@ -1,0 +1,283 @@
+.cproj { position: relative; }
+.cproj .shell { position: relative; }
+
+/* --------------------------- featured ----------------------------- */
+.cproj-feature {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 56px);
+  align-items: center;
+  margin-top: clamp(40px, 5vw, 64px);
+  padding: clamp(24px, 3vw, 40px);
+  border-radius: 28px;
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--hairline);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: transform 0.5s var(--ease), border-color 0.5s var(--ease);
+}
+
+.cproj-feature:hover { transform: translateY(-4px); border-color: rgba(34, 211, 238, 0.28); }
+.cproj-feature:hover .cproj-window { transform: scale(1.02); }
+
+.cproj-feature-visual { position: relative; }
+
+.cproj-window {
+  position: relative;
+  z-index: 1;
+  border-radius: 18px;
+  overflow: hidden;
+  background: linear-gradient(160deg, var(--bg-ink-deep), var(--bg-ink));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.9);
+  transition: transform 0.5s var(--ease);
+}
+
+.cproj-window-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+.cproj-window-bar i {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+}
+.cproj-window-bar span {
+  margin-left: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.688rem;
+  color: var(--mist-dim);
+}
+
+.cproj-window pre {
+  margin: 0;
+  padding: 18px 18px 22px;
+  font-family: var(--font-mono);
+  font-size: clamp(0.688rem, 0.95vw, 0.813rem);
+  line-height: 1.9;
+  color: #cbd5ff;
+  overflow-x: auto;
+}
+.cproj-window code { display: block; white-space: pre; }
+
+.cproj-feature-glow {
+  position: absolute;
+  inset: 12% -6% -14% 8%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.4), transparent 68%);
+  filter: blur(46px);
+  z-index: 0;
+}
+
+.cproj-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-mono);
+  font-size: 0.688rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+.cproj-pip {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--py-gold);
+  box-shadow: 0 0 10px var(--py-gold);
+}
+
+.cproj-feature-copy h3 {
+  margin-top: 14px;
+  font-size: clamp(1.625rem, 2.8vw, 2.25rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.cproj-feature-text {
+  margin-top: 14px;
+  line-height: 1.7;
+  color: var(--mist);
+}
+
+.cproj-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.cproj-tags--sm { margin-top: 14px; }
+
+.cproj-facts {
+  display: flex;
+  gap: 34px;
+  margin: 24px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--hairline);
+}
+.cproj-facts dt {
+  font-family: var(--font-mono);
+  font-size: 0.688rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mist-dim);
+}
+.cproj-facts dd {
+  margin: 6px 0 0;
+  font-weight: 600;
+  color: var(--white);
+}
+.cproj-facts dd.is-ready { color: #9ef6c0; }
+
+.cproj-cta { margin-top: 26px; }
+
+/* ---------------------------- grid --------------------------------
+   Even three-up. The old six-column grid with mixed spans was there to
+   make the cards look like a magazine layout; with five projects it
+   just left a hole and a lonely last card. */
+.cproj-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(14px, 1.5vw, 20px);
+  margin-top: 18px;
+  padding: 0;
+  list-style: none;
+}
+
+.cproj-cell { display: flex; }
+
+.cproj-card {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 236px;
+  padding: clamp(20px, 2vw, 26px);
+  border-radius: var(--card-r);
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid var(--hairline);
+  overflow: hidden;
+  transition: transform 0.45s var(--ease), background 0.45s var(--ease),
+    border-color 0.45s var(--ease), box-shadow 0.45s var(--ease);
+}
+
+/* the wash that replaces the picture: a corner of the section's own
+   blue, low enough to read as surface rather than as a panel */
+.cproj-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(80% 70% at 100% 0%, rgba(37, 99, 235, 0.5) 0%, transparent 62%);
+  opacity: 0.16;
+  transition: opacity 0.45s var(--ease);
+}
+
+.cproj-card:hover {
+  transform: translateY(-6px);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(34, 211, 238, 0.34);
+  box-shadow: 0 40px 70px -40px rgba(0, 0, 0, 0.95);
+}
+.cproj-card:hover::before { opacity: 0.32; }
+.cproj-card:hover .cproj-card-arrow { transform: translate(3px, -3px); color: var(--cyan); }
+.cproj-card:hover .cproj-card-ghost { color: rgba(34, 211, 238, 0.14); transform: translateY(5px); }
+
+/* The numeral, set large and nearly transparent in the corner. It is
+   the texture the gradient panel used to provide, at none of its cost
+   and without pretending to be a screenshot. */
+.cproj-card-ghost {
+  position: absolute;
+  /* bleeds off the bottom only. Letting it run off the right edge too
+     cut the second digit in half, which read as a rendering fault
+     rather than as deliberate. */
+  right: 14px;
+  bottom: -20px;
+  font-family: var(--font-display);
+  font-size: 6.5rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  color: rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+  transition: color 0.45s var(--ease), transform 0.55s var(--ease);
+}
+
+.cproj-card-no {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.cproj-card-pip {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.16);
+}
+
+.cproj-card h3 {
+  position: relative;
+  margin-top: 14px;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.cproj-card-text {
+  position: relative;
+  margin-top: 9px;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--mist-dim);
+}
+
+/* pinned to the foot, so every card in a row ends on the same line
+   whatever the length of its description */
+.cproj-card .cproj-tags {
+  position: relative;
+  margin-top: auto;
+  padding-top: 18px;
+}
+
+.cproj-card-arrow {
+  position: absolute;
+  right: clamp(18px, 2vw, 24px);
+  top: clamp(18px, 2vw, 24px);
+  color: rgba(255, 255, 255, 0.45);
+  transition: transform 0.4s var(--ease), color 0.4s var(--ease);
+}
+
+.skel-card { padding: 4px; }
+
+@media (max-width: 900px) {
+  .cproj-feature { grid-template-columns: 1fr; }
+  .cproj-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 620px) {
+  .cproj-grid { grid-template-columns: 1fr; gap: 14px; }
+  .cproj-card { min-height: 0; }
+  .cproj-card-ghost { font-size: 5rem; }
+  .cproj-facts { gap: 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cproj-card,
+  .cproj-card::before,
+  .cproj-card-ghost,
+  .cproj-card-arrow { transition: none; }
+}

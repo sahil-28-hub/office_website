@@ -1,0 +1,228 @@
+/* =================================================================
+   The techcadd Difference — heading stays put; two pairs of cards
+   fly in from the left/right to the same centred slots, hold, then
+   pair 1 exits upward as pair 2 arrives in its place. One --progress
+   custom property (0→1, set by a scroll listener in WhyTechCadd.jsx)
+   drives every transform via calc() — no per-frame React renders.
+   Light panel: lifts over the dark CourseCategories section above it.
+================================================================= */
+
+.wt {
+  position: relative;
+  overflow: hidden;
+  margin-top: calc(-1 * clamp(24px, 3.2vw, 46px));
+  border-radius: clamp(24px, 3.2vw, 46px) clamp(24px, 3.2vw, 46px) 0 0;
+  background:
+    radial-gradient(60% 55% at 85% 0%, rgba(37, 99, 235, 0.06) 0%, transparent 60%),
+    radial-gradient(55% 50% at 10% 100%, rgba(28, 83, 209, 0.06) 0%, transparent 60%),
+    var(--paper);
+}
+
+.wt-scroll {
+  position: relative;
+  height: 240vh;
+  --progress: 0;
+  /* sub-progress windows derived from --progress, shared by every card:
+     arrive1  0    → 0.3   pair 1 slides in and settles
+     hold1    0.3  → 0.48  pair 1 sits still, readable
+     shift    0.48 → 0.76  pair 1 exits up + fades while pair 2 arrives
+     hold2    0.76 → 1     pair 2 sits still */
+  --p-arrive1: clamp(0, calc(var(--progress) / 0.3), 1);
+  --p-shift: clamp(0, calc((var(--progress) - 0.48) / 0.28), 1);
+}
+
+.wt-stage {
+  /* position/top/bottom are set inline by JS — fixed while the
+     wrapper is in range, absolute top/bottom before and after. */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: clamp(2rem, 5vw, 3.5rem) 0;
+}
+
+/* ---------------- heading ---------------- */
+.wt-heading {
+  flex: none;
+  max-width: 640px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.wt-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 16px 7px 13px;
+  margin-bottom: 16px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  box-shadow: 0 14px 30px -22px rgba(11, 26, 77, 0.3);
+  font-family: var(--font-mono);
+  font-size: var(--step-eyebrow);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.wt-eyebrow .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--electric);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.16);
+  animation: wt-blink 2.4s ease-in-out infinite;
+}
+@keyframes wt-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.wt-title {
+  font-size: clamp(1.7rem, 3.4vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.12;
+  color: var(--ink-strong);
+}
+.wt-title-accent {
+  background: var(--grad-ink);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.wt-sub {
+  max-width: 54ch;
+  margin: 14px auto 0;
+  color: var(--ink-body);
+  font-size: var(--step-body);
+  line-height: 1.6;
+}
+.wt-sub b {
+  color: var(--ink-strong);
+  font-weight: 700;
+}
+
+/* ---------------- the card stage ---------------- */
+.wt-cards {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.wt-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(43vw, 420px);
+  padding: clamp(1.5rem, 2.6vw, 2.25rem);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  box-shadow: var(--shadow-lift);
+}
+
+/* left-slot cards (pair 1 and pair 2 share the same resting spot) */
+.wt-card--l1,
+.wt-card--l2 {
+  transform: translate(calc(-100% - 12px), -50%);
+}
+/* right-slot cards */
+.wt-card--r1,
+.wt-card--r2 {
+  transform: translate(12px, -50%);
+}
+
+/* pair 1: slide in from the left/right edge, hold, then lift + fade */
+.wt-card--l1 {
+  transform:
+    translate(calc(-100% - 12px + (1 - var(--p-arrive1)) * -60vw), calc(-50% + var(--p-shift) * -130px));
+  opacity: calc(var(--p-arrive1) * (1 - var(--p-shift)));
+}
+.wt-card--r1 {
+  transform:
+    translate(calc(12px + (1 - var(--p-arrive1)) * 60vw), calc(-50% + var(--p-shift) * -130px));
+  opacity: calc(var(--p-arrive1) * (1 - var(--p-shift)));
+}
+
+/* pair 2: hidden off to the side until the shift window, then arrives
+   in the exact same slots pair 1 just vacated */
+.wt-card--l2 {
+  transform: translate(calc(-100% - 12px + (1 - var(--p-shift)) * -60vw), -50%);
+  opacity: var(--p-shift);
+}
+.wt-card--r2 {
+  transform: translate(calc(12px + (1 - var(--p-shift)) * 60vw), -50%);
+  opacity: var(--p-shift);
+}
+
+.wt-card-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 16px;
+  border-radius: var(--r-md);
+  color: var(--white);
+}
+.wt-card-icon svg {
+  width: 22px;
+  height: 22px;
+}
+.wt-card[data-tone='blue'] .wt-card-icon { background: linear-gradient(155deg, #1d4ed8, #22d3ee); }
+.wt-card[data-tone='violet'] .wt-card-icon { background: linear-gradient(155deg, #1c53d1, #2563eb); }
+.wt-card[data-tone='cyan'] .wt-card-icon { background: linear-gradient(155deg, #22d3ee, #1d4ed8); }
+.wt-card[data-tone='warm'] .wt-card-icon { background: linear-gradient(155deg, #ffb020, #ff6a3d); }
+
+.wt-card-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+  color: var(--ink-strong);
+  margin-bottom: 8px;
+}
+
+.wt-card-text {
+  font-size: 0.938rem;
+  line-height: 1.6;
+  color: var(--ink-body);
+}
+
+/* =================================================================
+   Below 860px the pin/scroll-jack is more fragile than useful (see
+   CourseCategories.css). Fall back to a plain stacked list of all
+   four cards — same treatment for prefers-reduced-motion.
+================================================================= */
+@media (max-width: 860px), (prefers-reduced-motion: reduce) {
+  .wt-scroll {
+    height: auto;
+  }
+  .wt-stage {
+    position: static;
+    height: auto;
+    display: block;
+  }
+  .wt-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: clamp(1.75rem, 4vw, 2.5rem);
+    padding: 0 var(--gutter) clamp(28px, 6vw, 46px);
+  }
+  .wt-card {
+    position: static;
+    width: auto;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wt-eyebrow .dot {
+    animation: none;
+  }
+}

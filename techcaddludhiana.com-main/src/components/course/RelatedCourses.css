@@ -1,0 +1,97 @@
+.crel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  margin: clamp(32px, 4.5vw, 52px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.crel-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 26px 24px 22px;
+  border-radius: var(--card-r);
+  background: var(--paper);
+  border: 1px solid var(--rule-soft);
+  color: inherit;
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease), border-color 0.4s var(--ease);
+}
+
+.crel-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(37, 99, 235, 0.32);
+  box-shadow: var(--shadow-lift);
+}
+
+.crel-tag {
+  align-self: flex-start;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-mono);
+  font-size: 0.688rem;
+  letter-spacing: 0.04em;
+  color: var(--indigo);
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.16);
+}
+
+.crel-name {
+  margin-top: 16px;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--ink-strong);
+  letter-spacing: -0.01em;
+}
+
+.crel-text {
+  margin-top: 8px;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--ink-body);
+  flex: 1;
+}
+
+.crel-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule-soft);
+}
+
+.crel-duration {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+}
+
+.crel-arrow {
+  width: 30px;
+  height: 30px;
+  margin-left: auto;
+}
+.crel-arrow svg { width: 14px; height: 14px; }
+
+.crel-card:hover .crel-arrow {
+  background: var(--grad-pill);
+  color: var(--white);
+  border-color: transparent;
+}
+
+.crel-all {
+  display: flex;
+  width: fit-content;
+  margin: clamp(30px, 4vw, 44px) auto 0;
+}
+
+@media (max-width: 980px) {
+  .crel-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 620px) {
+  .crel-grid { grid-template-columns: 1fr; gap: 14px; }
+}

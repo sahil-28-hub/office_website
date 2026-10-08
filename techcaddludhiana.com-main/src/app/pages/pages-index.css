@@ -1,0 +1,92 @@
+/* A plain index: these are reference pages, and the card's job is to
+   name one and get out of the way. */
+
+/* The band is as tall as its contents, not the full-height slab the
+   editorial sections use — this page is usually a short list and the
+   default padding left it mostly empty space. */
+.tc-page--pages .ap-sec {
+  padding-top: clamp(36px, 4vw, 56px);
+  padding-bottom: clamp(44px, 5vw, 72px);
+}
+
+/*
+  `auto-fill`, not `auto-fit`.
+
+  They differ on exactly one thing and it is the thing that matters
+  here: auto-fit collapses the empty tracks and lets the surviving
+  items stretch across all of them, so a site with one page rendered a
+  single card a metre wide. auto-fill keeps the empty tracks, so one
+  card is one card's width and the row fills left to right as pages are
+  added.
+*/
+.pgx-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: 14px;
+  list-style: none;
+  padding: 0;
+}
+
+.pgx-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 100%;
+  padding: 16px 18px;
+  border: 1px solid var(--line-soft, rgba(11, 26, 77, 0.1));
+  border-radius: 16px;
+  background: #fff;
+  text-decoration: none;
+  transition: border-color 0.3s var(--ease), transform 0.3s var(--ease),
+    box-shadow 0.3s var(--ease);
+}
+.pgx-card:hover {
+  border-color: rgba(11, 26, 77, 0.22);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+}
+
+.pgx-card-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(37, 99, 235, 0.1);
+  color: #1d4ed8;
+  transition: background-color 0.3s var(--ease), color 0.3s var(--ease);
+}
+.pgx-card:hover .pgx-card-icon {
+  background: #1d4ed8;
+  color: #fff;
+}
+
+.pgx-card-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.35;
+  color: var(--ink-strong);
+}
+
+.pgx-card-arrow {
+  display: grid;
+  place-items: center;
+  flex: none;
+  color: var(--ink-muted);
+  transition: color 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.pgx-card:hover .pgx-card-arrow {
+  color: #1d4ed8;
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pgx-card,
+  .pgx-card-icon,
+  .pgx-card-arrow { transition: none; }
+  .pgx-card:hover,
+  .pgx-card:hover .pgx-card-arrow { transform: none; }
+}

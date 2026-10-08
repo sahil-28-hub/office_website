@@ -1,0 +1,96 @@
+/* ==================================================================
+   Skeletons.
+
+   One shimmer, two palettes. A skeleton sits inside a band that is
+   either paper or ink, and it has to read as "content arriving" on
+   both — so the tone is a data attribute rather than two components.
+
+   The shimmer is a single background-position animation on a
+   gradient. No box-shadow, no opacity keyframes, nothing that forces
+   a repaint of the layer underneath.
+================================================================== */
+
+.sk {
+  --sk-base: rgba(11, 26, 77, 0.07);
+  --sk-sheen: rgba(11, 26, 77, 0.13);
+  --sk-r: 8px;
+
+  display: block;
+  border-radius: var(--sk-r);
+  background-color: var(--sk-base);
+  background-image: linear-gradient(
+    100deg,
+    transparent 20%,
+    var(--sk-sheen) 42%,
+    var(--sk-sheen) 58%,
+    transparent 80%
+  );
+  background-size: 260% 100%;
+  background-repeat: no-repeat;
+  background-position: 130% 0;
+  animation: sk-sweep 1.5s var(--ease) infinite;
+}
+
+/* on a dark band the same shimmer, lifted out of the navy */
+.sk[data-tone='ink'] {
+  --sk-base: rgba(255, 255, 255, 0.07);
+  --sk-sheen: rgba(255, 255, 255, 0.14);
+}
+
+@keyframes sk-sweep {
+  to { background-position: -130% 0; }
+}
+
+/* shapes ----------------------------------------------------------- */
+.sk--text { height: 0.85em; border-radius: 5px; }
+.sk--title { height: 1.7em; border-radius: 7px; }
+.sk--pill { height: 34px; border-radius: var(--r-pill); }
+.sk--card { border-radius: var(--r-lg); }
+.sk--circle { border-radius: 50%; aspect-ratio: 1; }
+
+/* a paragraph of staggered lines, last one short like real text */
+.sk-lines { display: grid; gap: 10px; }
+.sk-lines > .sk:last-child { width: 62%; }
+
+/* Section placeholder — what a deferred band shows before its chunk
+   lands. It reserves the band's height so nothing below it jumps, and
+   carries the band's own tone so the light/dark rhythm down the page
+   is unbroken even while a section is still arriving. */
+.sk-section {
+  display: grid;
+  align-content: center;
+  gap: 18px;
+  padding: clamp(3.5rem, 6vw, 5.5rem) 0;
+  background: var(--paper);
+}
+
+.sk-section[data-band='tint'] { background: var(--paper-tint); }
+.sk-section[data-band='ink'] { background: var(--bg-ink); }
+
+.sk-section .sk-head {
+  display: grid;
+  gap: 14px;
+  max-width: 620px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.sk-section .sk-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: clamp(16px, 2vw, 26px);
+  margin-top: clamp(20px, 3vw, 40px);
+}
+
+/* image placeholder — sits behind an <img> until it decodes, so a
+   slow photograph shows a shimmering plate instead of a white hole */
+.sk-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk { animation: none; background-image: none; }
+}

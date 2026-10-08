@@ -1,0 +1,63 @@
+/* ==================================================================
+   §6 — learning for every stage of the career journey.
+================================================================== */
+
+.apaud-head { max-width: 44ch; }
+
+.apaud-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin: clamp(36px, 4.6vw, 62px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.apaud-card {
+  display: flex;
+  flex-direction: column;
+  padding: 26px 26px 30px;
+  overflow: hidden;
+}
+
+.apaud-card header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.apaud-card h3 {
+  margin-top: 22px;
+  font-size: 1.14rem;
+  letter-spacing: -0.025em;
+  color: var(--ap-title);
+  transition: transform 0.4s var(--ease);
+}
+
+.apaud-card:hover h3 { transform: translateX(3px); }
+
+.apaud-card p {
+  margin-top: 12px;
+  font-size: 0.938rem;
+  line-height: 1.65;
+  color: var(--ap-muted);
+}
+
+/* a rule that draws itself across the foot of the card on hover */
+.apaud-edge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--ap-accent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.55s var(--ease);
+}
+
+.apaud-card:hover .apaud-edge { transform: scaleX(1); }
+
+@media (max-width: 1000px) { .apaud-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 620px) { .apaud-grid { grid-template-columns: minmax(0, 1fr); } }

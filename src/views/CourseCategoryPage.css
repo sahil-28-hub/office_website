@@ -1,0 +1,48 @@
+/* ==================================================================
+   Category pages and the category links that point at them.
+
+   The page itself is built from the kit — banner, course cards, the
+   shared CTA — so all that is left to style is the row of links.
+   `.cat-links` is also used on /courses, under the catalogue's filter.
+================================================================== */
+
+.tc-page--category .tc-courses { margin-top: clamp(28px, 3.4vw, 44px); }
+
+.cat-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: clamp(20px, 2.6vw, 32px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cat-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ink-strong);
+  text-decoration: none;
+  transition: border-color 0.25s var(--ease), color 0.25s var(--ease);
+}
+.cat-links a:hover {
+  border-color: var(--electric);
+  color: var(--electric);
+}
+.cat-links svg { flex: none; transition: transform 0.25s var(--ease); }
+.cat-links a:hover svg { transform: translateX(3px); }
+
+/* on /courses the row sits between the filter and the grid */
+.cat-links--inline { margin-top: 14px; }
+.cat-links--inline a { padding: 7px 14px; font-size: 0.813rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cat-links a,
+  .cat-links svg { transition: none; }
+}

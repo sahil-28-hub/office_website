@@ -1,0 +1,166 @@
+/* ==================================================================
+   Gallery banner.
+
+   Same construction as the home page's dark sections: vertical ink
+   gradient, the periwinkle grid under a radial mask, two blurred
+   orbs, and the glass eyebrow pill.
+================================================================== */
+
+.ghero {
+  position: relative;
+  overflow: hidden;
+  padding-top: calc(var(--nav-h) + clamp(56px, 9vh, 104px));
+  padding-bottom: clamp(52px, 7vh, 92px);
+  background: linear-gradient(180deg, var(--bg-ink) 0%, var(--bg-ink-deep) 100%);
+  color: var(--mist);
+}
+
+.ghero-bg { position: absolute; inset: 0; pointer-events: none; }
+
+.ghero-grid {
+  position: absolute;
+  inset: -10% -10% 0;
+  background-image:
+    linear-gradient(rgba(147, 197, 253, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(147, 197, 253, 0.07) 1px, transparent 1px);
+  background-size: 68px 68px;
+  mask-image: radial-gradient(75% 65% at 50% 40%, #000 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(75% 65% at 50% 40%, #000 30%, transparent 100%);
+}
+
+.ghero-orb {
+  position: absolute;
+  top: -18%;
+  left: -8%;
+  width: 42vw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.55;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.75), transparent 68%);
+}
+
+.ghero-orb--two {
+  top: auto;
+  bottom: -30%;
+  left: auto;
+  right: -10%;
+  width: 36vw;
+  background: radial-gradient(circle, rgba(28, 83, 209, 0.6), transparent 68%);
+}
+
+/* ---------------------------- content ----------------------------- */
+.ghero-inner {
+  position: relative;
+  z-index: 2;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+}
+
+.ghero.is-visible .ghero-inner { opacity: 1; transform: none; }
+
+.ghero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px 8px 12px;
+  margin-bottom: 26px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--hairline);
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: var(--font-mono);
+  font-size: var(--step-eyebrow);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.ghero-eyebrow .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.16);
+  animation: ghero-blink 2.4s ease-in-out infinite;
+}
+
+@keyframes ghero-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.ghero-title {
+  max-width: 18ch;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5.4vw, 4rem);
+  line-height: 1.02;
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  color: var(--white);
+}
+
+.ghero-title-accent {
+  background: var(--grad-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ghero-sub {
+  max-width: 56ch;
+  margin-top: 20px;
+  font-size: var(--step-lead);
+  line-height: 1.65;
+  color: var(--mist-dim);
+}
+
+/* ----------------------------- facts ------------------------------ */
+.ghero-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: clamp(30px, 4vw, 46px) 0 0;
+}
+
+.ghero-facts > div {
+  padding: 4px 26px 4px 0;
+  margin-right: 26px;
+  border-right: 1px solid var(--hairline);
+}
+
+.ghero-facts > div:last-child { border-right: 0; margin-right: 0; padding-right: 0; }
+
+.ghero-facts dt {
+  font-family: var(--font-mono);
+  font-size: 0.688rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mist-dim);
+}
+
+.ghero-facts dd {
+  margin: 6px 0 0;
+  font-size: 0.975rem;
+  font-weight: 600;
+  color: var(--white);
+}
+
+@media (max-width: 560px) {
+  .ghero-facts > div {
+    padding-right: 0;
+    margin-right: 0;
+    border-right: 0;
+    flex: 1 1 100%;
+    padding-block: 10px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .ghero-facts > div:last-child { border-bottom: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ghero-eyebrow .dot { animation: none; }
+  .ghero-inner { opacity: 1; transform: none; transition: none; }
+}

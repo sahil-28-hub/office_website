@@ -1,0 +1,103 @@
+:root {
+  /* ---- Brand palette, matched to techcaddjalandhar.com ---- */
+  --ink: #060e2b;           /* dark navy canvas */
+  --ink-deep: #030818;      /* deepest vignette */
+  --indigo: #0c1f6c;        /* logo navy */
+  --indigo-lift: #123285;   /* raised indigo surfaces */
+  --electric: #2563eb;      /* primary royal blue */
+  --violet: #1c53d1;        /* secondary deep blue (name kept for compatibility) */
+  --cyan: #22d3ee;          /* tech accent glow */
+  --sky: #0ea5e9;           /* secondary accent */
+  --gold: #ffd23f;          /* highlight accent — see --grad-gold */
+  --gold-soft: #ffe27a;
+  --gold-deep: #f5b301;
+
+  /* ---- Dark section surfaces ----
+     --bg-ink is the page-level dark used by every dark band, so the
+     site can alternate light / dark / light down the page. Cards and
+     panels sitting on it step UP to --bg-ink-card, which is what gives
+     them depth against the darker page behind. */
+  --bg-ink: #0b1a4d;
+  --bg-ink-card: #142a6b;
+  --bg-ink-deep: #060e2b;   /* the darker end of a dark band's gradient */
+
+  --white: #ffffff;
+  --mist: #cbd5e1;          /* body text on dark */
+  --mist-dim: #94a3c4;      /* captions, meta */
+
+  --glass: rgba(255, 255, 255, 0.06);
+  --glass-strong: rgba(255, 255, 255, 0.1);
+  --hairline: rgba(255, 255, 255, 0.12);
+
+  --grad-accent: linear-gradient(100deg, var(--cyan) 0%, #3b82f6 45%, var(--violet) 100%);
+  /* The yellow contrast from techcaddjalandhar.com. Yellow TEXT and
+     icons go on dark surfaces only — hero and dark-band headline accents,
+     icon tiles, stars. On paper it is used only as a fill behind dark
+     text (the "Hot" badges). Never put white text on it. */
+  --grad-gold: linear-gradient(100deg, var(--gold-soft) 0%, var(--gold) 50%, var(--gold-deep) 110%);
+  --grad-pill: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 55%, #22d3ee 130%);
+
+  /* ---- Type ----
+     next/font injects the loaded families through the CSS variables
+     --font-display, --font-body, --font-mono set on <html> via the
+     className in app/layout.tsx. The fallback stacks cover the flash
+     before the variable fonts arrive. */
+  --font-display: 'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --step-eyebrow: 0.688rem;
+  --step-small: 0.813rem;
+  --step-body: 1.063rem;
+  --step-lead: 1.188rem;
+  --step-display: clamp(3rem, 8.2vw, 6.25rem);
+
+  /* ---- Layout ---- */
+  --shell: 1240px;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+  --nav-h: 76px;
+}
+
+/* kept in sync with the nav's own desktop/drawer breakpoint
+   (Navbar.jsx DESKTOP, Navbar.css's max-width: 1319px block) so the
+   rest of the page pads for whichever nav height is actually
+   rendered */
+@media (max-width: 1319px) {
+  :root { --nav-h: 66px; }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --nav-h: 58px;
+    --gutter: 1.1rem;
+  }
+}
+
+:root {
+
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-pill: 999px;
+
+  --shadow-pill: 0 18px 45px -18px rgba(6, 8, 30, 0.65);
+  --shadow-glow: 0 24px 70px -24px rgba(37, 99, 235, 0.85);
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  /* ---- Light surface, for sections that sit on paper ---- */
+  --paper: #ffffff;
+  --paper-tint: #f3f6fc;         /* faint blue wash */
+  --ink-strong: #0b1a4d;         /* headings on paper */
+  --ink-body: #48557a;           /* body copy on paper */
+  --ink-muted: #7c8bb0;          /* captions, meta on paper */
+
+  --rule: rgba(12, 31, 108, 0.13);      /* hairline on paper */
+  --rule-soft: rgba(12, 31, 108, 0.07);
+
+  --grad-ink: linear-gradient(100deg, #2563eb 0%, #1c53d1 55%, #0c1f6c 110%);
+  --shadow-lift: 0 30px 60px -34px rgba(11, 26, 77, 0.55);
+  --shadow-indigo: 0 26px 70px -32px rgba(37, 99, 235, 0.75);
+}

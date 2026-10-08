@@ -1,0 +1,157 @@
+/* ==================================================================
+   Mouse follower.
+
+   Two parts: a small dot that sits exactly under the pointer, and a
+   ring that trails it with easing. The dot keeps the precision a
+   cursor needs; the ring is the part that reads as movement.
+
+   Both use mix-blend-mode: difference against white, which inverts
+   whatever is behind them. That is what lets one cursor cross this
+   site's alternating light and dark bands without ever restyling —
+   it comes out near-black on paper and near-white on the navy, with
+   no state to track.
+
+   Only transform and opacity are animated, and both layers are
+   promoted once, so the follower costs one composited layer rather
+   than a repaint per frame.
+================================================================== */
+
+.cur {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  /* the JS writes translate3d on these; the centring is folded into
+     the child so the transform stays a pure position */
+  will-change: transform;
+}
+
+.cur-dot,
+.cur-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.28s var(--ease), height 0.28s var(--ease),
+              opacity 0.25s var(--ease), border-color 0.28s var(--ease),
+              background-color 0.28s var(--ease);
+}
+
+.cur-dot {
+  width: 7px;
+  height: 7px;
+  background: #ffffff;
+}
+
+.cur-ring {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+}
+
+.cur-label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffffff;
+  white-space: nowrap;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 0.18s linear, transform 0.28s var(--ease);
+}
+
+/* ---- over something clickable: the ring opens up, the dot recedes
+   into it, so the pointer reads as "armed" ---- */
+/* no fill here on purpose: under difference blending even a 12% white
+   wash comes out as a grey disc, which reads as a blob rather than a
+   cursor. The ring stays an outline and simply opens. */
+.cur.is-active .cur-ring {
+  width: 58px;
+  height: 58px;
+  border-width: 1.5px;
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.cur.is-active .cur-dot {
+  width: 4px;
+  height: 4px;
+  opacity: 0.6;
+}
+
+/* ---- data-cursor="View": the word rides inside the ring.
+
+   This has to come after .is-active, not before: an element carrying
+   a label is always interactive too, so both classes are on at once
+   and at equal specificity the later rule is the one that lands. ---- */
+.cur.has-label .cur-ring {
+  width: 76px;
+  height: 76px;
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.cur.has-label .cur-label { opacity: 1; transform: none; }
+
+/* with a word in the ring, the dot would sit on top of it */
+.cur.has-label .cur-dot { opacity: 0; }
+
+/* ---- pressed ---- */
+.cur.is-down .cur-ring { width: 26px; height: 26px; }
+.cur.is-down .cur-dot { width: 10px; height: 10px; }
+
+/* ---- off the window, or over a field where the native caret matters ---- */
+.cur.is-hidden { opacity: 0; }
+
+/* ==================================================================
+   Hiding the native cursor.
+
+   Scoped to a class the component only sets once it has decided the
+   follower is running, so a touch device, a coarse pointer or a
+   reduced-motion preference never ends up with no cursor at all.
+
+   Text fields keep their own cursor: an I-beam tells you where the
+   caret will land, and no drawn ring replaces that.
+================================================================== */
+html.has-cursor,
+html.has-cursor body,
+html.has-cursor a,
+html.has-cursor button,
+html.has-cursor [role='button'],
+html.has-cursor summary,
+html.has-cursor label {
+  cursor: none;
+}
+
+html.has-cursor input,
+html.has-cursor textarea,
+html.has-cursor select,
+html.has-cursor [contenteditable='true'] {
+  cursor: auto;
+}
+
+/* the follower never appears on touch, on a coarse pointer, on a
+   narrow screen, or when less motion was asked for — the media query
+   is the backstop for the JS check in Cursor.jsx */
+@media (hover: none), (pointer: coarse), (max-width: 1024px), (prefers-reduced-motion: reduce) {
+  .cur { display: none; }
+  html.has-cursor,
+  html.has-cursor body,
+  html.has-cursor a,
+  html.has-cursor button,
+  html.has-cursor [role='button'],
+  html.has-cursor summary,
+  html.has-cursor label {
+    cursor: auto;
+  }
+}
+
+@media print {
+  .cur { display: none; }
+}

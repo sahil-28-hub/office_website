@@ -1,0 +1,437 @@
+/* =================================================================
+   Find Your Track — six category cards, three to a row, on a single
+   inset tray.
+
+   At rest every card is flat brand colour: an accent chip on top, the
+   track name and one line of copy at the bottom. Hover one and it
+   widens inside its own row — the two cards beside it give up exactly
+   the width it takes, so the row's outer edges never move — while the
+   photograph unfolds down its right-hand side.
+
+   The section used to be a 230vh pinned stage that assembled itself as
+   you scrolled. That is gone: the pin fought the wheel, and six cards
+   never fit a single 100vh frame. What replaces it is a plain band
+   with a staggered reveal, so the only motion left on scroll is the
+   one-off rise of each card.
+
+   Dark panel, lifts over the light Universe section above it; the
+   light Journey section below already expects a dark panel to lift
+   over.
+================================================================= */
+
+.cc {
+  position: relative;
+  overflow: hidden;
+  margin-top: calc(-1 * clamp(24px, 3.2vw, 46px));
+  border-radius: clamp(24px, 3.2vw, 46px) clamp(24px, 3.2vw, 46px) 0 0;
+  background: linear-gradient(180deg, var(--bg-ink-deep) 0%, var(--bg-ink) 50%, var(--bg-ink-deep) 100%);
+  padding: clamp(56px, 7vw, 104px) 0 clamp(60px, 8vw, 112px);
+}
+
+.cc-inner {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------------- heading ---------------- */
+.cc-heading {
+  text-align: center;
+  margin-bottom: clamp(28px, 4vw, 48px);
+}
+
+.cc-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px 8px 12px;
+  margin-bottom: 14px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--hairline);
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: var(--font-mono);
+  font-size: var(--step-eyebrow);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+.cc-eyebrow .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.18);
+}
+
+.cc-title {
+  font-size: clamp(1.75rem, 3.6vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--white);
+}
+.cc-title-accent {
+  background: var(--grad-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.cc-lede {
+  max-width: 46ch;
+  margin: 14px auto 0;
+  font-size: var(--step-body);
+  line-height: 1.55;
+  color: var(--mist-dim);
+}
+
+/* ---------------- the tray ---------------- */
+.cc-tray {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.1vw, 16px);
+  padding: clamp(10px, 1.1vw, 16px);
+  border-radius: clamp(20px, 2.4vw, 34px);
+  border: 1px solid var(--hairline);
+  background: rgba(255, 255, 255, 0.045);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 40px 90px -50px rgba(0, 0, 0, 0.9);
+}
+
+.cc-row {
+  display: flex;
+  gap: clamp(10px, 1.1vw, 16px);
+}
+
+/* The flex track. Growing the CELL rather than the card keeps the two
+   animations off each other's toes: the cell owns the width and the
+   scroll-reveal transform, the card owns the lift and the surface. */
+.cc-cell {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  transition: flex-grow 0.55s var(--ease);
+}
+
+/* White cards on the dark tray. The band underneath stays dark — it
+   has to, with a light section either side of it — so the cards carry
+   the light instead, and the tray reads as the shadow they sit in. */
+.cc-card {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  height: clamp(220px, 21vw, 280px);
+  border-radius: clamp(16px, 1.7vw, 24px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: var(--paper);
+  box-shadow: 0 20px 44px -30px rgba(4, 5, 18, 0.9);
+  transition: transform 0.45s var(--ease), border-color 0.45s var(--ease),
+    box-shadow 0.45s var(--ease), opacity 0.45s var(--ease);
+}
+
+/* tones — the accent pair each card is built from, plus the same
+   colour as an rgba for the rim and the glow, which cannot be mixed
+   out of the hex at use time without color-mix */
+.cc-card[data-tone='blue'] { --accent: #1d4ed8; --accent-2: #22d3ee; --glow: rgba(37, 99, 235, 0.26); }
+.cc-card[data-tone='teal'] { --accent: #17c8c8; --accent-2: #22d3ee; --glow: rgba(23, 200, 200, 0.26); }
+.cc-card[data-tone='indigo'] { --accent: #1c53d1; --accent-2: #2563eb; --glow: rgba(28, 83, 209, 0.26); }
+.cc-card[data-tone='warm'] { --accent: #ffb020; --accent-2: #ff6a3d; --glow: rgba(255, 122, 45, 0.28); }
+.cc-card[data-tone='pink'] { --accent: #ff5f8f; --accent-2: #1c53d1; --glow: rgba(255, 95, 143, 0.28); }
+.cc-card[data-tone='green'] { --accent: #2ee6a8; --accent-2: #22d3ee; --glow: rgba(46, 200, 168, 0.28); }
+
+/* the accent wash: a breath of the card's own colour out of the corner
+   the chip sits in, deepening on hover. Low enough on white that the
+   card still reads as white rather than tinted. */
+.cc-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(85% 70% at 8% 0%, var(--accent) 0%, transparent 62%);
+  opacity: 0.07;
+  transition: opacity 0.45s var(--ease);
+}
+
+.cc-card-body {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(16px, 1.7vw, 24px);
+  color: var(--ink-strong);
+}
+
+.cc-card-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  background: linear-gradient(140deg, var(--accent) 0%, var(--accent-2) 100%);
+  color: #06152b;
+  box-shadow: 0 12px 26px -14px var(--accent);
+  transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease);
+}
+.cc-card-icon svg {
+  width: 21px;
+  height: 21px;
+}
+
+.cc-card-text {
+  display: block;
+  margin-top: 18px;
+}
+
+/* Both lines reserve the two rows they might need. A card that widens
+   pushes the ones beside it narrow enough to wrap their titles, and
+   without the reservation every neighbour's copy would jump up a line
+   the moment you hovered anything — six cards twitching to show one.
+   With it, the type block is the same height on every card and only
+   the seams between cards ever move. */
+.cc-card-label {
+  display: block;
+  min-height: 2.4em;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.05rem, 1.45vw, 1.313rem);
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+
+.cc-card-blurb {
+  display: block;
+  margin-top: 8px;
+  min-height: 3em;
+  max-width: 26ch;
+  font-size: clamp(0.813rem, 0.95vw, 0.906rem);
+  line-height: 1.5;
+  color: var(--ink-body);
+}
+
+/* the row is reserved at rest rather than added on hover, so opening a
+   card never nudges its own copy up the tile */
+.cc-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.688rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--electric);
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
+}
+.cc-card-cta svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.4s var(--ease);
+}
+
+/* ---------------- the photograph ----------------
+   A flex item with no width at rest. Hovering opens it, and the frame
+   inside clips a `cover` crop, so the picture reads as unfolding out
+   of the card's edge rather than sliding in from off-canvas. */
+.cc-card-media {
+  position: relative;
+  flex: 0 0 auto;
+  align-self: stretch;
+  width: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: width 0.6s var(--ease), opacity 0.4s var(--ease);
+}
+
+.cc-card-frame {
+  position: absolute;
+  top: clamp(12px, 1.2vw, 16px);
+  right: clamp(12px, 1.2vw, 16px);
+  bottom: clamp(12px, 1.2vw, 16px);
+  left: 0;
+  overflow: hidden;
+  border-radius: clamp(12px, 1.3vw, 18px);
+  background: linear-gradient(150deg, var(--accent) 0%, var(--accent-2) 130%);
+}
+
+.cc-card-frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 42%;
+  transform: scale(1.08);
+  transition: transform 0.9s var(--ease);
+}
+
+/* ---------------- hover ----------------
+   Fine pointers only. On a touch screen there is no hover to reveal
+   anything with, so the photograph is simply always open (below). */
+@media (hover: hover) and (pointer: fine) {
+  /* 1.7 + 0.65 + 0.65 = 3, so the row's total width is unchanged and
+     only the seams between cards move.
+
+     `:not()` on the shrink rule rather than letting the open card win
+     on specificity: `.cc-row:hover .cc-cell` is three compound
+     selectors to `.cc-cell:hover`'s two, so without it the hovered
+     card would shrink along with its neighbours. */
+  .cc-row:hover .cc-cell:not(:hover),
+  .cc-row:focus-within .cc-cell:not(:focus-within) { flex-grow: 0.65; }
+  .cc-cell:hover,
+  .cc-cell:focus-within { flex-grow: 1.7; }
+
+  /* the open card takes a rim and a wash of its own accent, so the
+     colour that names the track is what marks it as open */
+  .cc-cell:hover .cc-card,
+  .cc-cell:focus-within .cc-card {
+    transform: translateY(-4px);
+    border-color: var(--glow);
+    box-shadow: 0 34px 60px -30px rgba(4, 5, 18, 0.95), 0 0 0 3px var(--glow);
+  }
+  .cc-cell:hover .cc-card::before,
+  .cc-cell:focus-within .cc-card::before { opacity: 0.16; }
+
+  .cc-cell:hover .cc-card-icon,
+  .cc-cell:focus-within .cc-card-icon {
+    transform: scale(1.06);
+    box-shadow: 0 18px 34px -14px var(--accent);
+  }
+
+  /* 40% of a cell that is itself 1.7x its resting width leaves the copy
+     column at about the width it had, so the text does not rewrap as
+     the picture opens */
+  .cc-cell:hover .cc-card-media,
+  .cc-cell:focus-within .cc-card-media {
+    width: 40%;
+    opacity: 1;
+  }
+  .cc-cell:hover .cc-card-frame img,
+  .cc-cell:focus-within .cc-card-frame img { transform: scale(1); }
+
+  .cc-cell:hover .cc-card-cta,
+  .cc-cell:focus-within .cc-card-cta {
+    opacity: 1;
+    transform: none;
+  }
+  .cc-cell:hover .cc-card-cta svg,
+  .cc-cell:focus-within .cc-card-cta svg { transform: translateX(3px); }
+
+  /* No dimming of the two cards either side. Fading a white card over a
+     dark tray does not read as "receded", it reads as grey — and the
+     open card is already the wide one with a picture in it. */
+}
+
+/* ---------------- scroll reveal ----------------
+   One rise per card, staggered across the tray. Nothing here is
+   scroll-linked — it fires once when the section arrives and then the
+   section is inert, which is what stops the band from feeling like it
+   is being dragged along behind the wheel. */
+.cc-heading[data-reveal],
+.cc-cell[data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  /* the stagger is spelled per property rather than as a blanket
+     transition-delay: the entrance is what should be staggered, and a
+     shared delay would also hold the hover widening back by up to
+     350ms on the last card of the tray */
+  transition:
+    opacity 0.75s var(--ease) calc(var(--i, 0) * 70ms),
+    transform 0.75s var(--ease) calc(var(--i, 0) * 70ms),
+    flex-grow 0.55s var(--ease) 0s;
+}
+.cc-heading[data-reveal].is-in,
+.cc-cell[data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* =================================================================
+   Narrow screens
+
+   Two to a row down to 720px, then one. There is no hover to open the
+   picture with on a touch screen, so it is open from the start and the
+   card reads as a wide list item.
+================================================================= */
+@media (max-width: 1024px) {
+  .cc-card { height: clamp(200px, 26vw, 240px); }
+  .cc-card-blurb { max-width: none; }
+}
+
+@media (max-width: 900px) {
+  .cc-row {
+    flex-wrap: wrap;
+  }
+  .cc-cell {
+    flex: 1 1 calc(50% - clamp(10px, 1.1vw, 16px));
+  }
+}
+
+@media (max-width: 720px) {
+  .cc-tray {
+    gap: 12px;
+    padding: 12px;
+  }
+  .cc-row { gap: 12px; }
+  .cc-cell { flex: 1 1 100%; }
+  .cc-card { height: 168px; }
+  .cc-card-media {
+    width: 42%;
+    opacity: 1;
+  }
+  .cc-card-frame {
+    top: 10px;
+    right: 10px;
+    bottom: 10px;
+  }
+  .cc-card-frame img { transform: none; }
+  .cc-card-cta {
+    opacity: 1;
+    transform: none;
+  }
+  .cc-card-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+  }
+  .cc-card-icon svg { width: 18px; height: 18px; }
+  .cc-card-text { margin-top: 12px; }
+  /* one card per row here, so nothing lines up against anything — drop
+     the reserved rows and let each card close up around its own copy */
+  .cc-card-label,
+  .cc-card-blurb { min-height: 0; }
+}
+
+@media (max-width: 420px) {
+  .cc-card { height: 160px; }
+  .cc-card-media { width: 38%; }
+  .cc-card-blurb { display: none; }
+  .cc-card-cta { margin-top: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cc-heading[data-reveal],
+  .cc-cell[data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .cc-cell,
+  .cc-card,
+  .cc-card-icon,
+  .cc-card-media,
+  .cc-card-cta,
+  .cc-card-frame img {
+    transition: none;
+  }
+}

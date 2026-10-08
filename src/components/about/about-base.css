@@ -1,0 +1,395 @@
+/* ==================================================================
+   About page foundations.
+
+   The visual language is the home page's, not a new one: glass pills
+   with a blinking cyan dot for labels, gradient accent words, pill
+   buttons on --grad-pill, hairline-bordered glass panels, and dark
+   bands built from vertical ink gradients the way Hero, Universe and
+   Community build theirs.
+
+   A section declares its tone — .ap-dark or .ap-light — and that
+   class maps the site tokens onto one local set, so nothing below
+   reads a raw colour and a section can move between surfaces by
+   swapping a class.
+
+   Namespaced ap-* throughout: the home page already owns .about-*.
+================================================================== */
+
+.about-page {
+  --ap-y: clamp(68px, 7.6vw, 122px);
+  --ap-r: var(--r-md);
+  --ap-r-lg: var(--r-lg);
+
+  position: relative;
+  background: var(--paper);
+  color: var(--ink-body);
+}
+
+/* ------------------------------- tones ---------------------------- */
+.ap-dark {
+  --ap-title: var(--white);
+  --ap-text: var(--mist);
+  --ap-muted: var(--mist-dim);
+
+  --ap-surface: var(--glass);
+  --ap-surface-lift: var(--glass-strong);
+  --ap-line: var(--hairline);
+  --ap-line-lift: rgba(255, 255, 255, 0.26);
+  --ap-shadow: var(--shadow-pill);
+  --ap-inner: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+
+  --ap-accent: var(--cyan);
+  --ap-accent-grad: var(--grad-gold);
+  --ap-accent-soft: rgba(34, 211, 238, 0.16);
+
+  --ap-ico-bg: linear-gradient(145deg, rgba(255, 210, 63, 0.24), rgba(255, 210, 63, 0.07));
+  --ap-ico-line: rgba(255, 210, 63, 0.38);
+  --ap-ico-fg: var(--gold);
+
+  /* the same vertical ink gradient the home page's dark sections use */
+  background: linear-gradient(180deg, var(--bg-ink-deep) 0%, var(--bg-ink) 45%, var(--bg-ink-deep) 100%);
+  color: var(--ap-text);
+}
+
+/* every other dark band takes the deeper variant, as Ask and Cta do */
+.ap-dark--deep {
+  background: linear-gradient(180deg, var(--bg-ink) 0%, var(--bg-ink-deep) 60%, #0a1640 100%);
+}
+
+.ap-light {
+  --ap-title: var(--ink-strong);
+  --ap-text: var(--ink-body);
+  --ap-muted: var(--ink-muted);
+
+  --ap-surface: rgba(255, 255, 255, 0.72);
+  --ap-surface-lift: #ffffff;
+  --ap-line: var(--rule);
+  --ap-line-lift: rgba(37, 99, 235, 0.34);
+  --ap-shadow: var(--shadow-lift);
+  --ap-inner: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  --ap-accent: var(--electric);
+  --ap-accent-grad: var(--grad-ink);
+  --ap-accent-soft: rgba(37, 99, 235, 0.12);
+
+  --ap-ico-bg: linear-gradient(145deg, rgba(37, 99, 235, 0.16), rgba(28, 83, 209, 0.08));
+  --ap-ico-line: rgba(37, 99, 235, 0.22);
+  --ap-ico-fg: var(--indigo);
+
+  background: var(--paper);
+  color: var(--ap-text);
+}
+
+.ap-light--tint { background: var(--paper-tint); }
+
+.ap-dark,
+.ap-light { position: relative; }
+
+/* a soft brand glow at the head of each dark band */
+.ap-dark::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 300px;
+  pointer-events: none;
+  background: radial-gradient(70% 100% at 50% 0%, rgba(37, 99, 235, 0.16), transparent 70%);
+}
+
+/* the site's grid: the same 1px lines, tint and radial mask that
+   Hero, Universe, Ask and Cta lay over their dark sections */
+.ap-dark::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(147, 197, 253, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(147, 197, 253, 0.06) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(72% 62% at 50% 45%, #000 25%, transparent 100%);
+  -webkit-mask-image: radial-gradient(72% 62% at 50% 45%, #000 25%, transparent 100%);
+}
+
+/* the deeper bands take the wider 78px grid Universe uses */
+.ap-dark--deep::after { background-size: 78px 78px; }
+
+.ap-light + .ap-light { border-top: 1px solid var(--rule-soft); }
+
+/* ---------------------------- sections ---------------------------- */
+.ap-sec { padding-block: var(--ap-y); }
+.ap-sec > .shell { position: relative; }
+
+.ap-head { max-width: 740px; }
+.ap-head--center { margin-inline: auto; text-align: center; }
+
+/* the home page's label: a glass pill with a blinking cyan dot */
+.ap-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px 8px 12px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--ap-line);
+  background: var(--ap-surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: var(--font-mono);
+  font-size: var(--step-eyebrow);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ap-title);
+}
+
+.ap-eyebrow::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--ap-accent);
+  box-shadow: 0 0 0 4px var(--ap-accent-soft);
+  animation: ap-blink 2.4s ease-in-out infinite;
+}
+
+@keyframes ap-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.ap-title {
+  margin-top: 22px;
+  font-family: var(--font-display);
+  font-size: clamp(1.95rem, 3.8vw, 3.1rem);
+  line-height: 1.06;
+  font-weight: 700;
+  letter-spacing: -0.032em;
+  color: var(--ap-title);
+}
+
+.ap-accent {
+  background: var(--ap-accent-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ap-lead {
+  margin-top: 18px;
+  max-width: 58ch;
+  font-size: var(--step-lead);
+  line-height: 1.68;
+  color: var(--ap-muted);
+}
+
+.ap-head--center .ap-lead { margin-inline: auto; }
+
+.ap-body {
+  display: grid;
+  font-family: var(--font-body);
+  gap: 15px;
+  margin-top: 22px;
+  max-width: 56ch;
+  line-height: 1.75;
+  color: var(--ap-text);
+}
+
+.ap-note {
+  font-size: var(--step-small);
+  line-height: 1.65;
+  color: var(--ap-muted);
+}
+
+/* ---------------------------- surfaces ---------------------------- */
+.ap-panel {
+  position: relative;
+  border-radius: var(--ap-r);
+  background: var(--ap-surface);
+  border: 1px solid var(--ap-line);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--ap-inner);
+  transition: transform 0.35s var(--ease), border-color 0.35s var(--ease),
+    background 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+
+.ap-panel--hover:hover {
+  transform: translateY(-4px);
+  background: var(--ap-surface-lift);
+  border-color: var(--ap-line-lift);
+  box-shadow: var(--ap-inner), var(--ap-shadow);
+}
+
+/* ---------------------------- buttons ----------------------------- */
+.ap-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 30px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease),
+    background 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+
+.ap-btn svg { width: 18px; height: 18px; flex: none; transition: transform 0.25s var(--ease); }
+.ap-btn:hover { transform: translateY(-2px); }
+.ap-btn:hover svg { transform: translateX(3px); }
+
+.ap-btn--primary {
+  color: var(--white);
+  background: var(--grad-pill);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  box-shadow: var(--shadow-glow);
+}
+
+.ap-btn--ghost {
+  color: var(--ap-title);
+  background: var(--ap-surface);
+  border: 1px solid var(--ap-line);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.ap-btn--ghost:hover { border-color: var(--ap-line-lift); background: var(--ap-surface-lift); }
+
+/* ------------------------- small utilities ------------------------ */
+.ap-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 15px;
+  border-radius: var(--r-pill);
+  background: var(--ap-surface);
+  border: 1px solid var(--ap-line);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: var(--ap-text);
+  white-space: nowrap;
+  transition: border-color 0.3s var(--ease), color 0.3s var(--ease),
+    background 0.3s var(--ease);
+}
+
+.ap-chip:hover {
+  background: var(--ap-surface-lift);
+  border-color: var(--ap-line-lift);
+  color: var(--ap-title);
+}
+
+.ap-ico {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex: none;
+  border-radius: 14px;
+  background: var(--ap-ico-bg);
+  border: 1px solid var(--ap-ico-line);
+  color: var(--ap-ico-fg);
+  box-shadow: var(--ap-inner);
+  transition: transform 0.4s var(--ease), border-color 0.4s var(--ease),
+    box-shadow 0.4s var(--ease);
+}
+
+.ap-ico svg { width: 22px; height: 22px; }
+
+.ap-panel--hover:hover .ap-ico {
+  transform: translateY(-2px);
+  border-color: var(--ap-line-lift);
+}
+
+.ap-no {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  color: var(--ap-muted);
+}
+
+/* --------------------- photo frame + fallback --------------------- */
+.ap-shot {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border-radius: var(--ap-r);
+  background: linear-gradient(145deg, rgba(37, 99, 235, 0.3), rgba(6, 14, 43, 0.85));
+  border: 1px solid var(--ap-line);
+  box-shadow: var(--ap-inner);
+}
+
+.ap-shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s var(--ease);
+}
+
+.ap-shot:hover img { transform: scale(1.04); }
+
+.ap-shot-empty {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 10px;
+  height: 100%;
+  min-height: 170px;
+  padding: 20px;
+  text-align: center;
+  color: rgba(216, 226, 255, 0.62);
+}
+
+.ap-shot-empty svg { width: 26px; height: 26px; }
+
+.ap-shot-empty span {
+  font-family: var(--font-mono);
+  font-size: 0.688rem;
+  letter-spacing: 0.06em;
+}
+
+.ap-shot-tag {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: var(--r-pill);
+  background: rgba(6, 14, 43, 0.6);
+  border: 1px solid var(--hairline);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: var(--font-mono);
+  font-size: 0.688rem;
+  letter-spacing: 0.05em;
+  color: #e4ebff;
+}
+
+.ap-shot-tag i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+}
+
+/* ----------------------------- reveal ----------------------------- */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  transition-delay: var(--d, 0ms);
+}
+
+[data-reveal].is-in { opacity: 1; transform: none; }
+[data-reveal='left'] { transform: translateX(-22px); }
+[data-reveal='right'] { transform: translateX(22px); }
+[data-reveal='scale'] { transform: scale(0.975); }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1; transform: none; transition: none; }
+  .ap-eyebrow::before { animation: none; }
+}

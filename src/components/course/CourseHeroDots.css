@@ -1,0 +1,185 @@
+/* ==================================================================
+   The hero pixel field.
+
+   The stage sits on the hero's own ink - nothing here paints a
+   background, so the band behind it is the one CourseHero.css sets and
+   the page theme stays in one place. The canvas paints only the dots;
+   every glow and shadow around them belongs to this stage.
+================================================================== */
+
+.chd {
+  position: relative;
+  min-height: 470px;
+  display: grid;
+  align-content: center;
+  isolation: isolate;
+  animation: chd-in 1s 0.3s var(--ease) both;
+}
+
+@keyframes chd-in {
+  from { opacity: 0; transform: translateY(26px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* the rasteriser's measuring path - present in the document, never seen */
+.chd-probe {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.chd-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* The bloom behind the logo. One blue for every mark, matching the
+   dots - a per-brand hue made the whole hero flicker as it cycled
+   through a course's tools. Behind the canvas, so the dots read as lit
+   rather than as sitting on a coloured disc. */
+.chd-halo {
+  position: absolute;
+  inset: 14%;
+  z-index: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(34, 211, 238, 0.55) 0%, transparent 60%),
+    radial-gradient(circle, rgba(37, 99, 235, 0.6) 0%, transparent 72%);
+  opacity: 0.2;
+  filter: blur(64px);
+}
+
+/* ------------------------------ caption ---------------------------- */
+.chd-caption {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: 8px;
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.chd-caption-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mist-dim);
+}
+
+.chd-pip {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.14);
+  animation: chd-pulse 2.4s var(--ease) infinite;
+}
+
+@keyframes chd-pulse {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.14); }
+  50% { box-shadow: 0 0 0 9px rgba(34, 211, 238, 0.04); }
+}
+
+.chd-caption strong {
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--white);
+  /* keyed in the JSX, so the swap replays as the mesh re-forms */
+  animation: chd-swap 0.6s var(--ease) both;
+}
+
+@keyframes chd-swap {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.chd-caption-note {
+  font-size: 0.813rem;
+  color: var(--mist);
+}
+
+/* -------------------------- the phone list ------------------------- */
+.chd-list {
+  display: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chd-mark {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  font-family: var(--font-display);
+  font-size: 0.563rem;
+  font-weight: 700;
+}
+.chd-mark svg { width: 14px; height: 14px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .chd,
+  .chd-pip,
+  .chd-caption strong { animation: none; }
+  .chd { opacity: 1; transform: none; }
+}
+
+/* --------------------------- responsive ---------------------------- */
+@media (max-width: 1080px) {
+  .chd {
+    min-height: 420px;
+    max-width: 520px;
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 720px) {
+  /* The field needs room a phone does not have, and shrunk to fit it
+     stops reading as a logo at all. The tool names carry the useful
+     half, so they stay as a plain wrapped row. */
+  .chd {
+    display: block;
+    min-height: 0;
+    animation: none;
+  }
+  .chd-canvas,
+  .chd-halo,
+  .chd-caption { display: none; }
+
+  .chd-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chd-list li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 13px 5px 5px;
+    border-radius: var(--r-pill);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--hairline);
+    font-family: var(--font-mono);
+    font-size: 0.688rem;
+    color: #d7dfff;
+  }
+}

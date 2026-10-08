@@ -1,0 +1,350 @@
+/* =================================================================
+   Capabilities — six service tracks, sidebar tabs + a logo grid.
+   Dark indigo panel between the light Ask and Journey sections, so it
+   lifts over Ask the same way every dark-on-light seam here does.
+================================================================= */
+
+.cap {
+  position: relative;
+  overflow: hidden;
+  margin-top: calc(-1 * clamp(24px, 3.2vw, 46px));
+  border-radius: clamp(24px, 3.2vw, 46px) clamp(24px, 3.2vw, 46px) 0 0;
+  padding: clamp(3.5rem, 6vw, 5.5rem) 0 clamp(4rem, 7vw, 6rem);
+  color: var(--mist);
+  background:
+    radial-gradient(70% 55% at 18% 8%, rgba(37, 99, 235, 0.22) 0%, transparent 60%),
+    radial-gradient(60% 55% at 100% 100%, rgba(28, 83, 209, 0.2) 0%, transparent 62%),
+    linear-gradient(155deg, var(--bg-ink) 0%, #102463 45%, var(--bg-ink-deep) 100%);
+}
+
+/* ---------------- decoration ---------------- */
+.cap-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.cap-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(75% 65% at 50% 30%, #000 10%, transparent 100%);
+  -webkit-mask-image: radial-gradient(75% 65% at 50% 30%, #000 10%, transparent 100%);
+}
+.cap-circuit {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+}
+.cap-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(110px);
+  opacity: 0.4;
+}
+.cap-glow--a {
+  width: 460px;
+  height: 460px;
+  left: -8%;
+  top: -10%;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.5), transparent 70%);
+  animation: cap-drift 24s var(--ease) infinite alternate;
+}
+.cap-glow--b {
+  width: 420px;
+  height: 420px;
+  right: -6%;
+  bottom: -12%;
+  background: radial-gradient(circle, rgba(28, 83, 209, 0.42), transparent 70%);
+  animation: cap-drift 29s var(--ease) infinite alternate-reverse;
+}
+@keyframes cap-drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(-30px, 24px, 0) scale(1.08); }
+}
+
+.cap-inner {
+  position: relative;
+  z-index: 2;
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+}
+.cap.is-visible .cap-inner {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------------- heading ---------------- */
+.cap-head {
+  max-width: 680px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.cap-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 18px 8px 13px;
+  margin-bottom: 18px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--hairline);
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: var(--font-mono);
+  font-size: var(--step-eyebrow);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+.cap-eyebrow .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.18);
+}
+
+.cap-title {
+  font-size: clamp(1.8rem, 3.6vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.14;
+  color: var(--white);
+}
+.cap-title-accent {
+  background: var(--grad-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.cap-sub {
+  max-width: 52ch;
+  margin: 16px auto 0;
+  color: var(--mist);
+  font-size: var(--step-body);
+}
+
+/* ---------------- body ---------------- */
+.cap-body {
+  display: grid;
+  grid-template-columns: minmax(0, 0.62fr) minmax(0, 1.38fr);
+  align-items: start;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+/* ---------------- sidebar ---------------- */
+.cap-sidebar {
+  margin: 0;
+  padding: 10px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--hairline);
+  /* one step lighter than the band behind it — that difference is
+     what gives the panel depth on the darker page */
+  background: var(--bg-ink-card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.cap-side-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 15px 16px;
+  border-radius: var(--r-md);
+  text-align: left;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.938rem;
+  color: var(--mist-dim);
+  transition: background 0.3s var(--ease), color 0.3s var(--ease);
+}
+.cap-side-btn:hover {
+  color: var(--mist);
+  background: rgba(255, 255, 255, 0.05);
+}
+.cap-side-btn.is-active {
+  color: var(--white);
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.55), rgba(28, 83, 209, 0.45));
+  box-shadow: 0 16px 34px -18px rgba(37, 99, 235, 0.85);
+}
+.cap-side-arrow {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------------- panel ---------------- */
+.cap-panel {
+  position: relative;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--hairline);
+  background: var(--bg-ink-card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  animation: cap-panel-in 0.45s var(--ease) both;
+}
+@keyframes cap-panel-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+.cap-panel-blurb {
+  font-size: 0.938rem;
+  color: var(--mist-dim);
+}
+
+.cap-tools {
+  margin: clamp(1.25rem, 2.5vw, 1.75rem) 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.cap-tool {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 22px 14px;
+  border-radius: var(--r-md);
+  background: var(--paper);
+  box-shadow: 0 20px 40px -26px rgba(6, 8, 30, 0.85);
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+.cap-tool:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 26px 50px -24px rgba(6, 8, 30, 0.95);
+}
+
+.cap-tool-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+}
+.cap-tool-icon svg {
+  width: 100%;
+  height: 100%;
+}
+.cap-tool-mono {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.cap-tool-name {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.813rem;
+  color: var(--ink-strong);
+  text-align: center;
+}
+
+/* ---------------- learn more ---------------- */
+.cap-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  padding: 8px 8px 8px 22px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--hairline);
+  background: var(--glass);
+  color: var(--white);
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: transform 0.25s var(--ease);
+}
+.cap-more:hover {
+  transform: translateY(-2px);
+}
+.cap-more-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--grad-pill);
+  color: var(--white);
+}
+.cap-more-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------------- responsive ---------------- */
+@media (max-width: 900px) {
+  .cap-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .cap-sidebar {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .cap-side-btn {
+    width: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .cap-tools {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cap-glow,
+  .cap-inner,
+  .cap-panel {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* Every tool card is now a link to the course that teaches it (see
+   ToolCard in Capabilities.jsx). The anchor mirrors the card's own
+   column layout so nothing moves, and it fills the card so the whole
+   tile is the hit area rather than just the label.
+
+   These cards sit on paper, not on the dark band, so the hover lifts
+   with an indigo tint and a shadow rather than a white wash. */
+.cap-tool-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  color: inherit;
+}
+
+.cap-tool.is-linked { cursor: pointer; }
+
+.cap-tool.is-linked:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 26px 50px -24px rgba(6, 8, 30, 0.9);
+}
+
+.cap-tool.is-linked:hover .cap-tool-name { color: var(--indigo); }
+
+.cap-tool.is-linked:focus-within {
+  outline: 2px solid var(--electric);
+  outline-offset: 3px;
+}

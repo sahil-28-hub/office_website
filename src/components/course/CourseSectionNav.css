@@ -1,0 +1,81 @@
+/* ==================================================================
+   The sticky section nav on a course page.
+
+   A pill, like the site navbar once it has been scrolled, so the two
+   read as a pair stacked under one another rather than a floating bar
+   over a full-width one. It sticks just below that navbar: the pill
+   there is --nav-h tall and sits 14px off the top.
+================================================================== */
+
+.csnav {
+  position: sticky;
+  top: calc(var(--nav-h) + 22px);
+  z-index: 40;
+  display: flex;
+  justify-content: center;
+  /* takes no room of its own in the flow: it rides over the first band
+     rather than opening a gap between the strip and the overview */
+  height: 0;
+  padding-inline: var(--gutter);
+  pointer-events: none;
+}
+
+.csnav-rail {
+  pointer-events: auto;
+  display: flex;
+  gap: 2px;
+  max-width: 100%;
+  height: max-content;
+  margin-top: 14px;
+  padding: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-radius: var(--r-pill);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(240, 242, 251, 0.96);
+  box-shadow: var(--shadow-pill);
+}
+.csnav-rail::-webkit-scrollbar { display: none; }
+
+.csnav-link {
+  flex: none;
+  padding: 8px 15px;
+  border-radius: var(--r-pill);
+  font-size: 0.813rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #2b3050;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.csnav-link:hover { background: rgba(12, 31, 108, 0.08); }
+
+.csnav-link.is-active {
+  background: var(--ink);
+  color: var(--white);
+}
+
+/* The rail rides over the top of the band that follows it, so that band
+   opens a little lower to keep its heading clear. */
+.csnav + .c-sec { padding-top: calc(var(--sec-y) + 60px); }
+
+/* course-base.css lands a jumped-to band flush with the top of the
+   window. With two bars up there now, its heading would arrive under
+   them — so a band stops short by the navbar's height, and its own top
+   padding carries the heading clear of the rail. `main >` only to
+   outrank that rule whichever stylesheet loads last. */
+.course-page main > .c-sec[id],
+.course-page main > .cm[id] {
+  scroll-margin-top: calc(var(--nav-h) + 30px);
+}
+
+@media (max-width: 720px) {
+  .csnav { padding-inline: 12px; }
+  .csnav-link { padding: 7px 12px; font-size: 0.75rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .csnav-link { transition: none; }
+}

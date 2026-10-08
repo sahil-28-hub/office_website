@@ -1,0 +1,239 @@
+/* ==================================================================
+   Our Team — /team.
+
+   Everything structural comes from page-kit.css and about-base.css:
+   the banner, the section bands, the card, the filter rail and the
+   buttons are all shared. This file adds only what the page has that
+   no other page does — a portrait on a card, and the application
+   form beside its copy.
+================================================================== */
+
+.tm-intro {
+  max-width: 68ch;
+}
+
+/* ---------------------------- the people --------------------------
+   A photograph the width of the card, then the copy. The tile keeps
+   its aspect ratio whether the photo has loaded, is missing, or was
+   never set — so the grid never reflows as images arrive.
+------------------------------------------------------------------ */
+.tm-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+}
+
+/* the shared card pads itself; the portrait wants to reach the edges,
+   so this one lays out its own padding instead */
+.tm-card {
+  padding: 0;
+  gap: 0;
+  overflow: hidden;
+}
+
+.tm-photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--grad-ink);
+}
+
+.tm-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  transition: transform 0.6s var(--ease);
+}
+
+.tm-card:hover .tm-photo img { transform: scale(1.04); }
+
+/* the stand-in when there is no photograph yet — initials on the
+   brand gradient, which reads as deliberate rather than broken */
+.tm-initials {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 4vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.tm-body {
+  padding: clamp(18px, 1.9vw, 24px);
+}
+
+.tm-name {
+  font-family: var(--font-display);
+  font-size: 1.06rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ap-title);
+}
+
+.tm-role {
+  margin-top: 5px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--ap-accent);
+}
+
+.tm-bio {
+  margin-top: 12px;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--ap-muted);
+}
+
+.tm-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tm-tags li {
+  padding: 5px 11px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--ap-line);
+  background: var(--ap-surface);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ap-text);
+}
+
+/* ------------------------- apply to work here ---------------------
+   Copy on the left, form on the right. The copy column is narrow on
+   purpose: it is three short paragraphs, and the form is the point of
+   the section.
+------------------------------------------------------------------ */
+.tm-apply-split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(34px, 4.6vw, 70px);
+}
+
+.tm-apply-copy .ap-note { margin-top: 22px; }
+
+.tm-form {
+  display: grid;
+  gap: 18px;
+  padding: clamp(24px, 2.8vw, 36px);
+  border-radius: var(--ap-r-lg, var(--r-lg));
+  background: var(--ap-surface);
+  border: 1px solid var(--ap-line);
+  box-shadow: var(--ap-shadow, var(--shadow-lift));
+}
+
+.tm-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.tm-field { display: grid; gap: 8px; }
+
+.tm-field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ap-title);
+}
+
+/* "optional" reads as a note, not as part of the question */
+.tm-field label span {
+  margin-left: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ap-muted);
+}
+
+.tm-field input,
+.tm-field select,
+.tm-field textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--ap-line);
+  background: var(--paper);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--ap-title);
+  transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+
+.tm-field textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
+
+.tm-field input:focus-visible,
+.tm-field select:focus-visible,
+.tm-field textarea:focus-visible {
+  outline: none;
+  border-color: var(--electric);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16);
+}
+
+.tm-field [aria-invalid='true'] { border-color: #d94a5a; }
+
+.tm-bad {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #d94a5a;
+}
+
+.tm-submit { justify-self: start; }
+
+.tm-status { min-height: 1.4em; font-size: 0.88rem; line-height: 1.55; }
+.tm-status .is-bad { color: #d94a5a; }
+
+/* off-screen rather than display:none — a bot that reads the DOM
+   fills a hidden field, and one that reads the CSS skips a
+   display:none one */
+.tm-hp {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* -------------------------- the sent state ------------------------ */
+.tm-done {
+  max-width: 56ch;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.tm-done-tick {
+  display: inline-grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  margin-bottom: 22px;
+  border-radius: 50%;
+  color: var(--white);
+  background: var(--grad-pill);
+  box-shadow: var(--shadow-glow);
+}
+
+.tm-done .ap-lead { margin-inline: auto; }
+.tm-done .ap-btn { margin-top: 26px; }
+
+/* --------------------------- responsive --------------------------- */
+@media (max-width: 940px) {
+  .tm-apply-split { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .tm-row { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tm-photo img { transition: none; }
+  .tm-card:hover .tm-photo img { transform: none; }
+}

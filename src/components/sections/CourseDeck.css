@@ -1,0 +1,337 @@
+/* ==================================================================
+   The deck — src/components/sections/CourseDeck.tsx
+
+   A 3D coverflow of every course. Near-black rather than the site's
+   --bg-ink so the band reads as its own surface between the hero above
+   it and the light catalogue below, and so the artwork on the cards is
+   the only colour in the frame.
+
+     .cd-stage    the perspective box
+     .cd-rail     preserve-3d parent every card is positioned against
+     .cd-card     one course; --o is its distance from the selection
+     .cd-window   the hollow frame over the middle of the fan
+================================================================== */
+
+.cd {
+  position: relative;
+  overflow: hidden;
+  background: #121214;
+  padding-block: clamp(3.5rem, 7vw, 6rem);
+  text-align: center;
+}
+
+/* A soft pool of light under the middle of the fan, so the selected
+   card sits on something rather than floating on flat black. */
+.cd::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(1100px, 90vw);
+  aspect-ratio: 2 / 1;
+  translate: -50% -50%;
+  background: radial-gradient(closest-side, rgba(37, 99, 235, 0.16), transparent 72%);
+  pointer-events: none;
+}
+
+.cd-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ------------------------------- counter ------------------------ */
+.cd-counter {
+  position: relative;
+  margin: 0 0 clamp(1.5rem, 3vw, 2.5rem);
+  font-family: var(--font-mono);
+  font-size: var(--step-small);
+  letter-spacing: 0.22em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.cd-counter em {
+  margin: 0 0.35em;
+  font-style: normal;
+  color: rgba(255, 255, 255, 0.28);
+}
+
+.cd-counter span { color: rgba(255, 255, 255, 0.3); }
+
+/* -------------------------------- stage ------------------------- */
+.cd-stage {
+  position: relative;
+  height: clamp(260px, 32vw, 400px);
+  perspective: 1500px;
+  perspective-origin: 50% 50%;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.cd-stage:active { cursor: grabbing; }
+.cd-stage:focus { outline: none; }
+
+.cd-rail {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transform-style: preserve-3d;
+}
+
+/* --------------------------------- slot ------------------------- */
+/* The arrival, and nothing else. Every slot starts off the right edge
+   of the band and slides to the centre; where it goes from there is
+   the card's business, one level down. */
+.cd-slot {
+  --gap: clamp(58px, 6vw, 92px);
+  --depth: 46px;
+  --tilt: 34deg;
+
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(150px, 17vw, 224px);
+  aspect-ratio: 1 / 1.06;
+  translate: -50% -50%;
+  opacity: 0;
+  transform-style: preserve-3d;
+}
+
+.cd.is-visible .cd-slot {
+  animation: cd-in 0.85s var(--ease) both;
+  animation-delay: calc(var(--i) * 55ms);
+}
+
+@keyframes cd-in {
+  from {
+    opacity: 0;
+    translate: calc(-50% + 62vw) -50%;
+  }
+  to {
+    opacity: 1;
+    translate: -50% -50%;
+  }
+}
+
+/* Beyond the fan there is nothing to see and nothing to click. The
+   fade sits on the card because the slot's opacity belongs to the
+   animation above, which would win over it. */
+.cd-slot[aria-hidden='true'] .cd-card {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* --------------------------------- card ------------------------- */
+/* Its place in the fan: pushed aside by --o, back by --away, and
+   turned to face the middle. */
+.cd-card {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: clamp(22px, 2.6vw, 34px);
+  overflow: hidden;
+  background: var(--tone-grad, linear-gradient(150deg, #2563eb 0%, #2440c9 130%));
+  box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.9);
+  text-decoration: none;
+  transform:
+    translate3d(calc(var(--o) * var(--gap)), 0, calc(var(--away) * var(--depth) * -1))
+    rotateY(calc(var(--o) * var(--tilt) * -1));
+  transition:
+    transform 0.62s var(--ease),
+    filter 0.62s var(--ease),
+    opacity 0.4s linear;
+
+  /* Cards deep in the stack dim into the background rather than
+     piling up as a hard edge. */
+  filter: brightness(calc(1 - var(--away) * 0.055));
+}
+
+.cd-card.is-active {
+  filter: none;
+  box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.95);
+}
+
+.cd-card-art {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.cd-card-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cd-card-name {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 2.2rem 0.9rem 0.85rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.72), transparent);
+  color: var(--white);
+  font-family: var(--font-display);
+  font-size: 0.813rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+
+/* Only the selected card is square-on to the reader, so it is the only
+   one whose label is legible rather than sheared. */
+.cd-card.is-active .cd-card-name { opacity: 1; }
+
+.cd-card:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 4px;
+}
+
+.cd-card.tone-blue   { --tone-grad: linear-gradient(150deg, #2563eb 0%, #2440c9 130%); }
+.cd-card.tone-indigo { --tone-grad: linear-gradient(150deg, #1c53d1 0%, #123285 130%); }
+.cd-card.tone-teal   { --tone-grad: linear-gradient(150deg, #22d3ee 0%, #1668b8 130%); }
+.cd-card.tone-green  { --tone-grad: linear-gradient(150deg, #34d399 0%, #0891b2 130%); }
+.cd-card.tone-orange { --tone-grad: linear-gradient(150deg, #ff9f45 0%, #d1451f 130%); }
+.cd-card.tone-purple { --tone-grad: linear-gradient(150deg, #c084fc 0%, #6d28d9 130%); }
+
+/* ------------------------------- window ------------------------- */
+/* Hollow by construction: a border and four corner ticks, no fill, so
+   what shows through the middle is the selected card itself. */
+.cd-window {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(174px, 19.5vw, 258px);
+  aspect-ratio: 1 / 1.06;
+  translate: -50% -50%;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: clamp(26px, 3vw, 39px);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.35),
+    0 0 40px rgba(255, 255, 255, 0.07);
+  pointer-events: none;
+}
+
+.cd-window i {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  border: 0 solid rgba(255, 255, 255, 0.85);
+}
+
+.cd-window i:nth-child(1) { top: -1px; left: -1px; border-width: 2px 0 0 2px; border-top-left-radius: 5px; }
+.cd-window i:nth-child(2) { top: -1px; right: -1px; border-width: 2px 2px 0 0; border-top-right-radius: 5px; }
+.cd-window i:nth-child(3) { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; border-bottom-right-radius: 5px; }
+.cd-window i:nth-child(4) { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; border-bottom-left-radius: 5px; }
+
+/* --------------------------------- foot ------------------------- */
+.cd-foot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 3vw, 2rem);
+  margin-top: clamp(1.75rem, 3.5vw, 2.75rem);
+}
+
+.cd-now {
+  min-width: min(20rem, 60vw);
+  margin: 0;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.cd-now strong {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.4vw, 1.6rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--white);
+}
+
+.cd-now span {
+  font-size: var(--step-small);
+  color: var(--mist-dim);
+}
+
+.cd-arrow {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-pill);
+  background: var(--glass);
+  color: var(--white);
+  cursor: pointer;
+  transition: background 0.25s var(--ease), border-color 0.25s var(--ease), opacity 0.25s;
+}
+
+.cd-arrow svg { width: 19px; height: 19px; }
+
+.cd-arrow:hover:not(:disabled) {
+  background: var(--glass-strong);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.cd-arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.cd-cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: clamp(1.25rem, 2.5vw, 1.9rem);
+  padding: 11px 22px;
+  border-radius: var(--r-pill);
+  background: var(--grad-pill);
+  box-shadow: var(--shadow-glow);
+  color: var(--white);
+  font-size: var(--step-small);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cd-cta svg { width: 18px; height: 18px; }
+
+/* ------------------------------ narrow -------------------------- */
+@media (max-width: 700px) {
+  .cd-slot {
+    --gap: 46px;
+    --depth: 34px;
+    --tilt: 40deg;
+    width: clamp(126px, 34vw, 164px);
+  }
+
+  .cd-window { width: clamp(146px, 38vw, 190px); }
+  .cd-now { min-width: 0; }
+}
+
+/* --------------------------- reduced motion --------------------- */
+/* The fan is the layout, not an effect, so it stays. What goes is the
+   fly-in and the easing between selections — the deck simply cuts from
+   one course to the next.
+
+   Done here rather than behind a JS check, so nothing about the deck's
+   markup depends on a media query the server cannot read. */
+@media (prefers-reduced-motion: reduce) {
+  .cd-slot,
+  .cd.is-visible .cd-slot {
+    animation: none;
+    opacity: 1;
+  }
+
+  .cd-card { transition: none; }
+}

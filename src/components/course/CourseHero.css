@@ -1,0 +1,200 @@
+/* The hero is the same surface as the dark bands further down the page
+   — flat --bg-ink under the shared diagonal weave, exactly what
+   .c-sec--dark paints. It used to run a three-stop gradient
+   (--bg-ink-deep → --bg-ink → #0a1640) with a blue radial and two
+   drifting glows over it, which made the top of the page read as a
+   different colour from the eligibility band it scrolls into. Both are
+   gone; the weave below is the only texture, and it comes from the one
+   --dark-weave definition in course-base.css. */
+.chero {
+  position: relative;
+  isolation: isolate;
+  padding-top: calc(var(--nav-h) + 76px);
+  padding-bottom: clamp(70px, 9vw, 120px);
+  background: var(--bg-ink);
+  color: var(--mist);
+  overflow: hidden;
+}
+
+.chero-bg { position: absolute; inset: 0; z-index: -1; }
+
+/* the same weave .c-sec--dark::before lays over every dark band, from
+   the same variables, so the two cannot drift apart */
+.chero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: var(--dark-weave);
+  mask-image: var(--dark-weave-mask);
+  -webkit-mask-image: var(--dark-weave-mask);
+}
+
+.chero-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(40px, 5vw, 72px);
+}
+
+/* A course with no picture yet has nothing to put in the second
+   column, so it does not get one — and the copy is held to a readable
+   measure rather than being allowed to run the full 1240px. */
+.chero-inner--solo {
+  grid-template-columns: minmax(0, 1fr);
+}
+.chero-inner--solo .chero-copy { max-width: 44ch; }
+.chero-inner--solo .chero-metrics { max-width: 640px; }
+
+/* ------------------------------ copy ------------------------------ */
+
+/* The label above the headline, and the badge beside it.
+
+   Both come from the CMS and both are optional, so the row draws
+   nothing when neither is set. The label is quiet — small, spaced,
+   the section eyebrow's register — and the badge is the only thing
+   here allowed to carry a fill, because it is the one word on the
+   page an editor uses to mark a course out. */
+.chero-kicker {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+  animation: chero-up 0.85s var(--ease) both;
+}
+.chero-eyebrow {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+.chero-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: #04121a;
+  background: linear-gradient(96deg, var(--cyan), var(--py-gold));
+}
+
+.chero-title {
+  font-size: clamp(2.6rem, 5.4vw, 4.35rem);
+  line-height: 1.02;
+  font-weight: 700;
+}
+
+.chero-line {
+  display: block;
+  animation: chero-up 0.85s var(--ease) both;
+}
+.chero-line:nth-child(1) { animation-delay: 0.08s; }
+.chero-line--accent {
+  background: linear-gradient(96deg, #ffffff 8%, var(--cyan) 52%, var(--py-gold) 108%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation-delay: 0.16s;
+}
+
+/* The tagline: one line, set in the accent, above the paragraph. It
+   only appears when the course has both it and an intro — see
+   CourseHero. */
+.chero-tagline {
+  max-width: 58ch;
+  margin-top: 18px;
+  font-size: clamp(1.02rem, 1.4vw, 1.2rem);
+  font-weight: 550;
+  line-height: 1.45;
+  color: var(--cyan);
+  animation: chero-up 0.85s 0.18s var(--ease) both;
+}
+
+/* The standfirst, between the headline and the chips. Held to about
+   58 characters a line: past that the eye loses the start of the next
+   one, and this paragraph sits under a headline set four times its
+   size, which makes a long measure harder still. */
+.chero-sub {
+  max-width: 58ch;
+  margin-top: 22px;
+  font-size: clamp(1rem, 1.35vw, 1.15rem);
+  line-height: 1.65;
+  color: var(--muted, rgba(255, 255, 255, 0.72));
+  animation: chero-up 0.85s 0.2s var(--ease) both;
+}
+
+/* Tighter under a tagline: the two are one block of copy, not two. */
+.chero-tagline + .chero-sub { margin-top: 10px; }
+
+/* The chips follow the standfirst when there is one and the headline
+   when there is not, so the gap above is the smaller of the two. */
+.chero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+  animation: chero-up 0.85s 0.24s var(--ease) both;
+}
+.chero-meta .c-chip { align-items: center; }
+
+.chero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 34px;
+  animation: chero-up 0.85s 0.36s var(--ease) both;
+}
+
+.chero-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 46px 0 0;
+  padding-top: 28px;
+  border-top: 1px solid var(--hairline);
+  animation: chero-up 0.85s 0.44s var(--ease) both;
+}
+
+.chero-metric dt {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.02em;
+}
+.chero-metric dd {
+  margin: 4px 0 0;
+  font-size: var(--step-small);
+  color: var(--mist-dim);
+}
+
+@keyframes chero-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* The second column is a picture and nothing else — see
+   CourseHeroArt.css. The field of dots that used to assemble into each
+   tool's logo has been removed, as did the floating editor / console /
+   stats cards before it. */
+
+@media (prefers-reduced-motion: reduce) {
+  .chero-line, .chero-actions, .chero-metrics,
+  .chero-kicker, .chero-sub, .chero-tagline,
+  .chero-meta { animation: none !important; opacity: 1; transform: none; }
+}
+
+/* --------------------------- responsive --------------------------- */
+@media (max-width: 1080px) {
+  .chero-inner { grid-template-columns: 1fr; gap: 64px; }
+}
+
+@media (max-width: 720px) {
+  .chero { padding-top: calc(var(--nav-h) + 44px); }
+  .chero-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 14px; }
+
+  .chero-actions .c-btn { flex: 1 1 auto; }
+}

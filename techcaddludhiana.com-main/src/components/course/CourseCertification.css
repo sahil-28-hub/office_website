@@ -1,0 +1,201 @@
+/* =================================================================
+   Certification — copy on the left, two drawn certificates on the
+   right. Paper band, so it sits between the dark toolchain section
+   above it and the dark projects section below.
+================================================================= */
+
+.ccert-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.ccert-points {
+  list-style: none;
+  margin: clamp(24px, 3vw, 38px) 0 0;
+  padding: 0;
+  display: grid;
+  gap: 18px;
+}
+
+.ccert-points li {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.ccert-point-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: var(--grad-pill);
+  color: var(--white);
+  box-shadow: 0 12px 26px -14px rgba(37, 99, 235, 0.9);
+}
+
+.ccert-points h3 {
+  font-family: var(--font-display);
+  font-size: 1.031rem;
+  font-weight: 600;
+  color: var(--ink-strong);
+}
+
+.ccert-points p {
+  margin-top: 4px;
+  font-size: 0.938rem;
+  line-height: 1.55;
+  color: var(--ink-body);
+}
+
+.ccert-note {
+  margin-top: clamp(20px, 2.5vw, 30px);
+  padding-top: 18px;
+  border-top: 1px solid var(--rule-soft);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--ink-muted);
+}
+
+/* ---------------- the drawn certificates ----------------
+   Two sheets, the second tucked behind and below the first so the pair
+   reads as a stack rather than a list. */
+.ccert-stack {
+  position: relative;
+  display: grid;
+  gap: clamp(14px, 1.8vw, 22px);
+}
+
+.ccert-card {
+  position: relative;
+  padding: clamp(20px, 2.2vw, 30px) clamp(18px, 2vw, 28px) clamp(16px, 1.8vw, 22px);
+  border-radius: 18px;
+  border: 1px solid var(--rule);
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(37, 99, 235, 0.07) 0%, transparent 55%),
+    var(--paper);
+  box-shadow: var(--shadow-lift);
+  text-align: center;
+  transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease);
+}
+
+/* the guilloche edge every certificate has, without the clip art */
+.ccert-card::before {
+  content: '';
+  position: absolute;
+  inset: 9px;
+  border-radius: 12px;
+  border: 1px solid rgba(37, 99, 235, 0.22);
+  pointer-events: none;
+}
+
+.ccert-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 40px 70px -38px rgba(11, 26, 77, 0.7);
+}
+
+.ccert-card-kind {
+  display: inline-block;
+  margin-bottom: 14px;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--electric);
+  font-family: var(--font-mono);
+  font-size: 0.563rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ccert-mark {
+  display: block;
+  margin-bottom: 14px;
+}
+.ccert-mark img {
+  height: 26px;
+  width: auto;
+  margin-inline: auto;
+  opacity: 0.9;
+}
+
+.ccert-card-award {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+/* the blank a name is written on — deliberately empty, since the
+   sample is nobody's certificate */
+.ccert-name-line {
+  display: block;
+  width: min(72%, 260px);
+  height: 1px;
+  margin: 22px auto 10px;
+  background: linear-gradient(90deg, transparent, rgba(12, 31, 108, 0.32) 18%, rgba(12, 31, 108, 0.32) 82%, transparent);
+}
+
+.ccert-card-line {
+  font-size: 0.813rem;
+  line-height: 1.5;
+  color: var(--ink-body);
+}
+
+.ccert-card-title {
+  margin-top: 8px;
+  font-family: var(--font-display);
+  font-size: 1.063rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink-strong);
+}
+
+.ccert-card-foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: clamp(18px, 2vw, 26px);
+  padding-top: 12px;
+  border-top: 1px dashed var(--rule);
+  font-family: var(--font-mono);
+  font-size: 0.563rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.ccert-card-foot b {
+  color: var(--ink-body);
+  font-weight: 600;
+}
+
+.ccert-sign {
+  width: 84px;
+  height: 1px;
+  background: var(--rule);
+}
+
+@media (max-width: 900px) {
+  .ccert-inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1.75rem, 5vw, 2.5rem);
+  }
+  .ccert-stack {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .ccert-stack {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ccert-card { transition: none; }
+}

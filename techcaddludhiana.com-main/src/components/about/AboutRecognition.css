@@ -1,0 +1,151 @@
+/* ==================================================================
+   §12 — recognition · §13 — a decade of building careers.
+================================================================== */
+
+.aprec-head { max-width: 54ch; }
+
+.aprec-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin: clamp(36px, 4.6vw, 62px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.aprec-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+  padding: 26px 28px 28px;
+  overflow: hidden;
+}
+
+.aprec-card h3 {
+  margin-top: 4px;
+  font-size: 1.12rem;
+  letter-spacing: -0.025em;
+  color: var(--ap-title);
+}
+
+.aprec-card p {
+  margin-top: 10px;
+  font-size: 0.925rem;
+  line-height: 1.65;
+  color: var(--ap-muted);
+}
+
+/* an oversized number bled into the corner, kept faint */
+.aprec-seal {
+  position: absolute;
+  right: 18px;
+  bottom: -14px;
+  font-family: var(--font-display);
+  font-size: 4.2rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  color: rgba(255, 255, 255, 0.05);
+  transition: color 0.5s var(--ease), transform 0.5s var(--ease);
+  pointer-events: none;
+}
+
+.aprec-card:hover .aprec-seal {
+  color: rgba(255, 255, 255, 0.09);
+  transform: translateY(-4px);
+}
+
+.aprec-note {
+  max-width: 60ch;
+  margin: clamp(24px, 3vw, 36px) auto 0;
+  text-align: center;
+}
+
+/* ---------------------------- the decade -------------------------- */
+.aprec-decade {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  gap: clamp(28px, 4vw, 58px);
+  align-items: center;
+  margin-top: clamp(40px, 5vw, 74px);
+  padding: clamp(28px, 3.6vw, 50px);
+  border-radius: var(--ap-r-lg);
+}
+
+.aprec-decade-title {
+  margin-top: 18px;
+  font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.032em;
+  color: var(--ap-title);
+}
+
+.aprec-decade-text {
+  margin-top: 16px;
+  max-width: 58ch;
+  line-height: 1.72;
+  color: var(--ap-text);
+}
+
+.aprec-figures {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-left: 1px solid var(--ap-line);
+}
+
+.aprec-figures li {
+  padding: 16px 0 16px 24px;
+  border-bottom: 1px solid var(--ap-line);
+}
+
+.aprec-figures li:last-child { border-bottom: 0; }
+
+.aprec-figures strong {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: clamp(1.5rem, 2.3vw, 2.05rem);
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--ap-title);
+  font-variant-numeric: tabular-nums;
+}
+
+.aprec-figures strong em {
+  font-style: normal;
+  color: var(--ap-accent);
+}
+
+.aprec-figures span {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.688rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ap-muted);
+}
+
+/* --------------------------- responsive --------------------------- */
+@media (max-width: 900px) {
+  .aprec-grid,
+  .aprec-decade { grid-template-columns: minmax(0, 1fr); }
+
+  .aprec-figures {
+    grid-template-columns: repeat(3, 1fr);
+    border-left: 0;
+    border-top: 1px solid var(--ap-line);
+  }
+
+  .aprec-figures li { padding: 18px 12px 0 0; border-bottom: 0; }
+}
+
+@media (max-width: 520px) {
+  .aprec-card { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .aprec-figures { grid-template-columns: minmax(0, 1fr); }
+  .aprec-figures li { padding: 14px 0; border-bottom: 1px solid var(--ap-line); }
+}

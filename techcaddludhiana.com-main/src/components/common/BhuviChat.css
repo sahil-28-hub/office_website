@@ -1,0 +1,401 @@
+/* ==================================================================
+   Ask Bhuvi, and the floating corners it shares the page with.
+
+   The four floating controls are split across the two bottom corners:
+
+     bottom-left    the Bhuvi launcher, with back-to-top above it
+     bottom-right   WhatsApp, with the social dock above it
+
+   Everything is positioned off the same two numbers, so the corners
+   stay level with each other.
+================================================================== */
+
+:root {
+  --fl-x: clamp(14px, 2.4vw, 28px);
+  --fl-y: clamp(14px, 2.4vw, 28px);
+  /* how far the corners lift to clear the course page's enquiry bar */
+  --fl-lift: 0px;
+}
+
+/* The course CTA bar sits on the floor at the right; the right-hand
+   corner steps up over it while it is on screen. */
+html:has(.fcta.is-shown) { --fl-lift: 74px; }
+
+/* ---------------------------- launcher ---------------------------- */
+.bhv {
+  position: fixed;
+  left: calc(var(--fl-x) + var(--safe-l, 0px));
+  bottom: calc(var(--fl-y) + var(--safe-b, 0px));
+  z-index: 85;
+}
+
+.bhv-launch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 50px;
+  padding: 0 20px 0 10px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(100deg, #7c3aed 0%, #c026d3 100%);
+  font-size: 0.938rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 18px 38px -14px rgba(124, 58, 237, 0.9);
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.bhv-launch:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 44px -14px rgba(192, 38, 211, 0.9);
+}
+
+/* Bhuvi's mark — a glass orb in the group's violet-to-cyan */
+.bhv-orb {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.95) 0 9%, rgba(255, 255, 255, 0) 30%),
+    conic-gradient(from 210deg, #e879f9, #a855f7, #38bdf8, #00f2fe, #e879f9);
+  box-shadow: inset 0 -3px 8px rgba(30, 10, 70, 0.45), 0 0 0 2px rgba(255, 255, 255, 0.28);
+}
+
+/* ------------------------------ panel ----------------------------- */
+.bhv-panel {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 12px);
+  display: flex;
+  flex-direction: column;
+  width: min(380px, calc(100vw - 2 * var(--fl-x)));
+  height: min(540px, calc(100vh - var(--nav-h) - 110px));
+  height: min(540px, calc(100dvh - var(--nav-h) - 110px));
+  border-radius: 22px;
+  border: 1px solid rgba(216, 180, 254, 0.22);
+  background: linear-gradient(170deg, #2a1065 0%, #170a3d 100%);
+  color: #ede9fe;
+  overflow: hidden;
+  box-shadow: 0 40px 90px -30px rgba(20, 6, 60, 0.85);
+  animation: bhv-in 0.24s var(--ease) both;
+}
+
+@keyframes bhv-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+.bhv-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(216, 180, 254, 0.16);
+  background: linear-gradient(100deg, rgba(124, 58, 237, 0.55), rgba(192, 38, 211, 0.4));
+}
+.bhv-head > div { flex: 1; min-width: 0; }
+.bhv-name { font-size: 0.938rem; font-weight: 700; color: #fff; }
+.bhv-sub { font-size: 0.75rem; color: rgba(237, 233, 254, 0.75); }
+
+.bhv-close {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+}
+.bhv-close:hover { background: rgba(255, 255, 255, 0.12); }
+.bhv-close svg { width: 16px; height: 16px; }
+
+.bhv-log {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.bhv-msg {
+  max-width: 88%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.bhv-msg--assistant {
+  align-self: flex-start;
+  border-bottom-left-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+}
+.bhv-msg--user {
+  align-self: flex-end;
+  border-bottom-right-radius: 6px;
+  background: linear-gradient(100deg, #7c3aed, #c026d3);
+  color: #fff;
+}
+.bhv-msg a { color: #c4b5fd; text-decoration: underline; }
+.bhv-msg--user a { color: #fff; }
+
+.bhv-typing { display: inline-flex; gap: 5px; padding: 14px; }
+.bhv-typing span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #c4b5fd;
+  animation: bhv-dot 1.1s ease-in-out infinite;
+}
+.bhv-typing span:nth-child(2) { animation-delay: 0.15s; }
+.bhv-typing span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes bhv-dot {
+  0%, 60%, 100% { opacity: 0.35; transform: none; }
+  30% { opacity: 1; transform: translateY(-3px); }
+}
+
+.bhv-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.bhv-topics button {
+  padding: 7px 13px;
+  border-radius: var(--r-pill);
+  border: 1px solid rgba(196, 181, 253, 0.45);
+  background: rgba(124, 58, 237, 0.22);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #ede9fe;
+  cursor: pointer;
+  transition: background 0.2s var(--ease);
+}
+.bhv-topics button:hover { background: rgba(124, 58, 237, 0.5); }
+
+.bhv-form {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid rgba(216, 180, 254, 0.16);
+}
+.bhv-form input {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: var(--r-pill);
+  border: 1px solid rgba(196, 181, 253, 0.3);
+  background: rgba(255, 255, 255, 0.07);
+  font: inherit;
+  font-size: 0.875rem;
+  color: #fff;
+}
+.bhv-form input::placeholder { color: rgba(237, 233, 254, 0.55); }
+.bhv-form input:focus-visible { outline: none; border-color: #c4b5fd; }
+.bhv-form button {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(100deg, #7c3aed, #c026d3);
+  color: #fff;
+  cursor: pointer;
+}
+.bhv-form button:disabled { opacity: 0.5; cursor: default; }
+.bhv-form button svg { width: 18px; height: 18px; }
+
+/* --------------------------- back to top -------------------------- */
+/* Bottom-left now, stacked above the Bhuvi launcher. `button.` only to
+   outrank the footer's own rule and the dock rule in responsive.css,
+   whichever stylesheet loads last. */
+button.ft-top {
+  right: auto;
+  left: calc(var(--fl-x) + var(--safe-l, 0px));
+  bottom: calc(var(--fl-y) + var(--safe-b, 0px) + 62px);
+  width: 44px;
+  height: 44px;
+  z-index: 84;
+}
+html:has(.fcta.is-shown) button.ft-top {
+  bottom: calc(var(--fl-y) + var(--safe-b, 0px) + 62px);
+}
+
+/* -------------------- WhatsApp and the social dock ---------------- */
+.fdock {
+  position: fixed;
+  right: calc(var(--fl-x) + var(--safe-r, 0px));
+  bottom: calc(var(--fl-y) + var(--safe-b, 0px) + var(--fl-lift));
+  z-index: 85;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  /* the closed stack must not swallow clicks meant for the page */
+  pointer-events: none;
+  transition: bottom 0.3s var(--ease);
+}
+
+.fdock-wa,
+.fdock-toggle,
+.fdock-social a {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+}
+
+.fdock-wa,
+.fdock-toggle { pointer-events: auto; }
+
+/* ---- the profiles: each in its own brand colour, fanning out ---- */
+.fdock-social {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Closed: small, low and transparent. `--i` counts up from the top when
+   opening and down when closing, so the stack unfolds upward and folds
+   back the way it came. */
+.fdock-social li {
+  opacity: 0;
+  transform: translateY(12px) scale(0.75);
+  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+  transition-delay: calc(var(--i, 0) * 30ms);
+}
+.fdock.is-open .fdock-social li {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--i, 0) * 50ms);
+}
+
+.fdock-social a {
+  width: 40px;
+  height: 40px;
+  background: var(--ink);
+  box-shadow: 0 10px 22px -8px rgba(6, 14, 43, 0.55);
+  transition: transform 0.25s var(--ease);
+}
+.fdock.is-open .fdock-social a { pointer-events: auto; }
+.fdock-social a:hover { transform: scale(1.1); }
+
+.fdock-social a.fdock-instagram {
+  background: linear-gradient(135deg, #f9ce34 0%, #ee2a7b 50%, #6228d7 100%);
+}
+.fdock-social a.fdock-facebook { background: #1877f2; }
+.fdock-social a.fdock-twitter { background: #000; }
+.fdock-social a.fdock-linkedin { background: #0a66c2; }
+.fdock-social a.fdock-youtube { background: #ff0000; }
+
+/* ---- the toggle: a plus that turns into a cross ---- */
+.fdock-toggle {
+  width: 44px;
+  height: 44px;
+  background: var(--electric);
+  box-shadow: 0 12px 26px -10px rgba(37, 99, 235, 0.8);
+  transition: transform 0.3s var(--ease);
+}
+.fdock-toggle:hover { transform: scale(1.1); }
+.fdock.is-open .fdock-toggle { transform: rotate(45deg); }
+.fdock.is-open .fdock-toggle:hover { transform: rotate(45deg) scale(1.1); }
+
+/* ---- WhatsApp, with a slow pulse behind it ---- */
+.fdock-wa {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  background: #25d366;
+  box-shadow: 0 18px 36px -12px rgba(37, 211, 102, 0.75);
+  transition: transform 0.25s var(--ease);
+}
+.fdock-wa:hover { transform: scale(1.1); }
+.fdock-wa svg { position: relative; }
+
+.fdock-ping {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(37, 211, 102, 0.4);
+  animation: fdock-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@keyframes fdock-ping {
+  75%, 100% { transform: scale(1.7); opacity: 0; }
+}
+
+/* On a phone the course CTA bar spans the floor, so both corners rise
+   over it rather than only the right one. */
+@media (max-width: 720px) {
+  html:has(.fcta.is-shown) { --fl-lift: 84px; }
+  html:has(.fcta.is-shown) .bhv { bottom: calc(var(--fl-y) + var(--safe-b, 0px) + 84px); }
+  html:has(.fcta.is-shown) button.ft-top { bottom: calc(var(--fl-y) + var(--safe-b, 0px) + 146px); }
+
+  .bhv-launch { height: 46px; padding-right: 16px; font-size: 0.875rem; }
+  .bhv-orb { width: 28px; height: 28px; }
+  .fdock-wa { width: 50px; height: 50px; }
+}
+
+/* --------------------------- services tab ------------------------- */
+/* Half-way down the left edge, reading bottom to top. */
+.fserv {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  z-index: 80;
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  padding: 11px 6px;
+  border-radius: 0 9px 9px 0;
+  background: linear-gradient(180deg, #f05138, #d63a22);
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 8px 18px -8px rgba(240, 81, 56, 0.7);
+  transform: translateY(-50%);
+  transition: padding 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+.fserv:hover {
+  padding-inline: 10px;
+  box-shadow: 0 12px 24px -8px rgba(240, 81, 56, 0.85);
+}
+.fserv span {
+  writing-mode: vertical-lr;
+  transform: rotate(180deg);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media print {
+  .bhv,
+  .fserv,
+  .fdock { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bhv-panel,
+  .fdock-ping,
+  .bhv-typing span { animation: none; }
+  .fdock-ping { display: none; }
+  .bhv-launch,
+  .fserv,
+  .fdock,
+  .fdock-wa,
+  .fdock-toggle,
+  .fdock-social li,
+  .fdock-social a { transition: none; }
+}

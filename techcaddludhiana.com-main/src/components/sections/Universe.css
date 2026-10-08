@@ -1,0 +1,610 @@
+/* =================================================================
+   Technologies We Master — a glossy 3D infinity ribbon in the site's
+   own palette, with the active track's tools revolving along it.
+   Clicking a tool names it in the caption under the stage.
+================================================================= */
+
+.uni {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(3rem, 6vw, 5rem) 0;
+  background:
+    radial-gradient(65% 60% at 12% 0%, rgba(37, 99, 235, 0.08) 0%, transparent 60%),
+    radial-gradient(60% 55% at 100% 100%, rgba(28, 83, 209, 0.07) 0%, transparent 60%),
+    var(--paper-tint);
+}
+
+/* ---------------- ambient background ---------------- */
+.uni-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.uni-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+}
+.uni-orb--a {
+  width: 440px;
+  height: 440px;
+  left: -10%;
+  top: -14%;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.16), transparent 70%);
+  animation: uni-orb-drift 22s var(--ease) infinite alternate;
+}
+.uni-orb--b {
+  width: 400px;
+  height: 400px;
+  right: -8%;
+  bottom: -16%;
+  background: radial-gradient(circle, rgba(28, 83, 209, 0.14), transparent 72%);
+  animation: uni-orb-drift 27s var(--ease) infinite alternate-reverse;
+}
+@keyframes uni-orb-drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(32px, -22px, 0) scale(1.08); }
+}
+
+.uni-inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+}
+.uni.is-visible .uni-inner {
+  opacity: 1;
+  transform: none;
+}
+
+.uni-content {
+  max-width: 660px;
+  margin-inline: auto;
+}
+
+/* ---------------- heading ---------------- */
+.uni-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 16px 7px 13px;
+  margin-bottom: 18px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  font-family: var(--font-mono);
+  font-size: var(--step-eyebrow);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.uni-eyebrow .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--electric);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.16);
+  animation: uni-blink 2.4s ease-in-out infinite;
+}
+@keyframes uni-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.uni-title {
+  font-size: clamp(1.9rem, 3.8vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--ink-strong);
+}
+.uni-title-accent {
+  background: var(--grad-ink);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.uni-sub {
+  max-width: 52ch;
+  margin: 16px auto 0;
+  color: var(--ink-body);
+  font-size: var(--step-body);
+  line-height: 1.6;
+}
+.uni-sub b {
+  color: var(--ink-strong);
+  font-weight: 700;
+}
+
+/* ---------------- category tabs ---------------- */
+/* one row, never two. When the seven tabs genuinely cannot fit (narrow
+   phones) the strip scrolls sideways instead of wrapping — the pill
+   stays a single line at every width. */
+.uni-tabs {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  gap: 2px;
+  margin: clamp(1.75rem, 3vw, 2.25rem) auto 0;
+  padding: 5px;
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  border-radius: 20px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  box-shadow: 0 20px 40px -28px rgba(11, 26, 77, 0.35);
+  scrollbar-width: none;
+}
+.uni-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.uni-tab-indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: var(--r-pill);
+  background: var(--grad-pill);
+  box-shadow: 0 10px 22px -12px rgba(37, 99, 235, 0.75);
+  transition: transform 0.35s var(--ease), width 0.35s var(--ease), height 0.35s var(--ease);
+  z-index: 0;
+}
+
+.uni-tab {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  /* flex:none — without it the tabs squash to fit instead of keeping
+     their size and letting the strip scroll */
+  flex: none;
+  gap: 7px;
+  padding: 9px 18px 9px 14px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: 0.813rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+  transition: color 0.25s var(--ease);
+  white-space: nowrap;
+}
+.uni-tab svg {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  opacity: 0.75;
+  transition: opacity 0.25s var(--ease);
+}
+.uni-tab:hover { color: var(--ink-strong); }
+.uni-tab.is-active { color: var(--white); }
+.uni-tab.is-active svg { opacity: 1; }
+
+/* ---- keeping the single line responsive ----
+   The seven tabs need ~860px at full size. Rather than wrapping (which
+   is what the user does not want) or scrolling immediately, the tabs
+   step down through padding, gap and type size first, and drop their
+   icons below 640px — that trims the strip to ~620px, so it stays a
+   single unbroken line far longer. Only below that does it scroll. */
+@media (max-width: 1080px) {
+  .uni-tab {
+    padding: 8px 14px 8px 11px;
+    font-size: 0.75rem;
+    gap: 6px;
+  }
+  .uni-tab svg { width: 14px; height: 14px; }
+}
+
+/* Dropping the icons takes the strip from ~760px to ~610px, which is
+   what lets a 768px tablet still show all seven on one line without
+   scrolling. They carry no information the label doesn't already. */
+@media (max-width: 900px) {
+  .uni-tab {
+    padding: 8px 13px;
+    font-size: 0.719rem;
+  }
+  .uni-tab svg { display: none; }
+}
+
+/* Below this the strip genuinely cannot fit, so it scrolls — and only
+   here does it get the trailing fade and snap, so the fade never eats
+   the last tab's edge on sizes where everything already fits. */
+@media (max-width: 640px) {
+  .uni-tabs {
+    mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 26px), transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 26px), transparent 100%);
+    scroll-snap-type: x proximity;
+  }
+  .uni-tab { scroll-snap-align: center; }
+}
+
+/* ---------------- the light stage ---------------- */
+/* a soft paper card, tinted with the brand blues/violets rather than
+   a dark backdrop — the ribbon carries the colour now, so the stage
+   stays quiet and every brand mark keeps its own real hex. */
+.uni-orbit-frame {
+  position: relative;
+  width: min(100%, 1120px);
+  margin: clamp(2.5rem, 5vw, 3.5rem) auto 0;
+  padding: clamp(1.5rem, 4vw, 2.75rem);
+  border-radius: clamp(24px, 3vw, 40px);
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  background:
+    radial-gradient(60% 60% at 16% 8%, rgba(37, 99, 235, 0.10) 0%, transparent 62%),
+    radial-gradient(55% 55% at 88% 88%, rgba(28, 83, 209, 0.10) 0%, transparent 64%),
+    linear-gradient(160deg, #ffffff 0%, #f5f7fe 48%, #eef1fb 100%);
+  box-shadow: 0 40px 80px -40px rgba(11, 26, 77, 0.30);
+}
+
+/* ---------------- the ribbon stage ---------------- */
+.uni-orbit {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.uni-orbit-tilt {
+  position: absolute;
+  inset: 0;
+  animation: uni-orbit-in 0.5s var(--ease) both;
+}
+
+@keyframes uni-orbit-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------------- sparkles ---------------- */
+.uni-sparks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+.uni-spark {
+  position: absolute;
+  translate: -50% -50%;
+  /* brand blue, not white — white sparkles vanish on the light stage */
+  background: var(--electric);
+  opacity: 0.5;
+  clip-path: polygon(
+    50% 0%, 58% 42%, 100% 50%, 58% 58%,
+    50% 100%, 42% 58%, 0% 50%, 42% 42%
+  );
+  animation: uni-twinkle 3.6s ease-in-out infinite;
+}
+@keyframes uni-twinkle {
+  0%, 100% { opacity: 0.14; transform: scale(0.7); }
+  50% { opacity: 0.6; transform: scale(1.1); }
+}
+
+/* ---------------- the ribbon ---------------- */
+.uni-ribbon {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: visible;
+}
+.uni-ribbon-shadow,
+.uni-ribbon-bloom,
+.uni-ribbon-body {
+  fill: none;
+  stroke-linecap: round;
+}
+
+/* the tube's cast shadow on the paper stage — indigo rather than grey
+   so it reads as coloured light, and pushed down-right to fix the
+   light direction the specular filter uses (above-left) */
+.uni-ribbon-shadow {
+  stroke: rgba(12, 31, 108, 0.28);
+  stroke-width: clamp(20px, 3.1vw, 34px);
+  filter: blur(14px);
+  transform: translate(5px, 14px);
+}
+
+/* a wide, soft colour bloom so the ribbon tints the paper around it */
+.uni-ribbon-bloom {
+  stroke: var(--electric);
+  stroke-width: clamp(30px, 4.6vw, 50px);
+  opacity: 0.16;
+  filter: blur(22px);
+}
+
+/* the body. The gradient supplies the colour; the uniTube3d filter in
+   the JSX supplies the form — a real curved specular highlight that
+   follows every bend, which is what separates this from a fat line. */
+.uni-ribbon-body {
+  stroke-width: clamp(20px, 3.1vw, 34px);
+}
+
+/* ---------------- revolving tools ---------------- */
+.uni-orbit-items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* travels the lemniscate via offset-path/offset-distance (durations
+   and negative delays are set inline per item, so they spread evenly
+   round the loop). offset-rotate:0deg keeps each logo upright the
+   whole way. The inline offset-distance is what shows when the
+   animation is removed for prefers-reduced-motion — an evenly spaced
+   static rest frame on the same curve. */
+.uni-orbit-node {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 4;
+  offset-rotate: 0deg;
+  translate: -50% -50%;
+  animation-name: uni-travel;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@keyframes uni-travel {
+  from { offset-distance: 0%; }
+  to { offset-distance: 100%; }
+}
+
+/* No hover pause — the ribbon never stops for the pointer, by request.
+   Two non-hover holds stay: keyboard focus (a tabbing user cannot
+   track a moving button at all), and the selected logo (so the one
+   you picked stays findable instead of drifting off). */
+.uni-orbit:focus-within .uni-orbit-node,
+.uni-orbit-node.is-selected {
+  animation-play-state: paused;
+}
+
+/* a light chip behind each mark: the ribbon runs directly under the
+   logos, so a bare mark would sit on whatever colour happens to be
+   passing beneath it. The chip guarantees a constant light backing —
+   which is also why every icon can keep its own real brand hex. */
+.uni-orbit-btn {
+  display: grid;
+  place-items: center;
+  width: clamp(40px, 5.2vw, 56px);
+  aspect-ratio: 1;
+  padding: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 6px 18px -6px rgba(11, 26, 77, 0.35),
+    0 0 0 1px rgba(12, 31, 108, 0.07);
+  cursor: pointer;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+/* focus-visible only — no :hover state on the logos, by request. The
+   transition above still smooths the selected state below. */
+.uni-orbit-btn:focus-visible {
+  outline: none;
+  box-shadow:
+    0 10px 26px -6px rgba(11, 26, 77, 0.45),
+    0 0 0 3px var(--electric);
+}
+
+.uni-orbit-badge {
+  display: grid;
+  place-items: center;
+  width: clamp(22px, 2.9vw, 30px);
+  aspect-ratio: 1;
+}
+.uni-orbit-badge svg {
+  width: 100%;
+  height: 100%;
+}
+.uni-orbit-badge--tag {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(0.563rem, 1vw, 0.688rem);
+  letter-spacing: -0.01em;
+}
+
+/* the picked tool keeps a lit ring so it stays findable */
+.uni-orbit-node.is-selected .uni-orbit-btn {
+  transform: scale(1.2);
+  box-shadow:
+    0 12px 30px -8px rgba(37, 99, 235, 0.6),
+    0 0 0 3px var(--electric);
+}
+
+/* ---------------- the centre mark ---------------- */
+.uni-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 6;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  width: clamp(72px, 12%, 108px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow:
+    0 22px 48px -14px rgba(6, 14, 43, 0.55),
+    0 0 0 10px rgba(255, 255, 255, 0.75);
+}
+.uni-core b {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 4.4vw, 2.75rem);
+  line-height: 1;
+  color: #fff;
+}
+
+/* the thin accent arc from the reference, slowly orbiting the mark */
+.uni-core-arc {
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: var(--electric);
+  border-right-color: rgba(37, 99, 235, 0.35);
+  animation: uni-core-spin 7s linear infinite;
+}
+@keyframes uni-core-spin {
+  to { transform: rotate(1turn); }
+}
+
+/* ---------------- caption + hint ---------------- */
+.uni-caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 12px;
+  margin-top: clamp(1rem, 2vw, 1.5rem);
+  min-height: 2rem;
+}
+.uni-caption-tag {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1rem, 2vw, 1.375rem);
+  color: var(--ink-strong);
+}
+.uni-caption-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.125rem, 2.3vw, 1.5rem);
+  color: var(--ink-strong);
+}
+.uni-caption-cat {
+  padding: 4px 12px;
+  border-radius: var(--r-pill);
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.22);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--indigo);
+}
+
+.uni-hint {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--step-eyebrow);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+/* ---------------- footer count + CTA ---------------- */
+.uni-count {
+  margin-top: clamp(2rem, 4vw, 2.75rem);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.063rem;
+  color: var(--ink-body);
+}
+.uni-count-num {
+  background: var(--grad-ink);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 1.35em;
+  font-weight: 700;
+}
+
+.uni-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 20px;
+  padding: 13px 24px;
+  border-radius: var(--r-pill);
+  background: var(--grad-pill);
+  color: var(--white);
+  font-weight: 600;
+  font-size: 0.875rem;
+  box-shadow: var(--shadow-indigo);
+  transition: transform 0.25s var(--ease);
+}
+.uni-cta svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.25s var(--ease);
+}
+.uni-cta:hover { transform: translateY(-2px); }
+.uni-cta:hover svg { transform: translateX(3px); }
+
+/* =================================================================
+   Below 620px the ribbon collapses into a wrapped logo grid — a
+   figure-8 this small can't hold ten legible logos.
+================================================================= */
+@media (max-width: 620px) {
+  /* min-height, not aspect-ratio: the tilt layer goes back into normal
+     flow here so the stack can grow past the box, but the ribbon's JS
+     "ready" gate still needs .uni-orbit to measure non-zero on the
+     very first frame (it renders nothing at all until it does —
+     including this breakpoint's own grid), and min-height guarantees
+     that without capping the height. */
+  .uni-orbit {
+    aspect-ratio: auto;
+    min-height: 240px;
+  }
+  .uni-orbit-tilt {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    height: 100%;
+  }
+  .uni-ribbon,
+  .uni-sparks {
+    display: none;
+  }
+  .uni-orbit-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+  /* !important is doing real work here — offset-path, offset-distance
+     and the animation timings are all set as INLINE styles by the JS
+     that lays the ribbon out, and inline styles beat a stylesheet rule
+     no matter how specific. Without these the logos stay pinned to the
+     (now hidden) curve and pile up on top of each other. */
+  .uni-orbit-node {
+    position: static;
+    offset-path: none !important;
+    offset-distance: 0 !important;
+    translate: none;
+    animation: uni-pop-static 0.4s var(--ease) both !important;
+    animation-delay: calc(var(--i, 0) * 35ms) !important;
+  }
+  .uni-core {
+    position: static;
+    translate: none;
+    order: -1;
+  }
+  .uni-orbit-btn { width: 48px; }
+}
+
+@keyframes uni-pop-static {
+  from { opacity: 0; transform: scale(0.6); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uni-inner,
+  .uni-orbit-tilt,
+  .uni-orbit-node,
+  .uni-orb,
+  .uni-spark,
+  .uni-core-arc,
+  .uni-eyebrow .dot {
+    animation: none !important;
+    transition: none;
+  }
+}

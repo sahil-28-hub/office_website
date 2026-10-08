@@ -1,0 +1,247 @@
+/* =================================================================
+   5 Steps to Your Tech Career — S-curve roadmap on a pale panel
+================================================================= */
+
+.jr {
+  position: relative;
+  margin-top: calc(-1 * clamp(24px, 3.2vw, 46px));
+  border-radius: clamp(24px, 3.2vw, 46px) clamp(24px, 3.2vw, 46px) 0 0;
+  overflow: hidden;
+  padding: clamp(2.75rem, 4.5vw, 4rem) 0 clamp(2.5rem, 4vw, 3.5rem);
+  background: #f7f9ff;
+  color: var(--ink-body);
+}
+
+.jr-inner {
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------------- heading ---------------- */
+.jr-head {
+  text-align: center;
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+.jr-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--step-eyebrow);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--electric);
+  margin-bottom: 10px;
+}
+
+.jr-title {
+  font-size: clamp(1.65rem, 3.2vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--ink-strong);
+}
+
+.jr-head {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.jr.is-visible .jr-head {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------------- rail ---------------- */
+.jr-rail {
+  position: relative;
+  margin-top: clamp(1.5rem, 2.8vw, 2.25rem);
+}
+
+.jr-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.jr-path {
+  fill: none;
+  stroke-linecap: round;
+}
+.jr-path--base {
+  stroke: rgba(12, 31, 108, 0.18);
+  stroke-width: 2;
+}
+.jr-path--live {
+  stroke: url(#jr-live);
+  stroke-width: 2.5;
+}
+
+.jr-dot {
+  fill: #2563eb;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease);
+}
+
+/* ---------------- steps ---------------- */
+.jr-steps {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: clamp(1.1rem, 2.2vw, 1.75rem);
+}
+
+.jr-step {
+  position: relative;
+  display: grid;
+  /* a real gutter in the middle: the markers sit at opposite edges of it,
+     which is what gives the connecting curve something to sweep across */
+  grid-template-columns: minmax(0, 1fr) clamp(120px, 16vw, 210px) minmax(0, 1fr);
+  align-items: center;
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s var(--ease),
+    transform 0.7s var(--ease);
+  transition-delay: calc(var(--i) * 0.09s + 0.1s);
+}
+.jr.is-visible .jr-step {
+  opacity: 1;
+  transform: none;
+}
+
+/* card on the outside, marker on the inside, mirrored every other row */
+.jr-step--left .jr-card {
+  grid-column: 1;
+  justify-self: end;
+  text-align: right;
+}
+.jr-step--left .jr-node {
+  grid-column: 2;
+  justify-self: start;
+}
+.jr-step--right .jr-card {
+  grid-column: 3;
+  justify-self: start;
+}
+.jr-step--right .jr-node {
+  grid-column: 2;
+  justify-self: end;
+}
+
+/* ---------------- number marker ---------------- */
+.jr-node {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid rgba(12, 31, 108, 0.28);
+  background: #ffffff;
+  box-shadow: 0 8px 20px -12px rgba(11, 26, 77, 0.5);
+  transition:
+    border-color 0.5s var(--ease),
+    box-shadow 0.5s var(--ease),
+    transform 0.5s var(--ease);
+}
+.jr-node b {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--indigo);
+  transition: color 0.5s var(--ease);
+}
+
+.jr-step.is-reached .jr-node {
+  border-color: var(--electric);
+  box-shadow:
+    0 0 0 5px rgba(37, 99, 235, 0.1),
+    0 12px 26px -12px rgba(37, 99, 235, 0.8);
+  transform: scale(1.06);
+}
+.jr-step.is-reached .jr-node b {
+  color: var(--electric);
+}
+
+/* ---------------- card ---------------- */
+.jr-card {
+  max-width: 320px;
+  padding: 15px 20px;
+  border-radius: var(--r-md);
+  border: 1px solid rgba(12, 31, 108, 0.1);
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 244, 255, 0.75) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 18px 40px -30px rgba(11, 26, 77, 0.5);
+  transition:
+    border-color 0.5s var(--ease),
+    box-shadow 0.5s var(--ease);
+}
+.jr-step.is-reached .jr-card {
+  border-color: rgba(37, 99, 235, 0.3);
+  box-shadow: 0 22px 46px -28px rgba(37, 99, 235, 0.6);
+}
+
+.jr-card-title {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-strong);
+}
+
+.jr-card-text {
+  margin-top: 5px;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--ink-body);
+}
+
+/* ---------------- responsive ---------------- */
+@media (max-width: 780px) {
+  .jr-steps {
+    gap: 1.1rem;
+  }
+  .jr-step,
+  .jr-step--left,
+  .jr-step--right {
+    grid-template-columns: 44px minmax(0, 1fr);
+    align-items: start;
+    gap: 18px;
+  }
+  .jr-step--left .jr-node,
+  .jr-step--right .jr-node {
+    grid-column: 1;
+    justify-self: start;
+  }
+  .jr-step--left .jr-card,
+  .jr-step--right .jr-card {
+    grid-column: 2;
+    justify-self: stretch;
+    text-align: left;
+    max-width: none;
+  }
+}
+
+@media (max-width: 460px) {
+  .jr-card { padding: 13px 16px; }
+  .jr-card-text { font-size: 0.813rem; }
+  .jr-node { width: 40px; height: 40px; }
+  .jr-step,
+  .jr-step--left,
+  .jr-step--right { grid-template-columns: 40px minmax(0, 1fr); gap: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jr-step,
+  .jr-head {
+    transition: none;
+  }
+}

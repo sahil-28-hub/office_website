@@ -1,0 +1,54 @@
+/* ==================================================================
+   §11 — connecting education with industry.
+================================================================== */
+
+.apind-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+}
+
+.apind-shot { aspect-ratio: 5 / 4; }
+
+.apind-copy .ap-title { max-width: 16ch; }
+
+.apind-activities {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.apind-activities li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  border-radius: var(--ap-r);
+  background: var(--ap-surface);
+  border: 1px solid var(--ap-line);
+  font-size: 0.9rem;
+  color: var(--ap-text);
+  transition: transform 0.4s var(--ease), border-color 0.4s var(--ease),
+    box-shadow 0.4s var(--ease);
+}
+
+.apind-activities li:hover {
+  transform: translateY(-3px);
+  border-color: var(--ap-line-lift);
+  box-shadow: var(--ap-shadow);
+}
+
+.apind-activities svg { flex: none; color: var(--electric); }
+
+@media (max-width: 900px) {
+  .apind-inner { grid-template-columns: minmax(0, 1fr); }
+  .apind-copy .ap-title { max-width: none; }
+}
+
+@media (max-width: 520px) {
+  .apind-activities { grid-template-columns: minmax(0, 1fr); }
+}

@@ -1,0 +1,90 @@
+/* ==================================================================
+   Privacy Policy, Terms & Conditions, Cookie Policy, Refund &
+   Cancellation Policy — one layout, driven by src/pages/LegalPage.jsx.
+
+   A narrow sticky contents rail beside the article, both sitting on
+   the light band the blog article body already uses (.tcp-body,
+   .tc-article-body — imported alongside this file rather than
+   duplicated).
+================================================================== */
+.tc-legal-body {
+  padding-block: clamp(48px, 7vw, 84px);
+}
+
+.tc-legal-shell {
+  display: grid;
+  grid-template-columns: 216px minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 64px);
+  align-items: start;
+}
+
+.tc-legal-toc {
+  position: sticky;
+  top: calc(var(--nav-h) + 28px);
+}
+
+.tc-legal-toc-label {
+  font-family: var(--font-mono);
+  font-size: 0.688rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 10px;
+}
+
+.tc-legal-toc ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-left: 1px solid var(--rule);
+}
+
+.tc-legal-toc a {
+  display: block;
+  padding: 7px 0 7px 16px;
+  margin-left: -1px;
+  border-left: 1px solid transparent;
+  font-size: 0.875rem;
+  color: var(--ink-muted);
+  text-decoration: none;
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+
+.tc-legal-toc a:hover,
+.tc-legal-toc a:focus-visible {
+  color: var(--ink-strong);
+  border-left-color: var(--electric);
+}
+
+.tc-legal-body .tc-article-body section + section {
+  margin-top: 2.4em;
+  padding-top: 2.4em;
+  border-top: 1px solid var(--rule);
+}
+
+.tc-legal-cookie-btn {
+  margin-top: 2em;
+}
+
+@media (max-width: 860px) {
+  .tc-legal-shell { grid-template-columns: minmax(0, 1fr); }
+  .tc-legal-toc {
+    position: static;
+    padding-bottom: 18px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .tc-legal-toc ul {
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-left: none;
+    gap: 8px 18px;
+  }
+  .tc-legal-toc a {
+    padding: 4px 0;
+    border-left: none;
+  }
+}

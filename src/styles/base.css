@@ -1,0 +1,261 @@
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body, #root { min-height: 100%; }
+
+/* Nothing may push the page sideways on a phone.
+
+   `clip`, not `hidden`. They look identical, but overflow-x: hidden
+   makes the element a scroll container in the other axis too, and a
+   scroll container on html/body is what silently kills every
+   position: sticky on the site — the course overview's video panel
+   was pinned markup that never pinned. `clip` cuts the overflow
+   without creating that container, so sticky holds against the
+   viewport as written.
+
+   hidden stays as the declaration underneath for anything too old to
+   know `clip` (Safari before 16), where a page that cannot scroll
+   sideways matters more than a panel that follows the copy. */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+@supports (overflow: clip) {
+  html, body { overflow-x: clip; }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+section[id] {
+  scroll-margin-top: calc(var(--nav-h) + 20px);
+}
+
+/* media never overflows its column */
+img, svg, video, canvas {
+  max-width: 100%;
+}
+
+/* long words and URLs wrap instead of stretching the layout */
+h1, h2, h3, h4, p, li, a {
+  overflow-wrap: break-word;
+}
+
+/* every tap target clears the 44px minimum on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  button,
+  a[role='button'],
+  .btn,
+  input[type='submit'] {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  margin: 0;
+  /* the canvas behind everything — seen on overscroll and for the
+     instant before the first section paints, so it matches the dark
+     bands rather than the old near-black ink */
+  background: var(--bg-ink);
+  color: var(--mist);
+  font-family: var(--font-body);
+  font-size: var(--step-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  color: var(--white);
+  margin: 0;
+  letter-spacing: -0.03em;
+}
+
+p { margin: 0; }
+
+button {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+a { color: inherit; text-decoration: none; }
+
+img { display: block; max-width: 100%; }
+
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.skip-link {
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  translate: -50% -200%;
+  z-index: 200;
+  background: var(--white);
+  color: var(--indigo);
+  padding: 10px 18px;
+  border-radius: var(--r-pill);
+  font-weight: 600;
+  transition: translate 0.2s var(--ease);
+}
+.skip-link:focus-visible { translate: -50% 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* =================================================================
+   Tech texture for dark bands.
+
+   Put <span class="tech-texture" aria-hidden="true" /> inside any dark
+   section (it positions itself absolutely over the section, behind the
+   content) to get a faint circuit-board weave: a fine dot matrix, plus
+   the horizontal/vertical traces that read as a PCB. All CSS — no
+   image request, and it tiles at any size.
+
+   It is deliberately very low contrast. It should register as surface
+   detail when you look for it, not as a pattern competing with copy.
+================================================================= */
+.tech-texture {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  /* the home pattern: a circuit board — solder dots on orthogonal traces */
+  background-image:
+    radial-gradient(rgba(147, 197, 253, 0.16) 1px, transparent 1.6px),
+    linear-gradient(90deg, rgba(147, 197, 253, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(147, 197, 253, 0.05) 1px, transparent 1px);
+  background-size: 26px 26px, 104px 104px, 104px 104px;
+  /* fade it out toward the edges so it never hard-stops at a seam */
+  mask-image: radial-gradient(120% 90% at 50% 40%, #000 15%, transparent 85%);
+  -webkit-mask-image: radial-gradient(120% 90% at 50% 40%, #000 15%, transparent 85%);
+}
+
+/* =================================================================
+   Per-page texture variants.
+
+   Each page wrapper picks a different weave, so the dark bands across
+   the site read as related but not identical. Every one is pure CSS
+   gradients — no image requests, and they tile at any size. Keep them
+   all in this same very low contrast band: they are surface detail,
+   not pattern competing with the copy on top.
+================================================================= */
+
+/* course pages — diagonal weave */
+.course-page .tech-texture {
+  background-image:
+    repeating-linear-gradient(45deg, rgba(147, 197, 253, 0.07) 0 1px, transparent 1px 14px),
+    repeating-linear-gradient(-45deg, rgba(147, 197, 253, 0.05) 0 1px, transparent 1px 14px);
+  background-size: auto, auto;
+}
+
+/* about — honeycomb-ish lattice, built from three angled rules */
+.about-page .tech-texture {
+  background-image:
+    repeating-linear-gradient(60deg, rgba(147, 197, 253, 0.06) 0 1px, transparent 1px 22px),
+    repeating-linear-gradient(-60deg, rgba(147, 197, 253, 0.06) 0 1px, transparent 1px 22px),
+    repeating-linear-gradient(0deg, rgba(147, 197, 253, 0.04) 0 1px, transparent 1px 38px);
+  background-size: auto, auto, auto;
+}
+
+/* contact — concentric signal rings */
+.contact-page .tech-texture {
+  background-image:
+    repeating-radial-gradient(circle at 50% 45%, rgba(147, 197, 253, 0.07) 0 1px, transparent 1px 46px);
+  background-size: auto;
+}
+
+/* gallery — a field of small crosshairs */
+.gallery-page .tech-texture {
+  background-image:
+    linear-gradient(rgba(147, 197, 253, 0.11) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(147, 197, 253, 0.11) 1px, transparent 1px);
+  background-size: 8px 34px, 34px 8px;
+}
+
+/* the shared sub-page shell, one weave per route */
+.tc-page--blog .tech-texture {
+  /* fine vertical scanlines */
+  background-image: repeating-linear-gradient(90deg, rgba(147, 197, 253, 0.07) 0 1px, transparent 1px 9px);
+  background-size: auto;
+}
+.tc-page--faq .tech-texture {
+  /* an open dot matrix */
+  background-image: radial-gradient(rgba(147, 197, 253, 0.16) 1.4px, transparent 1.8px);
+  background-size: 30px 30px;
+}
+.tc-page--reviews .tech-texture {
+  /* chevron weave */
+  background-image:
+    repeating-linear-gradient(135deg, rgba(147, 197, 253, 0.07) 0 1px, transparent 1px 18px);
+  background-size: auto;
+}
+.tc-page--founder .tech-texture {
+  /* wide grid with a diagonal running through it */
+  background-image:
+    repeating-linear-gradient(0deg, rgba(147, 197, 253, 0.05) 0 1px, transparent 1px 42px),
+    repeating-linear-gradient(90deg, rgba(147, 197, 253, 0.05) 0 1px, transparent 1px 42px),
+    repeating-linear-gradient(45deg, rgba(147, 197, 253, 0.05) 0 1px, transparent 1px 42px);
+  background-size: auto, auto, auto;
+}
+.tc-page--mission .tech-texture {
+  /* radial burst from the top */
+  background-image:
+    repeating-conic-gradient(from 0deg at 50% 0%, rgba(147, 197, 253, 0.06) 0deg 0.5deg, transparent 0.5deg 6deg);
+  background-size: auto;
+}
+.tc-page--partnerships .tech-texture {
+  /* offset brick lattice */
+  background-image:
+    linear-gradient(rgba(147, 197, 253, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(147, 197, 253, 0.05) 1px, transparent 1px);
+  background-size: 60px 26px, 60px 26px;
+  background-position: 0 0, 30px 13px;
+}
+.tc-page--courses .tech-texture {
+  /* tight square mesh */
+  background-image:
+    linear-gradient(rgba(147, 197, 253, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(147, 197, 253, 0.06) 1px, transparent 1px);
+  background-size: 18px 18px, 18px 18px;
+}

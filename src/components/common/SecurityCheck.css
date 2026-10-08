@@ -1,0 +1,170 @@
+/* ==================================================================
+   The security check, styled once.
+
+   It began on the site's dark ink — a glass field, the cyan accent on
+   focus, a green edge the moment the answer lands — and every colour
+   was written for that ground. Then it was reused on the contact form
+   and the team page, which are white cards, and the whole control went
+   invisible: white label on white, white input text on white, a note
+   at 1.5:1. Nobody could see the question they were being asked to
+   answer.
+
+   So the ground is a variable now. The defaults below are the dark
+   ones, unchanged, and `.seccheck--on-light` restates them for a light
+   card. A form declares which it is sitting on; nothing else moves.
+================================================================== */
+
+.seccheck {
+  /* dark ink — the original values */
+  --sc-label: var(--white);
+  --sc-text: var(--white);
+  --sc-placeholder: rgba(219, 224, 250, 0.5);
+  --sc-field-bg: rgba(255, 255, 255, 0.1);
+  --sc-field-border: rgba(255, 255, 255, 0.18);
+  --sc-field-hover: rgba(255, 255, 255, 0.32);
+  --sc-field-focus-bg: rgba(255, 255, 255, 0.16);
+  --sc-panel-bg: rgba(37, 99, 235, 0.12);
+  --sc-panel-border: rgba(96, 165, 250, 0.28);
+  --sc-btn: rgba(214, 223, 255, 0.85);
+  --sc-btn-bg: rgba(255, 255, 255, 0.07);
+  --sc-btn-border: var(--hairline);
+  --sc-btn-hover: var(--white);
+  --sc-btn-hover-bg: rgba(255, 255, 255, 0.14);
+  --sc-btn-hover-border: rgba(255, 255, 255, 0.3);
+  --sc-note: rgba(200, 209, 245, 0.62);
+}
+
+/* a white or near-white card. Same control, legible ground. */
+.seccheck--on-light {
+  --sc-label: #0b1a4d;
+  --sc-text: #0b1a4d;
+  --sc-placeholder: rgba(6, 14, 43, 0.45);
+  --sc-field-bg: #fff;
+  --sc-field-border: rgba(6, 14, 43, 0.18);
+  --sc-field-hover: rgba(6, 14, 43, 0.34);
+  --sc-field-focus-bg: #fff;
+  --sc-panel-bg: rgba(37, 99, 235, 0.06);
+  --sc-panel-border: rgba(37, 99, 235, 0.22);
+  --sc-btn: #3a4270;
+  --sc-btn-bg: rgba(6, 14, 43, 0.04);
+  --sc-btn-border: rgba(6, 14, 43, 0.16);
+  --sc-btn-hover: #0b1a4d;
+  --sc-btn-hover-bg: rgba(6, 14, 43, 0.08);
+  --sc-btn-hover-border: rgba(6, 14, 43, 0.3);
+  --sc-note: rgba(6, 14, 43, 0.66);
+}
+
+.seccheck {
+  display: grid;
+  gap: 9px;
+  min-width: 0;
+}
+
+.seccheck > label {
+  font-family: var(--font-body);
+  font-size: 0.938rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--sc-label);
+}
+
+/* the boxed variant, for the large enquiry panel */
+.seccheck--panel {
+  padding: 16px 18px;
+  border-radius: 16px;
+  background: var(--sc-panel-bg);
+  border: 1px solid var(--sc-panel-border);
+}
+
+.seccheck-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.seccheck-row input {
+  flex: 1;
+  min-width: 0;
+  padding: 13px 16px;
+  border-radius: 14px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--sc-text);
+  background: var(--sc-field-bg);
+  border: 1px solid var(--sc-field-border);
+  transition:
+    border-color 0.25s var(--ease),
+    background 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
+}
+
+.seccheck-row input::placeholder { color: var(--sc-placeholder); }
+.seccheck-row input:hover { border-color: var(--sc-field-hover); }
+
+.seccheck-row input:focus {
+  outline: none;
+  background: var(--sc-field-focus-bg);
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2);
+}
+
+.seccheck-row input[aria-invalid='true'] { border-color: #ff8aa4; }
+
+/* answered - the button above it is now live, and this says so
+   without a line of copy */
+.seccheck.is-solved .seccheck-row input {
+  border-color: rgba(74, 222, 128, 0.6);
+  background: rgba(74, 222, 128, 0.12);
+}
+
+.seccheck-new {
+  flex: none;
+  padding: 12px 15px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-mono);
+  font-size: 0.688rem;
+  letter-spacing: 0.06em;
+  color: var(--sc-btn);
+  background: var(--sc-btn-bg);
+  border: 1px solid var(--sc-btn-border);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.25s var(--ease), background 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+.seccheck-new:hover {
+  color: var(--sc-btn-hover);
+  background: var(--sc-btn-hover-bg);
+  border-color: var(--sc-btn-hover-border);
+}
+
+.seccheck-note {
+  font-size: 0.813rem;
+  line-height: 1.5;
+  color: var(--sc-note);
+}
+
+.seccheck-error {
+  font-size: 0.813rem;
+  color: #ff8aa4;
+}
+
+/* No question to show. Says so plainly and offers a way forward,
+   rather than failing silently and blocking the send button with no
+   explanation. */
+.seccheck-wait {
+  font-size: 0.875rem;
+  color: var(--sc-note);
+}
+.seccheck-wait button {
+  color: var(--sc-label);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+@media (max-width: 420px) {
+  .seccheck-row { flex-wrap: wrap; }
+  .seccheck-row input { flex: 1 1 100%; }
+}

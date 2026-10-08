@@ -1,0 +1,36 @@
+/* ==================================================================
+   The preview route's own chrome.
+
+   Almost nothing: the page being previewed brings its own styles, and
+   this only has to look right in the moments before a draft arrives.
+================================================================== */
+
+.pv-empty {
+  display: grid;
+  place-content: center;
+  gap: 8px;
+  min-height: 100vh;
+  padding: 24px;
+  text-align: center;
+  background: var(--paper);
+  color: var(--ink-muted);
+  font-family: var(--font-body);
+}
+
+.pv-empty p {
+  margin: 0;
+}
+
+.pv-empty-note {
+  max-width: 42ch;
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+/* The cookie notice has no business in an editor's preview — see the note
+   in PreviewFrame. */
+.is-preview .cc-wrap,
+.is-preview .bhv,
+.is-preview .fdock,
+.is-preview .fserv,
+.is-preview .ft-top { display: none; }

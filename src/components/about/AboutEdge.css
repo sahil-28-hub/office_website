@@ -1,0 +1,68 @@
+/* ==================================================================
+   §8 — what makes techcadd different.
+================================================================== */
+
+.apedge-mesh {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: clamp(36px, 4.6vw, 62px) 0 0;
+  padding: 0;
+  list-style: none;
+  border-radius: var(--ap-r-lg);
+  overflow: hidden;
+}
+
+.apedge-cell {
+  padding: clamp(26px, 2.6vw, 38px);
+  border-right: 1px solid var(--ap-line);
+  border-bottom: 1px solid var(--ap-line);
+  transition: background 0.5s var(--ease);
+}
+
+/* the mesh supplies its own outer border, so the last cell in a row
+   and the final row drop theirs */
+.apedge-cell:nth-child(3n) { border-right: 0; }
+.apedge-cell:nth-last-child(-n + 3) { border-bottom: 0; }
+
+.apedge-cell:hover { background: var(--ap-surface); }
+
+.apedge-cell .ap-ico { transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease); }
+
+.apedge-cell:hover .ap-ico {
+  transform: translateY(-3px) rotate(-4deg);
+  box-shadow: var(--ap-shadow);
+}
+
+.apedge-cell h3 {
+  margin-top: 22px;
+  font-size: 1.08rem;
+  letter-spacing: -0.025em;
+  color: var(--ap-title);
+  transition: transform 0.45s var(--ease);
+}
+
+.apedge-cell:hover h3 { transform: translateX(4px); }
+
+.apedge-cell p {
+  margin-top: 11px;
+  font-size: 0.925rem;
+  line-height: 1.65;
+  color: var(--ap-muted);
+}
+
+/* --------------------------- responsive --------------------------- */
+@media (max-width: 1000px) {
+  .apedge-mesh { grid-template-columns: repeat(2, 1fr); }
+  .apedge-cell:nth-child(3n) { border-right: 1px solid var(--ap-line); }
+  .apedge-cell:nth-child(2n) { border-right: 0; }
+  .apedge-cell:nth-last-child(-n + 3) { border-bottom: 1px solid var(--ap-line); }
+  .apedge-cell:last-child { border-bottom: 0; }
+}
+
+@media (max-width: 620px) {
+  .apedge-mesh { grid-template-columns: minmax(0, 1fr); }
+  .apedge-cell,
+  .apedge-cell:nth-child(3n) { border-right: 0; }
+  .apedge-cell:nth-last-child(-n + 3) { border-bottom: 1px solid var(--ap-line); }
+  .apedge-cell:last-child { border-bottom: 0; }
+}

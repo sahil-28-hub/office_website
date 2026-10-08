@@ -1,0 +1,90 @@
+/* ==================================================================
+   Full-bleed map band. No shell, no radius — it spans the viewport
+   and butts straight up against the footer.
+================================================================== */
+
+.cmap {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: clamp(320px, 38vw, 470px);
+  background: var(--paper-tint);
+  overflow: hidden;
+}
+
+.cmap iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.cmap-placeholder {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(150deg, rgba(37, 99, 235, 0.12), rgba(28, 83, 209, 0.08));
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+.cmap-placeholder svg { width: 26px; height: 26px; color: var(--electric); }
+
+/* the floating address chip, kept clear of Google's own controls */
+.cmap-card {
+  position: absolute;
+  top: clamp(16px, 3vw, 28px);
+  left: clamp(16px, 4vw, 42px);
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  max-width: min(320px, calc(100% - 32px));
+  padding: 13px 20px 13px 13px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(12, 31, 108, 0.1);
+  backdrop-filter: saturate(150%) blur(14px);
+  -webkit-backdrop-filter: saturate(150%) blur(14px);
+  box-shadow: 0 22px 44px -24px rgba(11, 26, 77, 0.7);
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+
+.cmap-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 28px 54px -24px rgba(11, 26, 77, 0.8);
+}
+
+.cmap-card-ico {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--grad-pill);
+  color: var(--white);
+  box-shadow: 0 12px 22px -14px rgba(37, 99, 235, 0.9);
+}
+
+.cmap-card-body { display: grid; gap: 2px; min-width: 0; }
+
+.cmap-card-body b {
+  font-size: 0.938rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--ink-strong);
+}
+
+.cmap-card-body i {
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 0.688rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--electric);
+}

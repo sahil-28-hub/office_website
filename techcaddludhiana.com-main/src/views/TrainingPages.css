@@ -1,0 +1,287 @@
+/* ==================================================================
+   Internship & Training pages. Shared bands come from page-kit.css
+   and MoreCoursesPage.css (.mc-intro, .mc-points, .mc-faq).
+================================================================== */
+
+/* ---------------- duration cards ---------------- */
+.tr-formats {
+  display: grid;
+  gap: clamp(16px, 2vw, 24px);
+  margin: clamp(28px, 3.2vw, 44px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.tr-formats--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.tr-formats--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+.tr-format {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  padding: clamp(22px, 2.4vw, 30px);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  box-shadow: 0 24px 50px -40px rgba(11, 26, 77, 0.5);
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), border-color 0.35s var(--ease);
+}
+.tr-format:hover {
+  transform: translateY(-5px);
+  border-color: rgba(37, 99, 235, 0.35);
+  box-shadow: var(--shadow-indigo);
+}
+
+.tr-format-badge {
+  align-self: flex-start;
+  padding: 4px 11px;
+  border-radius: var(--r-pill);
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--electric);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tr-format-len {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 3.6vw, 3rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  background: var(--grad-ink);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.tr-format h3 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1.3;
+  color: var(--ink-strong);
+}
+
+.tr-format-sum {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--ink-body);
+}
+
+.tr-format-points {
+  display: grid;
+  gap: 8px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.tr-format-points li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 0.9rem;
+  color: var(--ink-strong);
+}
+.tr-format-points svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  padding: 3px;
+  border-radius: 50%;
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--electric);
+}
+
+.tr-format-for {
+  padding-top: 12px;
+  border-top: 1px solid var(--rule-soft);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--ink-muted);
+}
+.tr-format-for b { color: var(--ink-strong); font-weight: 600; }
+
+.tr-format-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: auto;
+  padding: 12px 18px;
+  border-radius: var(--r-pill);
+  background: var(--ink-strong);
+  color: var(--white);
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 600;
+  transition: background 0.3s var(--ease);
+}
+.tr-format-cta svg { width: 16px; height: 16px; }
+/* the whole card is the link */
+.tr-format-cta::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+.tr-format:hover .tr-format-cta { background: var(--grad-pill); }
+.tr-format-cta:focus-visible { outline: 2px solid var(--electric); outline-offset: 3px; }
+
+@media (max-width: 960px) {
+  .tr-formats--3,
+  .tr-formats--2 { grid-template-columns: 1fr; }
+}
+
+/* ---------------- tools ---------------- */
+.tr-side-label {
+  margin-bottom: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.tr-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tr-tools li {
+  padding: 7px 14px;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--ink-strong);
+}
+
+/* ---------------- stages (domain page) ---------------- */
+.tr-stages {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: clamp(14px, 1.6vw, 20px);
+  margin: clamp(28px, 3.2vw, 40px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------------- plan (duration page) ---------------- */
+.tr-plan {
+  position: relative;
+  display: grid;
+  gap: 16px;
+  margin: clamp(28px, 3.2vw, 40px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+/* the rail the steps hang from */
+.tr-plan::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  bottom: 14px;
+  left: 64px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--electric), var(--cyan));
+  opacity: 0.35;
+}
+.tr-plan > li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr);
+  gap: clamp(16px, 2.4vw, 32px);
+  align-items: start;
+}
+.tr-plan-tag {
+  position: relative;
+  z-index: 1;
+  justify-self: start;
+  padding: 7px 14px;
+  border-radius: var(--r-pill);
+  background: var(--ink-strong);
+  color: var(--white);
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.tr-plan-body {
+  padding: clamp(18px, 2vw, 24px);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-md);
+  background: var(--paper);
+}
+.tr-plan-body h3 {
+  font-family: var(--font-display);
+  font-size: 1.12rem;
+  color: var(--ink-strong);
+}
+.tr-plan-body p {
+  margin-top: 6px;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--ink-body);
+}
+.tr-plan-body ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.tr-plan-body ul li {
+  padding: 4px 11px;
+  border-radius: var(--r-pill);
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--electric);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .tr-plan::before { display: none; }
+  .tr-plan > li { grid-template-columns: 1fr; gap: 10px; }
+}
+
+/* ---------------- projects & tools ---------------- */
+.tr-two {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 72px);
+}
+.tr-two .ap-title { margin-bottom: 20px; }
+.tr-projects {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tr-projects li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-md);
+  background: var(--paper-tint);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ink-strong);
+}
+.tr-projects svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  color: var(--electric);
+}
+@media (max-width: 900px) {
+  .tr-two { grid-template-columns: 1fr; }
+}

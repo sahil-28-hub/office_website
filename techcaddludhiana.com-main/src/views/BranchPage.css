@@ -1,0 +1,28 @@
+/* ==================================================================
+   The four branch pages — /branches/phagwara, /branches/maqsudan,
+   /branches/hoshiarpur, /branches/amritsar. One template
+   (src/pages/BranchPage.jsx), driven by src/data/branches.js.
+================================================================== */
+.tc-branch-intro-body { max-width: 68ch; }
+
+.tc-branch-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: clamp(24px, 3.6vw, 40px) 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tc-branch-catalogue-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.tc-branch-notfound {
+  display: flex;
+  justify-content: center;
+  padding-block: clamp(24px, 4vw, 48px);
+}

@@ -1,0 +1,197 @@
+/* =================================================================
+   Long-form course copy.
+
+   Built from the same parts as the benefits grid - numbered cards on
+   a hairline border, lifting on hover - so an editorial section reads
+   as part of the course page rather than as pasted-in text. The cards
+   carry more words than the benefits ones, so the grid runs two wide
+   instead of three and the measure stays readable.
+
+   The band a narrative section sits on comes from its own `tone`
+   (paper, tint or dark), which resolves to the same .c-sec--* classes
+   every other section uses.
+================================================================= */
+
+/* c-sec holds every standard course block to a full screen and centres
+   it, which is right for a block that is one idea. These are long
+   editorial sections, so they take their height from their content -
+   otherwise a short one is padded out to 100svh and its copy floats in
+   the middle of an empty screen. */
+.cnar {
+  min-height: 0;
+  align-items: flex-start;
+}
+
+.cnar-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  margin: clamp(38px, 4.6vw, 58px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cnar-card {
+  position: relative;
+  height: 100%;
+  padding: 28px 30px 26px;
+  border-radius: var(--card-r);
+  background: var(--paper);
+  border: 1px solid var(--rule-soft);
+  overflow: hidden;
+  transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease),
+    border-color 0.45s var(--ease);
+}
+
+.cnar-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: linear-gradient(160deg, rgba(37, 99, 235, 0.07), rgba(28, 83, 209, 0.02) 60%, transparent);
+  transition: opacity 0.45s var(--ease);
+}
+
+.cnar-card > * { position: relative; }
+
+.cnar-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(37, 99, 235, 0.32);
+  box-shadow: var(--shadow-lift);
+}
+.cnar-card:hover::before { opacity: 1; }
+.cnar-card:hover .cnar-no { color: var(--electric); }
+
+/* a tint band sits on --paper-tint, so its cards need the plain paper
+   underneath to stay distinguishable from the band itself */
+.c-sec--tint .cnar-card { background: var(--paper); }
+
+/* on a dark band the cards are glass over the ink, the same treatment
+   every other dark-section card on the page gets */
+.c-sec--dark .cnar-card {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  border-color: var(--hairline);
+}
+.c-sec--dark .cnar-card:hover { border-color: rgba(96, 165, 250, 0.46); }
+.c-sec--dark .cnar-no { color: var(--mist-dim); }
+.c-sec--dark .cnar-title { color: var(--white); }
+.c-sec--dark .cnar-text,
+.c-sec--dark .cnar-close { color: var(--mist); }
+
+.cnar-no {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  color: var(--ink-muted);
+  transition: color 0.4s var(--ease);
+}
+
+.cnar-title {
+  margin-top: 14px;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--ink-strong);
+}
+
+.cnar-text {
+  margin-top: 12px;
+  font-size: 0.938rem;
+  line-height: 1.72;
+  color: var(--ink-muted);
+}
+
+/* ------------------------- the tools rail -------------------------
+   The one section that closes on a list of named tools rather than a
+   paragraph. Chips, so a long list stays scannable.
+------------------------------------------------------------------ */
+.cnar-tools {
+  margin-top: clamp(30px, 3.6vw, 44px);
+  padding: clamp(24px, 3vw, 32px);
+  border-radius: var(--card-r);
+  background: var(--paper);
+  border: 1px solid var(--rule-soft);
+}
+
+.c-sec--dark .cnar-tools {
+  background: rgba(9, 10, 32, 0.5);
+  border-color: var(--hairline);
+}
+
+.cnar-tools-label {
+  font-family: var(--font-mono);
+  font-size: var(--step-eyebrow);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--indigo);
+}
+
+.c-sec--dark .cnar-tools-label { color: var(--cyan); }
+
+.cnar-tools-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 0;
+  list-style: none;
+}
+
+.cnar-tools-list li {
+  padding: 9px 16px;
+  border-radius: var(--r-pill);
+  background: var(--paper-tint);
+  border: 1px solid var(--rule);
+  font-family: var(--font-mono);
+  font-size: 0.813rem;
+  color: var(--ink-strong);
+  transition: transform 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+
+.c-sec--dark .cnar-tools-list li {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--hairline);
+  color: #d7dfff;
+}
+
+.cnar-tools-list li:hover {
+  transform: translateY(-2px);
+  border-color: rgba(37, 99, 235, 0.4);
+}
+
+/* --------------------------- the close ----------------------------
+   The line each section lands on. Set wider and quieter than the
+   cards above it, so it reads as the author stepping back.
+------------------------------------------------------------------ */
+.cnar-close {
+  max-width: 74ch;
+  margin: clamp(30px, 3.4vw, 42px) auto 0;
+  padding-top: clamp(22px, 2.6vw, 30px);
+  border-top: 1px solid var(--rule-soft);
+  font-size: 1.02rem;
+  line-height: 1.72;
+  color: var(--ink-body);
+  text-align: center;
+}
+
+.c-sec--dark .cnar-close { border-top-color: var(--hairline); }
+
+/* --------------------------- responsive --------------------------- */
+@media (max-width: 900px) {
+  .cnar-list { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .cnar-card { padding: 24px 22px 22px; }
+  .cnar-close { text-align: left; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cnar-card,
+  .cnar-tools-list li { transition: none; }
+  .cnar-card:hover { transform: none; }
+  .cnar-tools-list li:hover { transform: none; }
+}

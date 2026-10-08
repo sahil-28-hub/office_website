@@ -1,0 +1,88 @@
+/* Questions only — one centred column, no supporting copy beside it. */
+.cfaq-inner {
+  max-width: 900px;
+  margin-inline: auto;
+}
+
+.cfaq-head { margin-bottom: clamp(34px, 4vw, 52px); }
+
+/* the list is long enough to set its own height; the section does not
+   need a screen's worth of minimum under it as well */
+.cfaq {
+  min-height: 0;
+  align-items: flex-start;
+}
+
+.cfaq-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--rule-soft);
+}
+
+.cfaq-item { border-bottom: 1px solid var(--rule-soft); }
+.cfaq-item h3 { margin: 0; }
+
+.cfaq-item button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 22px 4px;
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: 1.063rem;
+  font-weight: 600;
+  color: var(--ink-strong);
+  letter-spacing: -0.02em;
+  transition: color 0.3s var(--ease);
+}
+.cfaq-item button:hover { color: var(--indigo); }
+.cfaq-item button span:first-child { flex: 1; }
+
+.cfaq-sign {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: 50%;
+  color: var(--indigo);
+  border: 1px solid var(--rule);
+  transition: transform 0.4s var(--ease), background 0.4s var(--ease),
+    color 0.4s var(--ease), border-color 0.4s var(--ease);
+}
+.cfaq-item.is-open .cfaq-sign {
+  transform: rotate(180deg);
+  background: var(--grad-pill);
+  color: var(--white);
+  border-color: transparent;
+}
+
+.cfaq-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition: grid-template-rows 0.42s var(--ease), visibility 0s linear 0.42s;
+}
+.cfaq-item.is-open .cfaq-panel {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition: grid-template-rows 0.42s var(--ease), visibility 0s;
+}
+
+.cfaq-panel-inner { overflow: hidden; }
+
+.cfaq-panel p {
+  padding: 0 52px 24px 4px;
+  font-size: 0.938rem;
+  line-height: 1.75;
+  color: var(--ink-body);
+  opacity: 0;
+  transition: opacity 0.35s var(--ease) 0.06s;
+}
+.cfaq-item.is-open .cfaq-panel p { opacity: 1; }
+
+@media (max-width: 560px) {
+  .cfaq-panel p { padding-right: 20px; }
+}

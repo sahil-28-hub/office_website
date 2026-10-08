@@ -1,0 +1,32 @@
+/* ==================================================================
+   Contact page foundations.
+
+   The page is three bands — the photographic banner, the card that
+   overlaps it, and the full-bleed map — and each carries its own
+   styling. What is left to share is the page surface and the scroll
+   reveal, so that is all this file holds.
+================================================================== */
+
+.contact-page {
+  position: relative;
+  background: var(--paper);
+  color: var(--ink-body);
+}
+
+/* ----------------------------- reveal ----------------------------- */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.75s var(--ease), transform 0.75s var(--ease);
+  transition-delay: var(--d, 0ms);
+}
+
+[data-reveal].is-in { opacity: 1; transform: none; }
+
+[data-reveal='left'] { transform: translateX(-26px); }
+[data-reveal='right'] { transform: translateX(26px); }
+[data-reveal='scale'] { transform: scale(0.97); }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1; transform: none; transition: none; }
+}

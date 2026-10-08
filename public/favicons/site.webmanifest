@@ -1,0 +1,15 @@
+{
+  "name": "TechCadd Computer Education",
+  "short_name": "TechCadd",
+  "description": "Practical, industry-focused training in AI, MERN, Java, Python, Data Science, Cyber Security and Cloud — Ludhiana.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0b1f4b",
+  "theme_color": "#0b1a4d",
+  "icons": [
+    { "src": "/favicons/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/favicons/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/favicons/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

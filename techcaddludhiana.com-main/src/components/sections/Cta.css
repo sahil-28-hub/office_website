@@ -1,0 +1,305 @@
+/* =================================================================
+   Start building your career today — indigo closing CTA
+================================================================= */
+
+.cta {
+  position: relative;
+  overflow: hidden;
+  margin-top: calc(-1 * clamp(24px, 3.2vw, 46px));
+  border-radius: clamp(24px, 3.2vw, 46px) clamp(24px, 3.2vw, 46px) 0 0;
+  padding: clamp(3.5rem, 6vw, 5.5rem) 0 clamp(4rem, 7vw, 6rem);
+  color: var(--mist);
+  text-align: center;
+  /* same canvas as the Ask section, recentred for a centred layout */
+  background:
+    radial-gradient(70% 60% at 50% 42%, rgba(46, 38, 122, 0.6) 0%, rgba(6, 14, 43, 0) 62%),
+    linear-gradient(180deg, var(--bg-ink) 0%, var(--bg-ink-deep) 60%, #0a1640 100%);
+}
+
+/* ---------------- decoration ---------------- */
+.cta-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cta-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(147, 197, 253, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(147, 197, 253, 0.05) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(66% 62% at 50% 46%, #000 8%, transparent 100%);
+  -webkit-mask-image: radial-gradient(66% 62% at 50% 46%, #000 8%, transparent 100%);
+}
+
+.cta-ring {
+  position: absolute;
+  left: 13%;
+  top: 16%;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(147, 197, 253, 0.28);
+  animation: cta-bob 7s var(--ease) infinite alternate;
+}
+.cta-ring--small {
+  left: auto;
+  right: 11%;
+  top: auto;
+  bottom: 22%;
+  width: 26px;
+  height: 26px;
+  border-color: rgba(34, 211, 238, 0.35);
+  animation-duration: 9s;
+  animation-direction: alternate-reverse;
+}
+
+@keyframes cta-bob {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(10px, -16px, 0); }
+}
+
+.cta-glow {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  translate: -50% -50%;
+  width: 640px;
+  height: 460px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.5;
+  background: radial-gradient(circle, rgba(28, 83, 209, 0.45), transparent 70%);
+  animation: cta-bob 22s var(--ease) infinite alternate;
+}
+
+.cta-inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ---------------- copy ---------------- */
+.cta-eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.cta-title {
+  max-width: 16ch;
+  margin-top: 20px;
+  font-size: clamp(2.1rem, 5vw, 3.75rem);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  color: var(--white);
+}
+
+.cta-sub {
+  max-width: 48ch;
+  margin-top: 22px;
+  font-size: var(--step-body);
+  line-height: 1.6;
+  color: var(--mist);
+}
+
+/* ---------------- call pill ---------------- */
+.cta-call {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 38px;
+  padding: 12px 30px 12px 12px;
+  border-radius: var(--r-pill);
+  background: var(--grad-pill);
+  box-shadow:
+    0 0 0 6px rgba(37, 99, 235, 0.12),
+    var(--shadow-glow);
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+.cta-call:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 8px rgba(37, 99, 235, 0.16),
+    0 30px 58px -20px rgba(47, 98, 255, 1);
+}
+
+.cta-call-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  color: var(--white);
+}
+.cta-call-icon svg {
+  width: 19px;
+  height: 19px;
+}
+
+.cta-call-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.25;
+}
+.cta-call-text small {
+  font-family: var(--font-body);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+.cta-call-text b {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--white);
+}
+
+/* ---------------- callback form ---------------- */
+.cta-form {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 570px;
+  margin-top: 26px;
+}
+
+.cta-field {
+  flex: 1;
+  min-width: 0;
+}
+.cta-field input {
+  width: 100%;
+  padding: 18px 26px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--hairline);
+  background: var(--glass);
+  color: var(--white);
+  font: inherit;
+  font-size: 0.938rem;
+  transition: border-color 0.25s var(--ease), background 0.25s var(--ease);
+}
+.cta-field input::placeholder {
+  color: var(--mist-dim);
+}
+.cta-field input:focus {
+  outline: none;
+  border-color: rgba(34, 211, 238, 0.6);
+  background: var(--glass-strong);
+}
+.cta-field input[aria-invalid='true'] {
+  border-color: rgba(255, 138, 138, 0.75);
+}
+
+.cta-submit {
+  flex: none;
+  padding: 18px 32px;
+  border-radius: var(--r-pill);
+  background: var(--white);
+  color: var(--ink-strong);
+  font-weight: 600;
+  font-size: 0.938rem;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.cta-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 36px -18px rgba(0, 0, 0, 0.6);
+}
+
+/* Off-screen rather than display:none. A bot that checks for the
+   obvious tricks skips a hidden field but fills one that is
+   technically in the layout — and no sighted or screen-reader visitor
+   can reach it either way. */
+.cta-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.cta-error {
+  min-height: 1.25rem;
+  margin-top: 10px;
+  font-size: 0.813rem;
+  color: #ff9d9d;
+}
+
+.cta-ok { color: #8ef0c4; }
+.cta-error:empty {
+  margin-top: 0;
+}
+
+/* ---------------- assurances ---------------- */
+.cta-assurances {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px 0;
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.cta-assurances li {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 22px;
+  font-size: 0.875rem;
+  color: var(--mist);
+}
+.cta-assurances li + li {
+  border-left: 1px solid var(--hairline);
+}
+.cta-assurances svg {
+  width: 17px;
+  height: 17px;
+  color: var(--cyan);
+}
+
+/* ---------------- responsive ---------------- */
+@media (max-width: 900px) {
+  .cta-glow { width: 90vw; }
+  .cta-ring { left: 8%; top: 12%; }
+  .cta-ring--small { right: 7%; }
+}
+
+@media (max-width: 620px) {
+  .cta-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .cta-submit {
+    width: 100%;
+  }
+  .cta-assurances li {
+    padding: 0 14px;
+    font-size: 0.813rem;
+  }
+  .cta-assurances li + li {
+    border-left: 0;
+  }
+  .cta-ring {
+    left: 6%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-ring {
+    animation: none;
+  }
+}

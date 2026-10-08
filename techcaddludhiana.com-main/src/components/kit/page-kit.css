@@ -1,0 +1,1615 @@
+/* ==================================================================
+   Page kit — the shared surface every secondary page is built on.
+
+   Nothing new is invented here. The About page already established
+   the site's page-level vocabulary (ap-dark / ap-light bands, the
+   glass eyebrow pill with its blinking dot, gradient accent words,
+   pill buttons on --grad-pill, hairline glass panels), so this file
+   imports it and adds only the blocks those pages need that About
+   did not have: a banner variant, timelines,
+   marquees, accordions, ratings, post and course cards.
+
+   Everything is namespaced tc-*, and every colour comes from the
+   --ap-* set the parent band publishes, so a block moves between a
+   dark and a light band by moving in the markup — never by
+   restyling.
+================================================================== */
+
+@import '../about/about-base.css';
+
+.tc-page {
+  --ap-y: clamp(68px, 7.6vw, 122px);
+  --ap-r: var(--r-md);
+  --ap-r-lg: var(--r-lg);
+
+  position: relative;
+  background: var(--paper);
+  color: var(--ink-body);
+}
+
+/* ==================================================================
+   1. Reveal variants layered on top of about-base's [data-reveal].
+================================================================== */
+/* Named for the blur it used to animate. The filter is gone — it was
+   re-rasterising whole sections as they scrolled in — and the variant
+   keeps its shorter rise so the markup that asks for it still works. */
+[data-reveal='blur'] { transform: translateY(20px); }
+
+[data-reveal='rise'] { transform: translateY(46px) scale(0.985); }
+
+[data-reveal='clip'] {
+  clip-path: inset(0 0 100% 0);
+  transform: none;
+  transition: opacity 0.9s var(--ease), clip-path 0.9s var(--ease);
+  transition-delay: var(--d, 0ms);
+}
+[data-reveal='clip'].is-in { clip-path: inset(0 0 0 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal='blur'] { filter: none; }
+  [data-reveal='clip'] { clip-path: none; }
+}
+
+/* ==================================================================
+   2. Banner.
+
+   The same construction as the About banner — photograph over a
+   gradient under a veil, with the site grid laid across it — plus
+   two blurred brand orbs that drift on scroll.
+================================================================== */
+.tc-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding-top: calc(var(--nav-h) + clamp(66px, 10vh, 126px));
+  padding-bottom: clamp(58px, 8vh, 104px);
+  background: var(--bg-ink-deep);
+  color: var(--mist);
+}
+
+/* carries whichever per-page texture the .tc-page--* wrapper selects
+   (see base.css) — one hook, seven pages */
+.tc-hero .tech-texture {
+  z-index: -1;
+}
+
+.tc-hero-veil {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    linear-gradient(180deg, rgba(11, 26, 77, 0.72) 0%, rgba(11, 26, 77, 0.88) 55%, rgba(11, 26, 77, 0.96) 100%),
+    var(--shot, none),
+    linear-gradient(160deg, var(--bg-ink-deep) 0%, var(--bg-ink) 55%, var(--bg-ink-card) 100%);
+  background-size: cover, cover, cover;
+  background-position: center, center 32%, center;
+  background-repeat: no-repeat;
+}
+
+.tc-hero-grid {
+  position: absolute;
+  inset: -12% -10% 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(147, 197, 253, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(147, 197, 253, 0.07) 1px, transparent 1px);
+  background-size: 68px 68px;
+  mask-image: radial-gradient(75% 65% at 50% 40%, #000 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(75% 65% at 50% 40%, #000 30%, transparent 100%);
+}
+
+.tc-hero-orb {
+  position: absolute;
+  z-index: -1;
+  width: clamp(280px, 34vw, 520px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(70px);
+  opacity: 0.5;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.65), transparent 68%);
+}
+
+.tc-hero-orb--a { top: -14%; left: -8%; }
+.tc-hero-orb--b {
+  right: -10%;
+  bottom: -22%;
+  background: radial-gradient(circle, rgba(28, 83, 209, 0.55), transparent 68%);
+}
+
+.tc-hero-inner { position: relative; }
+.tc-hero--center { text-align: center; }
+.tc-hero--center .tc-hero-copy { margin-inline: auto; }
+
+.tc-hero-copy { max-width: 800px; }
+
+.tc-hero-title {
+  margin-top: 26px;
+  font-family: var(--font-display);
+  font-size: clamp(2.35rem, 5.9vw, 4.25rem);
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  color: var(--white);
+}
+
+/* scoped to the accent's own class, not to any nested span: WriteIn
+   wraps each word of this heading in a span of its own, and a bare
+   descendant selector would paint every one of them with the gradient */
+.tc-hero-title .tc-hero-accent {
+  background: var(--grad-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.tc-hero-lead {
+  max-width: 56ch;
+  margin-top: 22px;
+  font-size: clamp(1rem, 1.15vw, 1.18rem);
+  line-height: 1.68;
+  color: rgba(214, 221, 246, 0.82);
+}
+
+.tc-hero--center .tc-hero-lead { margin-inline: auto; }
+
+.tc-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 34px;
+}
+
+.tc-hero--center .tc-hero-actions { justify-content: center; }
+
+/* proof figures on a glass rail, as on the About banner */
+.tc-hero-stats {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 4), 1fr);
+  margin: clamp(44px, 5.4vw, 70px) 0 0;
+  padding: clamp(22px, 3vw, 32px) 0;
+  list-style: none;
+  border-radius: var(--r-lg);
+  background: var(--glass);
+  border: 1px solid var(--hairline);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), var(--shadow-pill);
+  text-align: center;
+}
+
+.tc-hero-stats li {
+  padding-inline: clamp(10px, 1.6vw, 22px);
+  border-right: 1px solid var(--hairline);
+  transition: transform 0.35s var(--ease);
+}
+
+.tc-hero-stats li:last-child { border-right: 0; }
+.tc-hero-stats li:hover { transform: translateY(-3px); }
+
+.tc-hero-stats strong {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  font-variant-numeric: tabular-nums;
+}
+
+.tc-hero-stats strong em {
+  font-style: normal;
+  background: var(--grad-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.tc-hero-stats span {
+  display: block;
+  margin-top: 11px;
+  font-size: 0.85rem;
+  color: var(--mist-dim);
+}
+
+/* a plain key/value rail, when there are no numbers worth counting */
+.tc-hero-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(18px, 4vw, 46px);
+  margin: clamp(38px, 4.6vw, 58px) 0 0;
+}
+
+.tc-hero--center .tc-hero-facts { justify-content: center; }
+
+.tc-hero-facts dt {
+  font-family: var(--font-mono);
+  font-size: var(--step-eyebrow);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.tc-hero-facts dd {
+  margin: 8px 0 0;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--white);
+}
+
+@media (max-width: 760px) {
+  .tc-hero-stats { grid-template-columns: repeat(2, 1fr); row-gap: 26px; }
+  .tc-hero-stats li:nth-child(2n) { border-right: 0; }
+  .tc-hero-stats li:nth-child(-n + 2) {
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--hairline);
+  }
+}
+
+@media (max-width: 420px) {
+  .tc-hero-stats { grid-template-columns: minmax(0, 1fr); }
+  .tc-hero-stats li { border-right: 0; }
+}
+
+/* ==================================================================
+   3. Card grid — the workhorse. Icon, optional number, title, copy.
+   Lit by useSpotlight() through --mx/--my when the host asks for it.
+================================================================== */
+.tc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: clamp(16px, 1.8vw, 24px);
+  margin-top: clamp(38px, 4.4vw, 60px);
+  padding: 0;
+  list-style: none;
+}
+
+.tc-grid--2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); }
+.tc-grid--4 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); }
+
+.tc-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: clamp(22px, 2.3vw, 30px);
+  border-radius: var(--ap-r);
+  background: var(--ap-surface);
+  border: 1px solid var(--ap-line);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--ap-inner);
+  transition: transform 0.4s var(--ease), border-color 0.4s var(--ease),
+    background 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+
+/* the cursor spotlight, drawn under the content */
+.tc-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 0%), var(--ap-accent-soft), transparent 70%);
+  transition: opacity 0.4s var(--ease);
+}
+
+.tc-card[data-lit]::before { opacity: 1; }
+
+.tc-card:hover {
+  transform: translateY(-5px);
+  background: var(--ap-surface-lift);
+  border-color: var(--ap-line-lift);
+  box-shadow: var(--ap-inner), var(--ap-shadow);
+}
+
+.tc-card:hover .ap-ico { transform: translateY(-3px); border-color: var(--ap-line-lift); }
+
+.tc-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.tc-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.12rem;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: var(--ap-title);
+}
+
+.tc-card p {
+  font-size: 0.97rem;
+  line-height: 1.68;
+  color: var(--ap-text);
+}
+
+.tc-card-no {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  color: var(--ap-muted);
+}
+
+.tc-card-list {
+  display: grid;
+  gap: 9px;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tc-card-list li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--ap-text);
+}
+
+.tc-card-list li::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ap-accent);
+}
+
+/* ==================================================================
+   4. Steps / timeline. The rail fills with --p, written onto the
+   section by useSectionProgress().
+================================================================== */
+.tc-steps {
+  position: relative;
+  display: grid;
+  gap: clamp(18px, 2vw, 26px);
+  margin-top: clamp(40px, 4.6vw, 62px);
+  padding: 0 0 0 clamp(30px, 4vw, 54px);
+  list-style: none;
+}
+
+.tc-steps::before,
+.tc-steps::after {
+  content: '';
+  position: absolute;
+  left: clamp(9px, 1.3vw, 17px);
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  border-radius: 2px;
+}
+
+.tc-steps::before { background: var(--ap-line); }
+
+.tc-steps::after {
+  background: var(--ap-accent-grad);
+  transform: scaleY(var(--p, 0));
+  transform-origin: 50% 0;
+  box-shadow: 0 0 16px rgba(37, 99, 235, 0.5);
+}
+
+.tc-step {
+  position: relative;
+  padding: clamp(20px, 2.1vw, 28px);
+  border-radius: var(--ap-r);
+  background: var(--ap-surface);
+  border: 1px solid var(--ap-line);
+  box-shadow: var(--ap-inner);
+  transition: transform 0.4s var(--ease), border-color 0.4s var(--ease),
+    background 0.4s var(--ease);
+}
+
+.tc-step:hover {
+  transform: translateX(4px);
+  background: var(--ap-surface-lift);
+  border-color: var(--ap-line-lift);
+}
+
+/* the node on the rail */
+.tc-step::before {
+  content: '';
+  position: absolute;
+  left: calc(clamp(4px, 0.8vw, 12px) - clamp(30px, 4vw, 54px));
+  top: 26px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--ap-accent);
+  box-shadow: 0 0 0 4px var(--ap-accent-soft);
+}
+
+.tc-step-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ap-accent);
+}
+
+.tc-step h3 {
+  margin-top: 10px;
+  font-family: var(--font-display);
+  font-size: 1.16rem;
+  letter-spacing: -0.02em;
+  color: var(--ap-title);
+}
+
+.tc-step p {
+  margin-top: 10px;
+  max-width: 62ch;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: var(--ap-text);
+}
+
+/* ==================================================================
+   5. Split layout — copy on one side, something sticky on the other.
+================================================================== */
+.tc-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+  gap: clamp(28px, 4.4vw, 70px);
+  align-items: start;
+}
+
+.tc-split--flip > *:first-child { order: 2; }
+
+.tc-split-sticky { position: sticky; top: calc(var(--nav-h) + 34px); }
+
+@media (max-width: 900px) {
+  .tc-split { grid-template-columns: minmax(0, 1fr); }
+  .tc-split--flip > *:first-child { order: 0; }
+  .tc-split-sticky { position: static; }
+}
+
+/* ==================================================================
+   6. Scroll-lit copy. Each word carries its own --i; the section's
+   --p decides how many of them have arrived.
+================================================================== */
+.tc-scrolltext {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.1vw, 2.5rem);
+  line-height: 1.34;
+  letter-spacing: -0.03em;
+  color: var(--ap-title);
+}
+
+.tc-scrolltext i {
+  font-style: normal;
+  /* lit once the scroll has travelled past this word's slot */
+  opacity: clamp(0.2, calc((var(--p, 0) * var(--n) - var(--i)) * 1.4), 1);
+  transition: opacity 0.25s linear;
+}
+
+.tc-scrolltext em {
+  font-style: normal;
+  background: var(--ap-accent-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tc-scrolltext i { opacity: 1; }
+}
+
+/* ==================================================================
+   7. Pull quote.
+================================================================== */
+.tc-quote {
+  position: relative;
+  padding: clamp(28px, 3.4vw, 46px);
+  border-radius: var(--ap-r-lg);
+  background: var(--ap-surface);
+  border: 1px solid var(--ap-line);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--ap-inner);
+}
+
+.tc-quote-mark {
+  color: var(--ap-accent);
+  opacity: 0.7;
+}
+
+.tc-quote-mark svg { width: 34px; height: 34px; }
+
+.tc-quote blockquote {
+  margin: 18px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 1.9vw, 1.6rem);
+  line-height: 1.5;
+  letter-spacing: -0.022em;
+  color: var(--ap-title);
+}
+
+.tc-quote figcaption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 22px;
+  font-size: 0.92rem;
+  color: var(--ap-muted);
+}
+
+.tc-quote figcaption b {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--ap-title);
+}
+
+.tc-quote figcaption i {
+  width: 26px;
+  height: 1px;
+  flex: none;
+  background: var(--ap-line-lift);
+}
+
+/* ==================================================================
+   8. Marquee rails — two tracks running against each other, the
+   pattern the About page uses for its subject chips.
+================================================================== */
+.tc-marquee {
+  display: grid;
+  gap: 14px;
+  margin-top: clamp(30px, 3.4vw, 44px);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.tc-rail { overflow: hidden; }
+
+.tc-track {
+  display: flex;
+  gap: 14px;
+  width: max-content;
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+  animation: tc-slide var(--speed, 46s) linear infinite;
+}
+
+.tc-rail[data-row='1'] .tc-track { animation-direction: reverse; }
+.tc-marquee:hover .tc-track { animation-play-state: paused; }
+
+@keyframes tc-slide {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tc-track { animation: none; }
+  .tc-rail { overflow-x: auto; }
+}
+
+/* ==================================================================
+   9. Accordion — used by the FAQ page and anywhere a long list of
+   answers would otherwise bury the page.
+================================================================== */
+.tc-acc {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tc-acc-item {
+  border-radius: var(--ap-r);
+  background: var(--ap-surface);
+  border: 1px solid var(--ap-line);
+  box-shadow: var(--ap-inner);
+  transition: border-color 0.35s var(--ease), background 0.35s var(--ease),
+    transform 0.35s var(--ease);
+}
+
+.tc-acc-item:hover { border-color: var(--ap-line-lift); }
+.tc-acc-item.is-open {
+  background: var(--ap-surface-lift);
+  border-color: var(--ap-line-lift);
+  box-shadow: var(--ap-inner), var(--ap-shadow);
+}
+
+.tc-acc-q {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: clamp(18px, 2vw, 24px);
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.25vw, 1.1rem);
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  color: var(--ap-title);
+}
+
+.tc-acc-q span { flex: 1; }
+
+.tc-acc-sign {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid var(--ap-line);
+  background: var(--ap-surface);
+  transition: transform 0.4s var(--ease), border-color 0.4s var(--ease),
+    background 0.4s var(--ease);
+}
+
+.tc-acc-sign::before,
+.tc-acc-sign::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 11px;
+  height: 1.6px;
+  border-radius: 2px;
+  translate: -50% -50%;
+  background: var(--ap-title);
+  transition: transform 0.4s var(--ease), opacity 0.3s var(--ease);
+}
+
+.tc-acc-sign::after { transform: rotate(90deg); }
+
+.tc-acc-item.is-open .tc-acc-sign {
+  transform: rotate(180deg);
+  border-color: transparent;
+  background: var(--grad-pill);
+}
+
+.tc-acc-item.is-open .tc-acc-sign::before,
+.tc-acc-item.is-open .tc-acc-sign::after { background: var(--white); }
+.tc-acc-item.is-open .tc-acc-sign::after { opacity: 0; transform: rotate(0deg); }
+
+/* height is animated through the grid track, so nothing is measured
+   in JS and the answer stays in the document for find-in-page */
+.tc-acc-a {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.45s var(--ease);
+}
+
+.tc-acc-item.is-open .tc-acc-a { grid-template-rows: 1fr; }
+
+.tc-acc-a > div { overflow: hidden; }
+
+.tc-acc-a p {
+  padding: 0 clamp(18px, 2vw, 24px) clamp(20px, 2.1vw, 26px) clamp(18px, 2vw, 24px);
+  max-width: 74ch;
+  font-size: 0.99rem;
+  line-height: 1.75;
+  color: var(--ap-text);
+}
+
+/* ==================================================================
+   10. Filter chips — blogs, FAQ topics, the course index.
+================================================================== */
+.tc-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: clamp(28px, 3vw, 40px);
+  padding: 0;
+  list-style: none;
+}
+
+.tc-filter button {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 18px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--ap-line);
+  background: var(--ap-surface);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--ap-text);
+  transition: transform 0.3s var(--ease), border-color 0.3s var(--ease),
+    background 0.3s var(--ease), color 0.3s var(--ease);
+}
+
+.tc-filter button:hover {
+  transform: translateY(-2px);
+  border-color: var(--ap-line-lift);
+  color: var(--ap-title);
+}
+
+.tc-filter button[aria-pressed='true'] {
+  color: var(--white);
+  border-color: transparent;
+  background: var(--grad-pill);
+  box-shadow: var(--shadow-glow);
+}
+
+.tc-filter button b {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  opacity: 0.72;
+}
+
+.tc-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 420px;
+  margin-top: 22px;
+  padding: 13px 20px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--ap-line);
+  background: var(--ap-surface);
+  transition: border-color 0.3s var(--ease), background 0.3s var(--ease);
+}
+
+.tc-search:focus-within { border-color: var(--ap-line-lift); background: var(--ap-surface-lift); }
+.tc-search svg { width: 18px; height: 18px; flex: none; color: var(--ap-muted); }
+
+.tc-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  font-family: var(--font-body);
+  font-size: 0.97rem;
+  color: var(--ap-title);
+}
+
+.tc-search input::placeholder { color: var(--ap-muted); }
+
+.tc-empty {
+  margin-top: clamp(34px, 4vw, 52px);
+  padding: clamp(30px, 3.6vw, 46px);
+  border-radius: var(--ap-r);
+  border: 1px dashed var(--ap-line-lift);
+  text-align: center;
+  color: var(--ap-muted);
+}
+
+.tc-count {
+  margin-top: 18px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  color: var(--ap-muted);
+}
+
+/* ==================================================================
+   11. Post cards — the blog index.
+================================================================== */
+.tc-posts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 316px), 1fr));
+  gap: clamp(18px, 2vw, 26px);
+  margin-top: clamp(30px, 3.4vw, 44px);
+  padding: 0;
+  list-style: none;
+}
+
+.tc-post {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--ap-r);
+  background: var(--ap-surface);
+  border: 1px solid var(--ap-line);
+  box-shadow: var(--ap-inner);
+  transition: transform 0.4s var(--ease), border-color 0.4s var(--ease),
+    background 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+
+.tc-post:hover {
+  transform: translateY(-6px);
+  background: var(--ap-surface-lift);
+  border-color: var(--ap-line-lift);
+  box-shadow: var(--ap-inner), var(--ap-shadow);
+}
+
+.tc-post-cover {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: linear-gradient(140deg, #1d4ed8, #1c53d1 60%, #22d3ee);
+}
+
+/* A CMS cover, laid over the gradient floor. object-fit keeps the
+   16/9 tile whatever shape was uploaded. */
+.tc-post-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s var(--ease);
+}
+
+.tc-post:hover .tc-post-img,
+a.tc-feature:hover .tc-post-img { transform: scale(1.06); }
+
+.tc-post-cover--violet { background: linear-gradient(140deg, #1c53d1, #2563eb 65%, #22d3ee); }
+.tc-post-cover--cyan { background: linear-gradient(140deg, #22d3ee, #2563eb 60%, #0c1f6c); }
+.tc-post-cover--indigo { background: linear-gradient(140deg, #0c1f6c, #2563eb 70%, #1c53d1); }
+
+/* the same periwinkle grid the dark bands carry, so the covers read
+   as part of the system rather than plain gradient blocks */
+.tc-post-cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.14) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: radial-gradient(70% 70% at 30% 20%, #000, transparent 75%);
+  -webkit-mask-image: radial-gradient(70% 70% at 30% 20%, #000, transparent 75%);
+  transition: transform 0.9s var(--ease);
+}
+
+.tc-post:hover .tc-post-cover::after { transform: scale(1.12) rotate(1.5deg); }
+
+.tc-post-tag {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  z-index: 1;
+  padding: 7px 14px;
+  border-radius: var(--r-pill);
+  background: rgba(6, 14, 43, 0.58);
+  border: 1px solid var(--hairline);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-family: var(--font-mono);
+  font-size: 0.69rem;
+  letter-spacing: 0.06em;
+  color: #e4ebff;
+}
+
+.tc-post-body {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  flex: 1;
+  padding: clamp(20px, 2.1vw, 26px);
+}
+
+.tc-post-meta {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--ap-muted);
+}
+
+.tc-post-meta i { font-style: normal; margin: 0 8px; opacity: 0.6; }
+
+.tc-post h3 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  line-height: 1.34;
+  letter-spacing: -0.022em;
+  color: var(--ap-title);
+}
+
+.tc-post p {
+  font-size: 0.94rem;
+  line-height: 1.65;
+  color: var(--ap-text);
+}
+
+.tc-post-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ap-accent);
+}
+
+.tc-post-more svg { width: 16px; height: 16px; transition: transform 0.3s var(--ease); }
+.tc-post:hover .tc-post-more svg { transform: translateX(4px); }
+
+/* the featured post, laid across two columns */
+.tc-feature {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(22px, 3vw, 44px);
+  align-items: center;
+  padding: clamp(22px, 2.6vw, 34px);
+  border-radius: var(--ap-r-lg);
+  background: var(--ap-surface);
+  border: 1px solid var(--ap-line);
+  box-shadow: var(--ap-inner);
+  transition: border-color 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+
+.tc-feature:hover { border-color: var(--ap-line-lift); box-shadow: var(--ap-inner), var(--ap-shadow); }
+
+.tc-feature .tc-post-cover { border-radius: var(--ap-r); aspect-ratio: 4 / 3; }
+
+.tc-feature h3 {
+  margin-top: 14px;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.4vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  color: var(--ap-title);
+}
+
+.tc-feature p {
+  margin-top: 14px;
+  font-size: 1.02rem;
+  line-height: 1.72;
+  color: var(--ap-text);
+}
+
+@media (max-width: 860px) {
+  .tc-feature { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ==================================================================
+   12. Review cards + rating breakdown.
+================================================================== */
+.tc-review {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: clamp(280px, 30vw, 380px);
+  padding: clamp(22px, 2.3vw, 28px);
+  border-radius: var(--ap-r);
+  background: var(--ap-surface);
+  border: 1px solid var(--ap-line);
+  box-shadow: var(--ap-inner);
+  white-space: normal;
+  transition: transform 0.4s var(--ease), border-color 0.4s var(--ease),
+    background 0.4s var(--ease);
+}
+
+.tc-review:hover {
+  transform: translateY(-4px);
+  background: var(--ap-surface-lift);
+  border-color: var(--ap-line-lift);
+}
+
+.tc-review--grid { width: auto; height: 100%; }
+
+.tc-stars { display: flex; gap: 4px; color: var(--gold); }
+.tc-stars svg { width: 16px; height: 16px; }
+
+.tc-review blockquote {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: var(--ap-text);
+}
+
+.tc-review figcaption {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+.tc-avatar {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--ap-ico-bg);
+  border: 1px solid var(--ap-ico-line);
+  font-family: var(--font-display);
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ap-ico-fg);
+}
+
+/* The row of marks under a review — the Google source and, where
+   there is one, the video. */
+.tc-review-marks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  margin: 12px 0 0;
+}
+
+/*
+  One rule, not two.
+
+  There were two `.tc-review-source` blocks — an older one setting
+  `display: inline-block` further down the file, which won on
+  specificity-tie-plus-order and killed the `gap`. The mark rendered
+  flush against the words: "GRead on Google".
+*/
+.tc-review-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  text-decoration: none;
+  transition: color 0.25s var(--ease);
+}
+
+/* The mark is a button when it opens the video, so it needs the
+   anchor's own look rather than the browser's. */
+.tc-review-watch {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+}
+
+.tc-review-watch:hover,
+.tc-review-watch:focus-visible {
+  color: var(--indigo);
+  text-decoration: underline;
+}
+
+.tc-review-google,
+.tc-review-yt {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
+/* The recorded testimonial inside a review card in the grid. */
+.tc-review-video {
+  margin-top: 14px;
+}
+
+/*
+  "Read on Google" under a review that carries its source address.
+
+  Quiet by default and only underlined on hover, because the card's
+  own voice is the quote — this is a way to check it, not a call to
+  action competing with the page's buttons.
+*/
+
+
+.tc-review-source:hover,
+.tc-review-source:focus-visible {
+  color: var(--indigo);
+  text-decoration: underline;
+}
+
+.tc-review-who b {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--ap-title);
+}
+
+.tc-review-who span {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.82rem;
+  color: var(--ap-muted);
+}
+
+.tc-bars {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tc-bar {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr) 52px;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--ap-muted);
+}
+
+.tc-bar i {
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: var(--ap-line);
+  overflow: hidden;
+}
+
+.tc-bar i::after {
+  content: '';
+  display: block;
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+  background: var(--ap-accent-grad);
+  transform: scaleX(calc(var(--p, 0) * var(--v)));
+  transform-origin: 0 50%;
+  transition: transform 0.2s linear;
+}
+
+.tc-bar b { text-align: right; font-weight: 500; color: var(--ap-title); }
+
+.tc-score {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-family: var(--font-display);
+}
+
+.tc-score strong {
+  font-size: clamp(3rem, 7vw, 4.6rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--ap-title);
+  font-variant-numeric: tabular-nums;
+}
+
+.tc-score span { font-size: 1.1rem; color: var(--ap-muted); }
+
+/* ==================================================================
+   13. Course index cards.
+
+   A picture card: artwork fills the top, the copy sits on a dark
+   plate below it, and a full-width pill opens the course. The whole
+   card is the hit area — .tc-course-more stretches over it — so the
+   pill is an affordance rather than the only target.
+
+   Cards are dark on a light band by design, which is what lets the
+   artwork run edge to edge without a frame around it.
+================================================================== */
+.tc-courses {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 268px), 1fr));
+  gap: clamp(16px, 1.8vw, 24px);
+  margin-top: clamp(28px, 3.2vw, 40px);
+  padding: 0;
+  list-style: none;
+}
+
+.tc-course {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: clamp(18px, 1.6vw, 22px);
+  background: var(--bg-ink-card);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 18px 40px -26px rgba(11, 26, 77, 0.55);
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+
+.tc-course:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset, 0 30px 58px -28px rgba(11, 26, 77, 0.7);
+}
+
+/* ---------------- artwork ---------------- */
+.tc-course-art {
+  position: relative;
+  /* z-index -1 paints the artwork above the card's own background but
+     below the in-flow copy, which lets .tc-course-body stay a plain
+     static box. That matters: the "Show more" pseudo-element stretches
+     to the nearest POSITIONED ancestor, and a positioned body would
+     trap the card's hit area inside the lower half. */
+  z-index: -1;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  /* the gradient is the floor: it shows through wherever a course has
+     no photograph, and behind one while it decodes */
+  background: var(--tone-grad, linear-gradient(150deg, #2563eb 0%, #1c53d1 130%));
+}
+
+/* Most of the 42 courses have no photograph, and a bare gradient reads
+   as unfinished. This lays the site's grid-and-dot texture over it so a
+   photoless card still looks made. It is painted before the <img>,
+   which is positioned and therefore covers it wherever a photo exists. */
+.tc-course-art::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 34px 34px, 34px 34px, 34px 34px;
+  background-position: 0 0;
+  mask-image: radial-gradient(120% 100% at 30% 20%, #000 10%, transparent 78%);
+  -webkit-mask-image: radial-gradient(120% 100% at 30% 20%, #000 10%, transparent 78%);
+}
+
+.tc-course-art img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease);
+}
+
+.tc-course:hover .tc-course-art img { transform: scale(1.05); }
+
+/* melts the foot of the picture into the plate below it, so there is
+   no hard seam across the card */
+.tc-course-scrim {
+  position: absolute;
+  inset: auto 0 -1px;
+  height: 58%;
+  background: linear-gradient(180deg, rgba(20, 42, 107, 0) 0%, var(--bg-ink-card) 92%);
+}
+
+/* one gradient per category — see courseTone() in data/courseImages.js */
+.tc-course.tone-blue   { --tone-grad: linear-gradient(150deg, #2563eb 0%, #2440c9 130%); }
+.tc-course.tone-indigo { --tone-grad: linear-gradient(150deg, #1c53d1 0%, #123285 130%); }
+.tc-course.tone-teal   { --tone-grad: linear-gradient(150deg, #22d3ee 0%, #1668b8 130%); }
+.tc-course.tone-green  { --tone-grad: linear-gradient(150deg, #34d399 0%, #0891b2 130%); }
+.tc-course.tone-orange { --tone-grad: linear-gradient(150deg, #ff9f45 0%, #d1451f 130%); }
+.tc-course.tone-purple { --tone-grad: linear-gradient(150deg, #c084fc 0%, #6d28d9 130%); }
+
+/* ---------------- copy ---------------- */
+.tc-course-body {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  /* pulled up over the scrim so the title sits on the fade rather
+     than below it, as in the reference card */
+  margin-top: -14%;
+  padding: 0 clamp(16px, 1.5vw, 20px) clamp(16px, 1.5vw, 20px);
+}
+
+.tc-course-body h3 {
+  font-family: var(--font-display);
+  font-size: 1.12rem;
+  line-height: 1.28;
+  letter-spacing: -0.02em;
+  color: var(--white);
+}
+
+.tc-course-body p {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: rgba(214, 221, 246, 0.78);
+  /* three lines, so a long blurb cannot make one card taller than
+     the rest of its row */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ---------------- chips ---------------- */
+.tc-course-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 3px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tc-course-chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: rgba(226, 231, 250, 0.92);
+  white-space: nowrap;
+}
+
+.tc-course-chips svg {
+  width: 13px;
+  height: 13px;
+  color: var(--cyan);
+}
+
+/* ---------------- the pill ---------------- */
+.tc-course-more {
+  display: grid;
+  place-items: center;
+  margin-top: auto;
+  padding-top: 13px;
+  padding-bottom: 13px;
+  border-radius: var(--r-pill);
+  background: var(--white);
+  color: var(--ink-strong);
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background 0.3s var(--ease), color 0.3s var(--ease);
+}
+
+/* the whole card is clickable, with the pill as the visible target */
+.tc-course-more::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.tc-course:hover .tc-course-more {
+  background: var(--grad-pill);
+  color: var(--white);
+}
+
+.tc-course-more:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+@media (max-width: 520px) {
+  .tc-course-art { aspect-ratio: 16 / 10; }
+}
+
+/* ==================================================================
+   14. Logo wall — college partners.
+================================================================== */
+.tc-logo {
+  display: grid;
+  place-items: center;
+  min-width: 190px;
+  padding: 20px 26px;
+  border-radius: var(--ap-r);
+  background: var(--ap-surface);
+  border: 1px solid var(--ap-line);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+  color: var(--ap-title);
+  text-align: center;
+  transition: border-color 0.35s var(--ease), background 0.35s var(--ease),
+    transform 0.35s var(--ease);
+}
+
+.tc-logo:hover {
+  transform: translateY(-3px);
+  border-color: var(--ap-line-lift);
+  background: var(--ap-surface-lift);
+}
+
+.tc-logo small {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--ap-muted);
+}
+
+/* ==================================================================
+   15. Closing call to action.
+================================================================== */
+.tc-cta-inner {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(38px, 5vw, 72px);
+  border-radius: var(--ap-r-lg);
+  background: var(--ap-surface);
+  border: 1px solid var(--ap-line);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--ap-inner), var(--ap-shadow);
+  text-align: center;
+}
+
+.tc-cta-glow {
+  position: absolute;
+  left: 50%;
+  top: -60%;
+  width: 120%;
+  aspect-ratio: 2 / 1;
+  translate: -50% 0;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(37, 99, 235, 0.35), transparent 72%);
+  filter: blur(20px);
+}
+
+.tc-cta-inner > *:not(.tc-cta-glow) { position: relative; }
+
+.tc-cta-title {
+  margin-top: 20px;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.6vw, 2.9rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  color: var(--ap-title);
+}
+
+.tc-cta-lead {
+  max-width: 54ch;
+  margin: 18px auto 0;
+  font-size: var(--step-lead);
+  line-height: 1.66;
+  color: var(--ap-muted);
+}
+
+.tc-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 32px;
+}
+
+.tc-cta-note {
+  margin-top: 22px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--ap-muted);
+}
+
+/* ==================================================================
+   16. Odds and ends.
+================================================================== */
+.tc-lede {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(18px, 3vw, 40px);
+}
+
+.tc-lede .ap-head { flex: 1 1 460px; }
+
+.tc-pill-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--ap-line);
+  background: var(--ap-surface);
+  font-size: 0.93rem;
+  font-weight: 600;
+  color: var(--ap-title);
+  transition: transform 0.3s var(--ease), border-color 0.3s var(--ease),
+    background 0.3s var(--ease);
+}
+
+.tc-pill-link:hover {
+  transform: translateY(-2px);
+  border-color: var(--ap-line-lift);
+  background: var(--ap-surface-lift);
+}
+
+.tc-pill-link svg { width: 17px; height: 17px; transition: transform 0.3s var(--ease); }
+.tc-pill-link:hover svg { transform: translateX(3px); }
+
+.tc-figure {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border-radius: var(--ap-r-lg);
+  background: linear-gradient(150deg, rgba(37, 99, 235, 0.32), rgba(6, 14, 43, 0.85));
+  border: 1px solid var(--ap-line);
+  box-shadow: var(--ap-inner);
+  aspect-ratio: var(--ratio, 4 / 5);
+}
+
+.tc-figure img { width: 100%; height: 100%; object-fit: cover; }
+
+.tc-figure-empty {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 12px;
+  height: 100%;
+  padding: 24px;
+  text-align: center;
+  color: rgba(216, 226, 255, 0.6);
+}
+
+.tc-figure-empty svg { width: 30px; height: 30px; }
+
+.tc-figure-empty span {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+}
+
+.tc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: var(--r-pill);
+  background: var(--ap-accent-soft);
+  border: 1px solid var(--ap-line);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ap-accent);
+}
+
+.tc-kv {
+  display: grid;
+  gap: 0;
+  margin: clamp(24px, 3vw, 34px) 0 0;
+  padding: 0;
+  border-radius: var(--ap-r);
+  border: 1px solid var(--ap-line);
+  background: var(--ap-surface);
+  overflow: hidden;
+}
+
+.tc-kv > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 15px clamp(18px, 2vw, 24px);
+  border-bottom: 1px solid var(--ap-line);
+  transition: background 0.3s var(--ease);
+}
+
+.tc-kv > div:last-child { border-bottom: 0; }
+.tc-kv > div:hover { background: var(--ap-surface-lift); }
+
+.tc-kv dt {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ap-muted);
+}
+
+.tc-kv dd {
+  margin: 0;
+  text-align: right;
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  color: var(--ap-title);
+}
+
+/* ==================================================================
+   An event's own questions — the accordion-free list on /events/<slug>.
+   Plain <dl> markup: a handful of short answers reads better open than
+   behind a control, and the page already has enough to click.
+================================================================== */
+.ev-faqs {
+  margin: 0;
+}
+
+.ev-faqs > div + div {
+  margin-top: 18px;
+}
+
+.ev-faqs dt {
+  font-weight: 600;
+  color: var(--ink-strong);
+}
+
+.ev-faqs dd {
+  margin: 4px 0 0;
+  color: var(--ink-body);
+}

@@ -1,0 +1,261 @@
+/* c-sec holds every course block to a full screen and centres it in
+   the middle of it. That is right for a section that is one idea, and
+   wrong here: this one now carries the course's long-form opening
+   copy, so it sets its own height. Left as it was, a course with a
+   short overview was padded out to 100svh and its copy floated in the
+   middle of an empty screen, while a course with the full three
+   paragraphs got a screen's worth of minimum it did not need on top of
+   copy that already overflowed it.
+
+   Same opt-out .cnar and .cfaq take, for the same reason. */
+.covw {
+  min-height: 0;
+  align-items: flex-start;
+}
+
+/* ----------------------------- layout -----------------------------
+   Copy left, preview right. The preview is a fixed 16/9 block while
+   the copy varies a lot in length between courses, so the columns are
+   not equal: the copy takes the larger share and the preview sticks
+   rather than stretching to match a column it can never fill.
+------------------------------------------------------------------ */
+.covw-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  /* stretch, not start: the preview column has to be as tall as the
+     copy for the block inside it to have any distance to stick over */
+  align-items: stretch;
+  gap: clamp(32px, 4.4vw, 68px);
+}
+
+.covw-copy { min-width: 0; }
+
+/* the head is left-aligned here, so drop the centred measure it
+   carries by default — course-base caps every .c-head at 680px, which
+   would leave the copy column half empty */
+.course-page .covw-copy .c-head { max-width: none; }
+.course-page .covw-copy .c-lead { max-width: 60ch; }
+
+/* Long-form opening copy, for the courses that carry it. */
+.covw-body {
+  margin-top: clamp(20px, 2.4vw, 28px);
+}
+
+.covw-body p {
+  font-size: 1.02rem;
+  line-height: 1.78;
+  color: var(--ink-muted);
+}
+
+.covw-body p + p { margin-top: 18px; }
+
+.covw-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  margin: clamp(26px, 3vw, 34px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.covw-highlights li {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--step-small);
+  color: var(--ink-body);
+}
+
+.covw-tick {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: var(--white);
+  background: var(--grad-pill);
+}
+
+/* ----------------------------- video ------------------------------
+   The column stretches; the block inside it sticks. It holds at the
+   top of the viewport from the moment the section's copy starts
+   passing it until the copy runs out, then releases with the section.
+------------------------------------------------------------------ */
+.covw-stage { min-width: 0; }
+
+.covw-sticky {
+  position: sticky;
+  /* clears the fixed navbar when it holds */
+  top: calc(var(--nav-h) + 24px);
+}
+
+.skel-video {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+
+.covw-video {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: var(--shadow-lift);
+  transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
+}
+
+/*
+  The real video, when the course has one.
+
+  The frame carries the same border, radius and lift as the drawn
+  stand-in beside it, so the slot looks the same whichever of the two
+  fills it — but the title goes underneath rather than over the still.
+*/
+.covw-player { margin: 0; }
+
+.covw-player-frame {
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: var(--shadow-lift);
+  transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
+}
+.covw-player-frame:hover { transform: scale(1.012); box-shadow: var(--shadow-indigo); }
+
+/* The frame supplies the corners; `.vp` must not round them again, or
+   its background shows through as four pale notches. Nothing else here
+   touches `.vp` — it centres its own play button with `place-items`,
+   and overriding its `display` puts that button in the top corner. */
+.covw-player-frame .vp { border-radius: 0; }
+
+.covw-player-cap {
+  margin-top: 12px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+
+.covw-video:hover { transform: scale(1.012); box-shadow: var(--shadow-indigo); }
+.covw-video:hover .covw-play { transform: translate(-50%, -50%) scale(1.09); }
+.covw-video:hover .covw-thumb-glow { opacity: 1; }
+
+.covw-thumb {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(700px 320px at 30% 20%, rgba(37, 99, 235, 0.34), transparent 70%),
+    linear-gradient(150deg, #0b0e2a 0%, var(--ink) 45%, #171a3d 100%);
+}
+
+.covw-thumb-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, #000 20%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, #000 20%, transparent 80%);
+}
+
+.covw-thumb-glow {
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--r-lg);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease);
+  box-shadow: inset 0 0 0 1px rgba(34, 211, 238, 0.45),
+    inset 0 0 60px rgba(34, 211, 238, 0.12);
+}
+
+.covw-thumb-code {
+  position: absolute;
+  left: clamp(20px, 4vw, 44px);
+  bottom: clamp(56px, 8vw, 78px);
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(0.688rem, 1.2vw, 0.875rem);
+  line-height: 2;
+  color: rgba(214, 223, 255, 0.72);
+}
+
+.covw-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: clamp(64px, 7vw, 88px);
+  height: clamp(64px, 7vw, 88px);
+  border-radius: 50%;
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: transform 0.45s var(--ease), background 0.35s var(--ease);
+}
+.covw-play:hover { background: rgba(255, 255, 255, 0.2); }
+.covw-play svg { margin-left: 3px; }
+
+.covw-play-ring {
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  animation: covw-ring 3s var(--ease) infinite;
+}
+
+@keyframes covw-ring {
+  0% { transform: scale(0.86); opacity: 0.9; }
+  75%, 100% { transform: scale(1.16); opacity: 0; }
+}
+
+.covw-video.is-playing .covw-play-ring { animation-play-state: paused; opacity: 0; }
+.covw-video.is-playing .covw-thumb-code { opacity: 0.35; }
+
+.covw-meta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px clamp(18px, 3vw, 28px);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(226, 231, 255, 0.8);
+  background: linear-gradient(180deg, transparent, rgba(5, 6, 20, 0.75));
+}
+
+.covw-time { color: var(--cyan); }
+
+@media (prefers-reduced-motion: reduce) {
+  .covw-player-frame { transition: none; }
+  .covw-player-frame:hover { transform: none; }
+  .covw-play-ring { animation: none; opacity: 0.4; }
+  .covw-video:hover { transform: none; }
+}
+
+/* One column below a laptop: at narrower widths the preview would be
+   too small to read and the copy measure too tight. Copy first, then
+   the preview under it — and nothing sticks once they are stacked. */
+@media (max-width: 1000px) {
+  .covw-split { grid-template-columns: minmax(0, 1fr); }
+  .course-page .covw-stage { margin-top: clamp(30px, 4vw, 44px); }
+  /* nothing to stick against once the columns are stacked */
+  .covw-sticky { position: static; }
+}
+
+@media (max-width: 640px) {
+  .covw-highlights { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .covw-thumb-code { bottom: 62px; }
+}
+

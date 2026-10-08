@@ -1,0 +1,52 @@
+/* The sitemap page: a grid of link groups. The band is as tall as its
+   contents, as on /pages. */
+
+.tc-page--sitemap .ap-sec {
+  padding-top: clamp(36px, 4vw, 56px);
+  padding-bottom: clamp(44px, 5vw, 72px);
+}
+
+.smap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 18px;
+  align-items: start;
+}
+
+.smap-group {
+  padding: 22px 24px;
+  border-radius: 20px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+}
+
+.smap-group h2 {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink-strong);
+}
+
+.smap-group ul {
+  display: grid;
+  gap: 2px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.smap-group a {
+  display: block;
+  padding: 5px 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--ink-body);
+  text-decoration: none;
+  transition: color 0.2s var(--ease);
+}
+.smap-group a:hover { color: var(--electric); }
+
+@media (prefers-reduced-motion: reduce) {
+  .smap-group a { transition: none; }
+}

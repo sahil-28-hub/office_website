@@ -1,0 +1,337 @@
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding: calc(var(--nav-h) + 70px) 0 70px;
+  overflow: hidden;
+  /* the page's dark tone, warmed toward violet on the right so the
+     ring stage sits in the light rather than on a flat field */
+  background:
+    radial-gradient(90% 80% at 78% 38%, rgba(28, 83, 209, 0.42) 0%, transparent 62%),
+    radial-gradient(70% 70% at 12% 88%, rgba(37, 99, 235, 0.24) 0%, transparent 60%),
+    linear-gradient(160deg, var(--bg-ink) 0%, var(--bg-ink-deep) 58%, #0a1640 100%);
+}
+
+/* ---------- background layers ---------- */
+.hero-bg { position: absolute; inset: 0; pointer-events: none; }
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.55;
+}
+.hero-orb--violet {
+  width: 480px; height: 480px;
+  right: 4%; top: 6%;
+  background: radial-gradient(circle, rgba(28, 83, 209, 0.55), transparent 68%);
+  animation: drift 16s var(--ease) infinite alternate;
+}
+.hero-orb--blue {
+  width: 420px; height: 420px;
+  left: -6%; bottom: -12%;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.42), transparent 70%);
+  animation: drift 20s var(--ease) infinite alternate-reverse;
+}
+
+@keyframes drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(-28px, 34px, 0) scale(1.08); }
+}
+
+/* ---------- layout ---------- */
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4.5rem);
+}
+
+/* ---------- copy ---------- */
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px 8px 12px;
+  margin-bottom: 26px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--hairline);
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: var(--font-mono);
+  font-size: var(--step-eyebrow);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+
+/* the badge is a link out to the institute on Google */
+a.hero-eyebrow {
+  text-decoration: none;
+  transition: border-color 0.25s var(--ease), color 0.25s var(--ease);
+}
+a.hero-eyebrow:hover,
+a.hero-eyebrow:focus-visible {
+  border-color: rgba(34, 211, 238, 0.55);
+  color: var(--white);
+}
+
+.hero-eyebrow .dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.16);
+  animation: blink 2.4s ease-in-out infinite;
+}
+.hero-eyebrow .sep { color: var(--mist-dim); }
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.hero-title {
+  font-size: var(--step-display);
+  font-weight: 700;
+  line-height: 0.94;
+  display: flex;
+  flex-direction: column;
+  color: var(--white);
+}
+
+.hero-title .word {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: rise 0.9s var(--ease) forwards;
+}
+.hero-title .word:nth-child(1) { animation-delay: 0.05s; }
+.hero-title .word:nth-child(2) { animation-delay: 0.18s; }
+.hero-title .word:nth-child(3) { animation-delay: 0.31s; }
+
+.word--accent {
+  background: var(--grad-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes rise {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-sub {
+  max-width: 30ch;
+  margin-top: 26px;
+  font-size: var(--step-lead);
+  color: var(--mist);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 36px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 30px;
+  border-radius: var(--r-pill);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), background 0.25s var(--ease);
+}
+.btn svg { width: 18px; height: 18px; transition: transform 0.25s var(--ease); }
+.btn:hover { transform: translateY(-2px); }
+.btn:hover svg { transform: translateX(3px); }
+
+.btn--primary {
+  color: var(--white);
+  background: var(--grad-pill);
+  box-shadow: var(--shadow-glow);
+}
+
+.btn--ghost {
+  color: var(--white);
+  border: 1px solid var(--hairline);
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.btn--ghost:hover { background: var(--glass-strong); }
+
+.hero-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  margin: 44px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--step-small);
+  color: var(--mist);
+}
+.hero-features li { display: flex; align-items: center; gap: 10px; }
+
+.feature-tile {
+  display: grid;
+  place-items: center;
+  width: 34px; height: 34px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--hairline);
+  background: linear-gradient(160deg, rgba(37, 99, 235, 0.28), rgba(28, 83, 209, 0.1));
+  color: var(--cyan);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+.feature-tile svg { width: 17px; height: 17px; }
+
+/* ================================================================
+   the orbit
+================================================================ */
+.hero-visual {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+}
+
+.hero-orbit {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+/* Each ring is a square box centred on the stage, carrying a circular
+   hairline border, spinning as one piece. --size is a % of the stage,
+   so the whole system scales with the column. */
+.hero-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--size);
+  aspect-ratio: 1;
+  margin: calc(var(--size) / -2) 0 0 calc(var(--size) / -2);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  animation: hero-spin var(--dur) linear infinite;
+  animation-direction: var(--dir);
+}
+.hero-ring--outer { border-color: rgba(255, 255, 255, 0.13); }
+.hero-ring--mid { border-color: rgba(255, 255, 255, 0.17); }
+.hero-ring--inner { border-color: rgba(255, 255, 255, 0.2); }
+
+@keyframes hero-spin {
+  to { transform: rotate(1turn); }
+}
+
+/* A zero-width bar from the ring's centre out to its edge: height 50%
+   is exactly the radius, and rotating it about its bottom end swings
+   the far tip around the hairline. No container-query units needed —
+   the 50% is simply half the ring's own height. */
+.hero-node {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 0;
+  height: 50%;
+  transform-origin: 50% 100%;
+  transform: rotate(var(--angle));
+}
+
+/* Sits on that far tip and counter-spins: same duration as the ring,
+   opposite direction (--counter-dir is set alongside --dir in the
+   JSX), so the ring's rotation is cancelled out here. */
+.hero-node-upright {
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: hero-spin var(--dur) linear infinite;
+  animation-direction: var(--counter-dir);
+}
+
+.hero-chip {
+  display: grid;
+  place-items: center;
+  width: clamp(34px, 3.5vw, 46px);
+  aspect-ratio: 1;
+  /* centre on the tip, then undo the static --angle so the logo is
+     upright rather than tipped by its position on the ring */
+  transform: translate(-50%, -50%) rotate(calc(-1 * var(--angle)));
+  border-radius: 30%;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 10px 26px -8px rgba(6, 8, 30, 0.75),
+    0 0 0 1px rgba(255, 255, 255, 0.5),
+    0 0 26px -6px rgba(28, 83, 209, 0.7);
+}
+.hero-chip svg {
+  width: 54%;
+  height: 54%;
+}
+.hero-chip b {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(0.625rem, 1.1vw, 0.813rem);
+}
+
+/* ---------- the centre stat ---------- */
+.hero-core {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  gap: 2px;
+  text-align: center;
+}
+.hero-core-num {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.25rem, 5.2vw, 3.75rem);
+  line-height: 1;
+  color: var(--white);
+  text-shadow: 0 6px 30px rgba(28, 83, 209, 0.6);
+}
+.hero-core-label {
+  font-family: var(--font-mono);
+  font-size: clamp(0.625rem, 1vw, 0.75rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 1020px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-copy { text-align: left; }
+  .hero-sub { max-width: 46ch; }
+  .hero-visual { order: 2; max-width: 480px; margin-inline: auto; }
+  .hero { padding-top: calc(var(--nav-h) + 54px); }
+}
+
+@media (max-width: 640px) {
+  .hero { min-height: auto; padding-top: calc(var(--nav-h) + 48px); padding-bottom: 56px; }
+  .hero-features { gap: 12px 18px; }
+  .btn { flex: 1 1 auto; justify-content: center; }
+  .hero-visual { max-width: 340px; }
+}
+
+@media (max-width: 420px) {
+  .hero-sub { max-width: none; font-size: 1rem; }
+  .hero-actions { gap: 10px; }
+  .btn { padding: 14px 22px; font-size: 0.875rem; }
+  .hero-eyebrow { font-size: 0.625rem; padding: 7px 13px 7px 10px; letter-spacing: 0.12em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-ring,
+  .hero-node-upright,
+  .hero-orb {
+    animation: none !important;
+  }
+}

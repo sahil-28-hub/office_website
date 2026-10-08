@@ -1,0 +1,346 @@
+/* ==================================================================
+   The cookie notice — a light card docked to the foot of the window,
+   with the category breakdown folding out inside it.
+
+   .cc-wrap is the fixed layer and lets clicks through; only the card
+   itself takes them, so the page behind stays usable while a visitor
+   decides.
+================================================================== */
+
+.cc-wrap {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 95;
+  display: flex;
+  justify-content: center;
+  padding: clamp(12px, 2vw, 24px);
+  padding-bottom: calc(clamp(12px, 2vw, 24px) + var(--safe-b, 0px));
+  pointer-events: none;
+}
+
+.cc-banner {
+  pointer-events: auto;
+  width: min(100%, 780px);
+  padding: clamp(20px, 2.4vw, 28px);
+  border-radius: 26px;
+  border: 1px solid var(--rule);
+  background: rgba(255, 255, 255, 0.97);
+  color: var(--ink-body);
+  box-shadow: 0 25px 70px -15px rgba(6, 14, 43, 0.35);
+  animation: cc-in 0.3s var(--ease) both;
+}
+
+@keyframes cc-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ------------------------------ head ------------------------------ */
+.cc-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.cc-mark {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  background: rgba(37, 99, 235, 0.08);
+  font-size: 1.25rem;
+}
+
+.cc-copy { flex: 1; min-width: 0; }
+
+.cc-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--ink-strong);
+}
+
+.cc-badge {
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  background: #ecfdf5;
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: #047857;
+}
+
+.cc-text {
+  margin-top: 6px;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--ink-muted);
+}
+
+.cc-close {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+.cc-close:hover { background: var(--paper-tint); color: var(--ink-strong); }
+.cc-close svg { width: 16px; height: 16px; }
+
+/* ----------------------------- pillars ---------------------------- */
+.cc-pillars {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 18px;
+  margin: 16px 0 0;
+  padding: 9px 16px;
+  list-style: none;
+  border-radius: 12px;
+  background: var(--paper-tint);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--ink-muted);
+}
+.cc-pillars li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cc-pillars svg {
+  width: 13px;
+  height: 13px;
+  color: var(--electric);
+}
+.cc-pillars .is-green svg { color: #059669; }
+.cc-pillars-link { margin-left: auto; }
+.cc-pillars-link a {
+  font-weight: 700;
+  color: var(--electric);
+  text-decoration: none;
+}
+.cc-pillars-link a:hover { text-decoration: underline; }
+
+/* ---------------------------- breakdown --------------------------- */
+.cc-cats {
+  max-height: 42vh;
+  margin: 18px 0 0;
+  padding: 4px 16px;
+  list-style: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  border-radius: 16px;
+  border: 1px solid var(--rule);
+  background: rgba(249, 250, 251, 0.8);
+}
+
+.cc-cats > li {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 14px;
+}
+.cc-cats > li + li { border-top: 1px solid var(--rule); }
+
+.cc-cat-body { flex: 1; min-width: 0; }
+
+.cc-cat-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ink-strong);
+}
+
+.cc-cat-badge {
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  background: #e5e7eb;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #4b5563;
+}
+.cc-cat-badge.is-on {
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--electric);
+}
+
+.cc-cat-text {
+  margin-top: 4px;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--ink-muted);
+}
+
+.cc-cat-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-top: 8px;
+  font-size: 0.68rem;
+  line-height: 1.55;
+  color: var(--ink-muted);
+}
+.cc-cat-meta b { font-weight: 600; color: var(--ink-strong); }
+.cc-cat-meta code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+}
+
+/* the switch */
+.cc-switch {
+  position: relative;
+  flex: none;
+  width: 44px;
+  height: 24px;
+  border-radius: var(--r-pill);
+  background: #d1d5db;
+  cursor: pointer;
+  transition: background 0.2s var(--ease);
+}
+.cc-switch.is-on { background: var(--electric); }
+.cc-switch--locked { cursor: not-allowed; opacity: 0.6; }
+.cc-switch:focus-visible { outline: 2px solid var(--electric); outline-offset: 2px; }
+
+.cc-switch-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(6, 14, 43, 0.25);
+  transition: transform 0.2s var(--ease);
+}
+.cc-switch.is-on .cc-switch-knob { transform: translateX(20px); }
+
+/* ----------------------------- actions ---------------------------- */
+.cc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+}
+
+.cc-actions-main {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cc-btn {
+  padding: 10px 20px;
+  border-radius: var(--r-pill);
+  border: 1px solid transparent;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease), background 0.2s var(--ease),
+    border-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.cc-btn--primary {
+  background: #1d4ed8;
+  color: #fff;
+  box-shadow: 0 8px 20px -8px rgba(29, 78, 216, 0.7);
+}
+.cc-btn--primary:hover { transform: scale(1.02); }
+
+.cc-btn--outline {
+  border-color: var(--rule);
+  background: var(--paper);
+  color: var(--ink-strong);
+}
+.cc-btn--outline:hover { border-color: var(--ink-strong); background: var(--paper-tint); }
+
+.cc-btn--soft {
+  border-color: rgba(37, 99, 235, 0.3);
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--electric);
+}
+.cc-btn--soft:hover { background: var(--electric); color: #fff; }
+
+.cc-manage {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+  transition: color 0.2s var(--ease);
+}
+.cc-manage:hover { color: var(--electric); }
+
+/* ------------------------------ toast ----------------------------- */
+.cc-toast {
+  position: fixed;
+  right: clamp(14px, 2.4vw, 28px);
+  bottom: clamp(14px, 2.4vw, 28px);
+  z-index: 96;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: var(--ink-deep);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 25px 50px -12px rgba(6, 14, 43, 0.5);
+  animation: cc-in 0.2s var(--ease) both;
+}
+.cc-toast span {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #10b981;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--ink-deep);
+}
+
+@media (max-width: 560px) {
+  .cc-banner { border-radius: 20px; }
+  .cc-pillars-link { margin-left: 0; }
+  .cc-cats { max-height: 38vh; }
+  .cc-actions-main { width: 100%; }
+  .cc-actions-main .cc-btn { flex: 1 1 auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cc-banner,
+  .cc-toast { animation: none; }
+  .cc-btn,
+  .cc-switch,
+  .cc-switch-knob { transition: none; }
+  .cc-btn--primary:hover { transform: none; }
+}

@@ -1,0 +1,419 @@
+/* ==================================================================
+   Device layer
+   ------------------------------------------------------------------
+   Loaded last, after every component sheet, so it can settle the
+   cross-cutting questions each component would otherwise have to
+   answer for itself: notches, touch targets, iOS quirks, the corner
+   where floating UI stacks up, and the two size extremes — a 360px
+   phone in landscape and a 2560px desktop.
+
+   Per-component layout stays in the component's own sheet. Nothing
+   here changes a design decision; it makes the existing design
+   survive the hardware it lands on.
+
+   Breakpoint tiers are documented once, in tokens.css.
+================================================================== */
+
+
+/* ==================================================================
+   1. Notches, cutouts, and the home indicator
+   ------------------------------------------------------------------
+   Anything pinned to a screen edge has to clear the hardware. The
+   --safe-* tokens are 0px on every device without a cutout, so these
+   rules are inert on a laptop and only do work on the phones that
+   need them.
+================================================================== */
+.nav-wrap {
+  padding-top: calc(var(--wrap-pad-y, 12px) + var(--safe-t));
+  padding-left: calc(var(--wrap-pad-x, 16px) + var(--safe-l));
+  padding-right: calc(var(--wrap-pad-x, 16px) + var(--safe-r));
+}
+
+/* the drawer must never run under the home indicator, and it measures
+   itself against the *visible* viewport — dvh, not vh, so a collapsing
+   address bar does not leave it overhanging the screen */
+.nav-drawer {
+  max-height: calc(100dvh - var(--nav-h) - var(--safe-t) - 56px);
+  padding-bottom: calc(14px + var(--safe-b));
+}
+
+/* In landscape the cutout eats into the *side* of the screen, which
+   is where the shell's gutter is. Adding the inset here fixes every
+   band at once — the hero padding above the fold already has enough
+   clearance for the top cutout on its own. */
+.shell {
+  padding-left: calc(var(--gutter) + var(--safe-l));
+  padding-right: calc(var(--gutter) + var(--safe-r));
+}
+
+
+/* ==================================================================
+   2. The floating-UI dock
+   ------------------------------------------------------------------
+   Back-to-top and the course CTA both wanted the bottom-right corner
+   and were landing on top of each other. They now share one lane:
+   the CTA sits on the floor, back-to-top stacks above it, and the
+   button steps aside entirely when the two would still collide.
+================================================================== */
+.ft-top {
+  right: var(--dock-r);
+  bottom: var(--dock-b);
+}
+
+.fcta {
+  right: var(--dock-r);
+  bottom: var(--dock-b);
+}
+
+/* The two live in different branches of the tree — the CTA belongs to
+   the course page, back-to-top to the footer — so the button cannot
+   ask its ancestors whether the bar is there. :has() lets it ask the
+   document instead, and only while the bar is actually on screen.
+   Where :has() is missing the selector is dropped and the two overlap
+   exactly as they did before, so nothing is made worse. */
+html:has(.fcta.is-shown) .ft-top {
+  bottom: calc(var(--dock-b) + 74px);
+}
+
+@media (max-width: 720px) {
+  /* the CTA goes full width down here, so back-to-top cannot sit
+     beside it — it moves above it instead */
+  .fcta {
+    right: calc(12px + var(--safe-r));
+    left: calc(12px + var(--safe-l));
+    bottom: calc(12px + var(--safe-b));
+  }
+  html:has(.fcta.is-shown) .ft-top {
+    bottom: calc(var(--dock-b) + 84px);
+  }
+
+  /* Dismissing a bar that covers the bottom of a phone screen is not
+     optional, so the close control comes back. The name gives up the
+     room for it — one line, clipped, rather than three words wrapping
+     the bar to twice its height. */
+  .fcta-close {
+    display: grid;
+    width: 30px;
+    height: 30px;
+    flex: none;
+  }
+  .fcta-body { min-width: 0; }
+  .fcta-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* below this the bar keeps only what it needs to do its job */
+@media (max-width: 400px) {
+  .fcta { padding: 10px 10px 10px 14px; gap: 8px; }
+  .fcta-meta { display: none; }
+  .fcta-btn { padding: 10px 14px; font-size: 0.813rem; }
+}
+
+
+/* ==================================================================
+   3. Form controls
+   ------------------------------------------------------------------
+   iOS Safari zooms the whole page in when a focused field's text is
+   under 16px, and never zooms back out. Every field on the site was
+   set between 15px and 15.5px. Rather than push the desktop type up,
+   the floor is applied only where the zoom actually happens.
+================================================================== */
+@media (pointer: coarse) {
+  input,
+  select,
+  textarea,
+  .tc-search input,
+  .tc-select select,
+  .cenq-field-group input,
+  .cenq-field-group select,
+  .cenq-field-group textarea,
+  .cta-field input,
+  .apcta-form input {
+    font-size: max(16px, 1rem);
+  }
+
+  /* A field is aimed at with a thumb. Only the controls that paint
+     their own box get the 44px floor — the ones nested inside a pill
+     wrapper are already tall enough, and stretching them would push
+     the wrapper out of shape. */
+  .cenq-field-group input,
+  .cenq-field-group select,
+  .cta-field input,
+  .apcta-form input {
+    min-height: 44px;
+  }
+  .cenq-field-group textarea { min-height: 96px; }
+
+  /* the wrappers, for the controls that do not paint their own */
+  .tc-search,
+  .tc-select { min-height: 44px; }
+}
+
+/* a field must never be the thing that widens the page */
+input,
+select,
+textarea {
+  max-width: 100%;
+}
+
+/* iOS paints its own inner shadow and corner radius on an otherwise
+   unstyled field, which reads as a broken control against this design */
+input:not([type='checkbox']):not([type='radio']),
+textarea {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+
+/* ==================================================================
+   4. Touch and pointer behaviour
+   ------------------------------------------------------------------
+   The site leans on hover for a lot of its polish. On a touch screen
+   a :hover state latches after a tap and stays stuck until something
+   else is tapped, which reads as a bug. These reveal-on-hover pieces
+   are shown outright instead.
+================================================================== */
+@media (hover: none) {
+  /* arrows and chevrons that slide in on hover are simply present */
+  .cnf-col a svg,
+  .mega-foot-link svg { opacity: 1; }
+
+  /* lift-on-hover cards do not lift; a tap gives feedback instead */
+  .blog-card-link:hover,
+  .cmap-card:hover,
+  .tc-card:hover {
+    transform: none;
+  }
+
+  /* the desktop mouse follower has nothing to follow */
+  .cur { display: none; }
+}
+
+/* links and buttons should not wait 300ms or fire a double-tap zoom */
+a, button, [role='button'], summary {
+  touch-action: manipulation;
+}
+
+/* a small tap target is a missed tap — the icon buttons get a hit
+   area larger than their paint, without changing how they look */
+@media (hover: none) and (pointer: coarse) {
+  .nav-burger,
+  .ft-top,
+  .fcta-close,
+  .blog-arrow {
+    position: relative;
+  }
+  .nav-burger::after,
+  .ft-top::after,
+  .fcta-close::after,
+  .blog-arrow::after {
+    content: '';
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    translate: -50% -50%;
+  }
+}
+
+
+/* ==================================================================
+   5. Horizontal rails
+   ------------------------------------------------------------------
+   Several bands turn into swipe rails on small screens. They pick up
+   the same set of manners: momentum scrolling, a scrollbar that is
+   not painted over the content, a swipe that does not drag the page
+   or trigger the browser's back gesture, and end padding so the last
+   card is not glued to the edge of the screen.
+================================================================== */
+.blog-track,
+.croad-rail,
+.apstory-rail,
+.tc-rail {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.blog-track::-webkit-scrollbar,
+.croad-rail::-webkit-scrollbar,
+.apstory-rail::-webkit-scrollbar,
+.tc-rail::-webkit-scrollbar {
+  display: none;
+}
+
+/* the rail runs to the screen edge but its cards keep the gutter, so
+   the row reads as continuing off-screen rather than being cut off */
+@media (max-width: 768px) {
+  .blog-track,
+  .croad-rail {
+    scroll-padding-inline: var(--gutter);
+  }
+  .blog-track { padding-right: var(--gutter); }
+}
+
+/* A code block is the one scroller that keeps a visible bar — a line
+   of code has no card edge to hint that it continues, so the bar is
+   the only thing telling you to swipe. */
+.cproj-window pre {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.28) transparent;
+}
+
+
+/* ==================================================================
+   6. Embedded media
+   ------------------------------------------------------------------
+   Anything arriving from outside the design — a map, a video — has
+   its own idea of how wide it is.
+================================================================== */
+iframe,
+embed,
+object {
+  max-width: 100%;
+}
+
+/* The map band is squat at phone height and swallows the page at
+   tablet height, so it is tied to the screen instead of the viewport
+   width. The address chip stays at the top: Google's attribution and
+   terms sit along the bottom edge and covering them is not allowed. */
+@media (max-width: 768px) {
+  .cmap { height: clamp(280px, 58vw, 360px); }
+  .cmap-card {
+    left: 12px;
+    right: 12px;
+    max-width: none;
+    padding: 11px 16px 11px 11px;
+  }
+}
+
+
+/* ==================================================================
+   7. Small phones — 380px and under
+   ------------------------------------------------------------------
+   The 360px Android is still the most common screen in India, and the
+   first thing to break on one is a row of pills or a stat strip that
+   assumes it has 400px to work with.
+================================================================== */
+@media (max-width: 380px) {
+  /* nothing decorative earns horizontal space at this width. The
+     bottom is restated rather than left to the shorthand, which would
+     otherwise discard the home-indicator inset set further up. */
+  .nav-drawer { padding: 10px 10px calc(10px + var(--safe-b)); }
+
+  /* the course hero's four metrics are still two across at this width
+     and each one is a number over a label — one column reads better
+     than two clipped ones */
+  .chero-metrics { grid-template-columns: minmax(0, 1fr); }
+
+  /* long unbroken strings — emails, URLs, course slugs — wrap rather
+     than push the page sideways */
+  .cnf-slug,
+  .cmap-card-body b,
+  .git-block-body,
+  .tc-post-meta {
+    word-break: break-word;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+
+  /* chip rows wrap instead of scrolling off the edge */
+  .ap-chip,
+  .tc-ci-links .ap-chip {
+    font-size: 0.68rem;
+    padding: 5px 10px;
+  }
+}
+
+
+/* ==================================================================
+   8. Phones in landscape
+   ------------------------------------------------------------------
+   A phone on its side is ~380px tall. Any band asking for a full
+   screen of height leaves nothing but the band visible, and the user
+   has to scroll past a single hero to reach the page.
+================================================================== */
+@media (max-height: 480px) and (orientation: landscape) and (pointer: coarse) {
+  /* release the full-screen minimums — a band is as tall as its
+     content, and the page scrolls normally */
+  .hero,
+  .cnf,
+  .c-sec,
+  .course-page .c-sec,
+  .course-page .chero {
+    min-height: 0;
+  }
+
+  .hero {
+    padding-top: calc(var(--nav-h) + 28px);
+    padding-bottom: 36px;
+  }
+
+  .c-sec { padding-block: clamp(32px, 7vw, 56px); }
+
+  :root { --step-display: clamp(1.75rem, 6vw, 2.5rem); }
+
+  /* the drawer has almost no room, so it uses what there is */
+  .nav-drawer { max-height: calc(100dvh - var(--nav-h) - 24px); }
+
+  /* decorative canvases are not worth a full frame budget when they
+     are 300px tall and half-hidden behind the copy */
+  .uni-canvas,
+  .eng-canvas,
+  .cm-canvas,
+  .ask-orb-canvas { opacity: 0.55; }
+}
+
+
+/* ==================================================================
+   9. Large and ultrawide desktops
+   ------------------------------------------------------------------
+   Above 1536px the shell widens (tokens.css). What is left is the
+   handful of elements that were sized for a laptop and look lost on a
+   27" display.
+================================================================== */
+@media (min-width: 1536px) {
+  /* --step-body and --shell both step up in tokens.css, which keeps
+     line length in the readable 60–75 character band instead of just
+     stretching the same type across more pixels */
+  .nav-drawer { max-width: var(--shell); }
+
+  /* the two floating controls move in from the corner with everything
+     else rather than clinging to the bezel */
+  :root { --dock-gap: clamp(24px, 2vw, 40px); }
+}
+
+
+/* ==================================================================
+   10. Print
+   ------------------------------------------------------------------
+   Course pages and the FAQ do get printed. Drop the furniture and
+   put the ink back on paper.
+================================================================== */
+@media print {
+  .nav-wrap,
+  .ft-top,
+  .fcta,
+  .cur,
+  .loader,
+  .cmap,
+  .skip-link {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 11pt;
+  }
+
+  h1, h2, h3 { color: #000; break-after: avoid; }
+  a { text-decoration: underline; }
+
+  section { break-inside: avoid; }
+}

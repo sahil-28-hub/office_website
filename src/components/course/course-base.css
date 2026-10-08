@@ -1,0 +1,452 @@
+/* ==================================================================
+   Course page foundations.
+   The palette extends the site tokens with two Python-native accents
+   used sparingly: the language's own blue and gold.
+================================================================== */
+
+.course-page {
+  --py-blue: #4b8bbe;
+  --py-gold: #ffd849;
+  --sec-y: clamp(48px, 5vw, 84px);
+  --card-r: 22px;
+
+  /* The diagonal weave every dark band on a course page is textured
+     with. Declared once, here, because two places paint it — the
+     .c-sec--dark::before below and the hero's .chero-bg::after in
+     CourseHero.css — and the hero is supposed to be the same surface
+     as the dark bands it scrolls into. Duplicating the gradients in
+     both files is how they quietly stop matching. */
+  --dark-weave:
+    repeating-linear-gradient(45deg, rgba(147, 197, 253, 0.07) 0 1px, transparent 1px 14px),
+    repeating-linear-gradient(-45deg, rgba(147, 197, 253, 0.05) 0 1px, transparent 1px 14px);
+  --dark-weave-mask: radial-gradient(120% 90% at 50% 40%, #000 15%, transparent 85%);
+
+  background: var(--paper);
+  color: var(--ink-body);
+}
+
+/* ---------------------------- sections ----------------------------
+   Every section is sized to one screen: it fills the viewport and
+   Sections take their height from their content plus --sec-y, like
+   every other band on the site.
+
+   They used to be held to min-height: 100svh, on the idea that one
+   scroll should move you one section. In practice the sections are not
+   all the same size: the overview on a short course is ~300px of copy,
+   and pinning it to a 900px screen left 600px of empty band under it —
+   and the related-courses strip carried 400px of nothing on every
+   course page. CourseNarrative.css had already opted out of the rule
+   for exactly this reason.
+
+   The hero still fills the screen (.course-page .chero below), which is
+   where a full viewport actually earns its place.
+------------------------------------------------------------------ */
+.c-sec {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-block: var(--sec-y);
+}
+
+/* base.css offsets anchored sections by the navbar height. A section
+   that already fills the screen wants to land flush with the top, and
+   its content is centred, so the fixed bar never covers anything. */
+.course-page .c-sec[id],
+.course-page .chero[id] {
+  scroll-margin-top: 0;
+}
+
+.c-sec > .shell {
+  width: 100%;
+}
+
+.c-sec--paper { background: var(--paper); }
+.c-sec--tint { background: var(--paper-tint); }
+
+.c-sec--dark {
+  position: relative;
+  background: var(--bg-ink);
+  color: var(--mist);
+  overflow: hidden;
+}
+
+/* the page texture, without having to add a span to every dark
+   section's JSX. .course-page picks the diagonal weave (base.css). */
+.c-sec--dark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--dark-weave);
+  mask-image: var(--dark-weave-mask);
+  -webkit-mask-image: var(--dark-weave-mask);
+}
+
+/* the ::before above is positioned, so it would paint over the
+   section's own (unpositioned) content — this puts the content back
+   on top */
+.c-sec--dark > .shell,
+.c-sec--dark > * {
+  position: relative;
+  z-index: 1;
+}
+
+.c-sec--dark h2,
+.c-sec--dark h3 { color: var(--white); }
+
+/* section head ----------------------------------------------------- */
+.c-head { max-width: 720px; }
+.c-head--center { margin-inline: auto; text-align: center; }
+
+.c-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-mono);
+  font-size: var(--step-eyebrow);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--indigo);
+}
+
+.c-eyebrow::before {
+  content: '>>>';
+  color: var(--py-blue);
+  letter-spacing: 0.02em;
+  opacity: 0.85;
+}
+
+.c-sec--dark .c-eyebrow { color: var(--cyan); }
+.c-sec--dark .c-eyebrow::before { color: var(--py-gold); }
+
+.c-title {
+  margin-top: 18px;
+  font-size: clamp(2rem, 4.1vw, 3.25rem);
+  line-height: 1.06;
+  font-weight: 700;
+  color: var(--ink-strong);
+}
+
+.c-sec--dark .c-title { color: var(--white); }
+
+.c-lead {
+  margin-top: 18px;
+  font-size: var(--step-lead);
+  line-height: 1.65;
+  color: var(--ink-muted);
+  max-width: 62ch;
+}
+
+.c-head--center .c-lead { margin-inline: auto; }
+.c-sec--dark .c-lead { color: var(--mist-dim); }
+
+/* ------------------------ keyword emphasis ------------------------
+   Course copy marks the terms a page is written to rank for, and
+   RichText renders those as <strong>. Weight and a neutral grey only —
+   never a brand colour — or a paragraph turns into a rash of
+   highlighted phrases.
+
+   The grey is deliberately light: the <strong> is there for the
+   crawler, and the reader should register the term as emphasised
+   without the line breaking into bold patches every third sentence.
+   The weight does the marking; --keyword only separates the term from
+   the ink around it.
+
+   Lives here rather than with any one component that uses it, so the
+   rule is loaded on every course page regardless of which blocks
+   that particular course happens to render.
+------------------------------------------------------------------ */
+:root {
+  --keyword: #9aa0b8;          /* light grey, on paper */
+  --keyword-dark: #cbd5e1;     /* the same idea on a dark band */
+}
+
+.c-lead strong,
+.covw-body strong,
+.cnar-text strong,
+.cnar-close strong,
+.cfaq-panel p strong,
+.cwho-grid p strong,
+.cwho-note strong {
+  font-weight: 650;
+  color: var(--keyword);
+}
+
+/* on a dark band the copy is already grey, so the keyword steps up
+   rather than down — mist over the dimmer grey, never full white */
+.c-sec--dark .c-lead strong,
+.c-sec--dark .cnar-text strong,
+.c-sec--dark .cnar-close strong,
+.c-sec--dark .cwho-grid p strong,
+.c-sec--dark .cwho-note strong { color: var(--keyword-dark); }
+
+/* ---------------------------- buttons ----------------------------- */
+.c-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 30px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: box-shadow 0.3s var(--ease), background 0.3s var(--ease),
+    color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+
+.c-btn svg { width: 18px; height: 18px; flex: none; }
+
+.c-btn--primary {
+  background: var(--grad-pill);
+  color: var(--white);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 16px 40px -16px rgba(37, 99, 235, 0.9);
+}
+.c-btn--primary:hover { box-shadow: 0 22px 52px -18px rgba(37, 99, 235, 1); }
+
+.c-btn--ghost {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--white);
+  border: 1px solid var(--hairline);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.c-btn--ghost:hover { background: rgba(255, 255, 255, 0.11); border-color: rgba(255, 255, 255, 0.28); }
+
+.c-btn--ink {
+  background: var(--ink);
+  color: var(--white);
+  border: 1px solid transparent;
+}
+.c-btn--ink:hover { box-shadow: 0 18px 38px -18px rgba(6, 14, 43, 0.9); }
+
+.c-btn--line {
+  background: transparent;
+  color: var(--ink-strong);
+  border: 1px solid var(--rule);
+}
+.c-btn--line:hover { border-color: var(--electric); color: var(--indigo); }
+
+.c-btn--sm { padding: 12px 22px; font-size: 0.938rem; }
+
+/* ------------------------- small utilities ------------------------ */
+.c-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 13px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: var(--indigo);
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.16);
+}
+
+/* The hero is a dark band but it is .chero, not .c-sec--dark, so it
+   never picked this up - its chips were rendering in --indigo on
+   near-black and were effectively invisible. Same treatment, all
+   three places — .cskel-hero is the loading state's hero and stands
+   on the same dark ground, so it needs it too. */
+.c-sec--dark .c-chip,
+.chero .c-chip,
+.cskel-hero .c-chip {
+  color: #cfe0ff;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--hairline);
+}
+
+.c-arrow {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--rule);
+  color: var(--indigo);
+  transition: transform 0.35s var(--ease), background 0.35s var(--ease),
+    color 0.35s var(--ease), border-color 0.35s var(--ease);
+}
+.c-arrow svg { width: 16px; height: 16px; }
+
+.c-grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 35%, #000 25%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 35%, #000 25%, transparent 78%);
+  pointer-events: none;
+}
+
+.c-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.035;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------------------------- reveal ------------------------------ */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  transition-delay: var(--d, 0ms);
+}
+[data-reveal].is-in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1; transform: none; transition: none; }
+}
+
+/* --------------------------- skeletons ---------------------------- */
+.c-skel {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: rgba(120, 130, 190, 0.14);
+}
+
+.c-skel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  animation: c-sheen 1.6s ease-in-out infinite;
+}
+
+.c-sec--dark .c-skel { background: rgba(255, 255, 255, 0.07); }
+.c-sec--dark .c-skel::after {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14), transparent);
+}
+
+@keyframes c-sheen {
+  100% { transform: translateX(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-skel::after { animation: none; }
+}
+
+/* ==================================================================
+   Fitting each section to one screen.
+
+   The .c-sec rule above reserves a viewport per section; these rules
+   keep the content inside it. Every value is viewport-relative, so a
+   tall desktop gets generous spacing and a short laptop gets a tighter
+   version of the same layout rather than a scrollbar. Anything that
+   still cannot fit scrolls, because .c-sec uses min-height.
+================================================================== */
+
+/* --- shared section head --- */
+.course-page .c-head { max-width: 680px; }
+.course-page .c-title {
+  margin-top: clamp(8px, 1.4vh, 18px);
+  font-size: clamp(1.625rem, 1.6vw + 1.1vh, 2.875rem);
+}
+.course-page .c-lead {
+  margin-top: clamp(8px, 1.4vh, 18px);
+  font-size: clamp(0.938rem, 0.35vw + 0.55vh, 1.125rem);
+  line-height: 1.55;
+}
+
+/* --- hero --- */
+.course-page .chero {
+  display: flex;
+  align-items: center;
+  min-height: 100svh;
+  padding-top: calc(var(--nav-h) + clamp(20px, 5vh, 72px));
+  padding-bottom: clamp(28px, 5vh, 96px);
+}
+.course-page .chero-inner { width: 100%; }
+.course-page .chd { min-height: min(470px, 54vh); }
+.course-page .chero-metrics { margin-top: clamp(16px, 2.6vh, 34px); }
+
+/* --- overview ---
+   No top margin on the stage: it is a column beside the copy now, not
+   a block stacked under it, and a margin here would drop the preview
+   out of line with the heading it sits next to. CourseOverview.css
+   puts the spacing back for the stacked layout on narrow screens. */
+.course-page .covw-highlights { margin-top: clamp(14px, 2.2vh, 30px); }
+.course-page .covw-video { max-height: 46vh; }
+
+/* --- benefits --- */
+.course-page .cben-grid {
+  gap: clamp(10px, 1.5vh, 22px);
+  margin-top: clamp(16px, 2.6vh, 40px);
+}
+.course-page .cben-card {
+  padding: clamp(16px, 2.4vh, 30px) clamp(18px, 1.6vw, 28px) clamp(14px, 2.2vh, 26px);
+}
+.course-page .cben-text { font-size: clamp(0.813rem, 0.3vw + 0.5vh, 0.938rem); }
+
+/* --- programme value --- */
+.course-page .cval-stat { margin-top: clamp(18px, 3vh, 42px); }
+.course-page .cval-trigger { padding-block: clamp(12px, 1.9vh, 24px); }
+
+/* --- roadmap --- */
+.course-page .croad-progress { margin-top: clamp(16px, 2.4vh, 34px); }
+.course-page .croad-grid { margin-top: clamp(16px, 2.4vh, 52px); }
+.course-page .croad-step { padding-block: clamp(8px, 1.3vh, 16px); }
+.course-page .croad-card { padding: clamp(18px, 2.6vh, 38px); }
+.course-page .croad-block { margin-top: clamp(14px, 2.2vh, 28px); }
+.course-page .croad-outcome { margin-top: clamp(14px, 2.2vh, 30px); }
+
+/* --- who can join ---
+   Six cards and a requirements panel in one screen: the cards give up
+   their padding first, then the gaps, before anything scrolls. */
+.course-page .cwho-grid {
+  gap: clamp(10px, 1.4vh, 18px);
+  margin-top: clamp(16px, 2.6vh, 52px);
+}
+.course-page .cwho-grid li { padding: clamp(14px, 2vh, 26px) clamp(16px, 1.6vw, 26px); }
+.course-page .cwho-need { padding: clamp(16px, 2.2vh, 34px) clamp(18px, 2vw, 34px); }
+.course-page .cwho-note { margin-top: clamp(14px, 2vh, 30px); }
+
+/* --- future scope --- */
+.course-page .cfut-grid { margin-top: clamp(16px, 2.4vh, 46px); }
+.course-page .cfut-horizon li { padding-bottom: clamp(14px, 2.2vh, 32px); }
+.course-page .cfut-industries { margin-top: clamp(14px, 2.2vh, 38px); }
+
+/* --- faq --- */
+.course-page .cfaq-item button { padding-block: clamp(13px, 2vh, 22px); }
+
+/* --- testimonials --- */
+.course-page .ctes-stage { margin-top: clamp(16px, 2.4vh, 46px); }
+.course-page .ctes-card { padding: clamp(20px, 3vh, 48px); }
+
+/* --- enquiry ---
+   The fields are sized for a thumb, so the gap between them is what
+   gives first when the section has to fit a short laptop. */
+.course-page .cenq-facts { margin-top: clamp(16px, 2.4vh, 28px); }
+.course-page .cenq-form {
+  gap: clamp(11px, 1.7vh, 20px);
+  padding: clamp(18px, 2.6vh, 38px) clamp(20px, 3vw, 38px);
+}
+.course-page .cenq-field-group textarea { min-height: clamp(84px, 14vh, 150px); }
+
+/* Short viewports — laptops at 1366×768 and below — lose the section
+   snap entirely; forcing a screen each there just crops content. */
+@media (max-height: 640px) {
+  .course-page .c-sec,
+  .course-page .chero {
+    min-height: 0;
+  }
+  .course-page .c-sec { display: block; }
+  .course-page .c-sec > .shell { width: auto; }
+}

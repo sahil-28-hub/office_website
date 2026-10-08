@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+dist
+.git
+.env
+.env.*
+!.env.example
+cms-techcadd
+.claude
+.agents
+.windsurf
+tsconfig.tsbuildinfo
+*.md

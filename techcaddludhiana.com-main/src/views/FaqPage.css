@@ -1,0 +1,10 @@
+/* ==================================================================
+   FAQ — page-specific adjustments on top of the shared kit.
+================================================================== */
+
+.tc-faq-list { margin-top: clamp(28px, 3.2vw, 42px); }
+
+/* the four shortcut cards close on a link rather than a paragraph */
+#shortcuts .tc-card .tc-post-more { margin-top: auto; padding-top: 4px; }
+
+.tc-faq-list .tc-empty { margin-top: 0; }

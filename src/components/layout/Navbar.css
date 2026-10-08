@@ -1,0 +1,1170 @@
+/* =================================================================
+   Navigation — frosted pill bar + six mega-menu dropdowns
+================================================================= */
+
+/* -----------------------------------------------------------------
+   Two states, one bar.
+
+   At the top of the page the bar carries no surface at all: no fill,
+   no border, no blur. It sits directly on the hero, so the wordmark
+   goes white and the links go light. Every page on the site opens on
+   a dark band, which is what makes that safe.
+
+   Scrolling past a few pixels brings the surface in and contracts the
+   bar into the floating pill: narrower, rounded, padded off the
+   window edges, with the logo and the row shrinking with it.
+
+   Both states are expressed as custom properties, so the breakpoint
+   rules further down only ever retune the numbers, never the layout,
+   and one more state — an open mega menu or drawer while still at the
+   top — can borrow the surface without borrowing the pill geometry.
+----------------------------------------------------------------- */
+.nav-wrap {
+  /* geometry */
+  --bar-max: 100%;
+  --bar-radius: 0px;
+  --bar-border: 0;
+  --bar-pad-y: 12px;
+  --bar-pad-l: var(--gutter);
+  --bar-pad-r: var(--gutter);
+  --wrap-pad-x: 0px;
+  --wrap-pad-y: 0px;
+  --logo-h: 36px;
+
+  /* surface — none of it, at the top */
+  --bar-bg: transparent;
+  --bar-line: transparent;
+  --bar-blur: none;
+  --bar-shadow: none;
+
+  /* ink, over the dark hero */
+  --bar-ink: rgba(255, 255, 255, 0.9);
+  --bar-ink-strong: var(--white);
+  --bar-hover: rgba(255, 255, 255, 0.14);
+  --logo-light: 1;
+
+  /* the two solid controls: Book Demo, and the burger */
+  --ctl-bg: rgba(255, 255, 255, 0.13);
+  --ctl-line: rgba(255, 255, 255, 0.4);
+  --ctl-blur: blur(12px);
+
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  padding: var(--wrap-pad-y) var(--wrap-pad-x) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  transition: padding 0.32s var(--ease);
+}
+
+/* the surface, shared by all three reasons to have one */
+.nav-wrap.is-scrolled,
+.nav-wrap.has-mega,
+.nav-wrap.has-drawer {
+  --bar-bg: rgba(238, 240, 250, 0.82);
+  --bar-line: rgba(255, 255, 255, 0.65);
+  --bar-blur: blur(22px) saturate(160%);
+  --bar-shadow: 0 10px 30px -22px rgba(6, 8, 30, 0.6);
+
+  --bar-ink: #2b3050;
+  --bar-ink-strong: var(--indigo);
+  --bar-hover: rgba(12, 31, 108, 0.08);
+  --logo-light: 0;
+
+  --ctl-bg: var(--ink);
+  --ctl-line: transparent;
+  --ctl-blur: none;
+}
+
+/* an open panel while still at the top keeps the full-bleed shape and
+   takes a hairline along its foot instead of the pill's full border */
+.nav-wrap.has-mega:not(.is-scrolled),
+.nav-wrap.has-drawer:not(.is-scrolled) {
+  --bar-border: 0 0 1px;
+}
+
+/* The pill carries no backdrop blur. It is fixed over the whole page,
+   so a blurred backdrop is re-sampled on every scrolled frame for the
+   entire visit; a near-opaque fill reads the same and costs nothing.
+   An open panel at the top of the page keeps its blur — that state is
+   brief and nothing is scrolling under it. */
+.nav-wrap.is-scrolled {
+  --bar-bg: rgba(240, 242, 251, 0.96);
+  --bar-blur: none;
+}
+
+/* the pill */
+.nav-wrap.is-scrolled {
+  --bar-max: 1320px;
+  --bar-radius: var(--r-pill);
+  --bar-border: 1px;
+  --bar-pad-y: 10px;
+  --bar-pad-l: 26px;
+  --bar-pad-r: 12px;
+  --wrap-pad-x: var(--gutter);
+  --wrap-pad-y: 14px;
+  --bar-shadow: var(--shadow-pill);
+  --logo-h: 30px;
+}
+
+/* the pill's own box is capped at --bar-max (1320px) once scrolled, no
+   matter how wide the window is — so its internal spacing has to stay
+   at the compact tier unconditionally. The viewport-width breakpoints
+   further down are for the full-bleed top state, which really does
+   grow and shrink with the window; they're the wrong trigger for a
+   state whose width is fixed. Selector specificity (not source order)
+   is what makes this win over both the base rules and those queries. */
+.nav-wrap.is-scrolled .nav-links { gap: 0; }
+.nav-wrap.is-scrolled .nav-link { padding: 10px 11px; font-size: 0.875rem; }
+.nav-wrap.is-scrolled .nav-link--ai { padding: 10px 20px; }
+.nav-wrap.is-scrolled .nav-cta { padding: 13px 22px; font-size: 0.875rem; }
+.nav-wrap.is-scrolled .nav-bar { gap: 14px; }
+.nav-wrap.is-scrolled { --bar-pad-l: 20px; }
+
+.nav-bar {
+  pointer-events: auto;
+  width: 100%;
+  max-width: var(--bar-max);
+  min-height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: var(--bar-pad-y) var(--bar-pad-r) var(--bar-pad-y) var(--bar-pad-l);
+  border-radius: var(--bar-radius);
+  background: var(--bar-bg);
+  border-style: solid;
+  border-width: var(--bar-border);
+  border-color: var(--bar-line);
+  backdrop-filter: var(--bar-blur);
+  -webkit-backdrop-filter: var(--bar-blur);
+  box-shadow: var(--bar-shadow);
+  transition: border-radius 0.32s var(--ease), max-width 0.32s var(--ease),
+    padding 0.32s var(--ease), box-shadow 0.32s var(--ease),
+    background 0.32s var(--ease), border-color 0.32s var(--ease);
+}
+
+/* the two wordmarks are stacked and cross-faded rather than swapped
+   on the src, so neither one has to be fetched mid-transition */
+.nav-logo {
+  position: relative;
+  display: block;
+  flex: none;
+}
+
+.nav-logo img {
+  display: block;
+  height: var(--logo-h);
+  width: auto;
+  object-fit: contain;
+  transition: height 0.32s var(--ease), opacity 0.3s var(--ease);
+}
+
+.nav-logo img.nav-logo--light {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: var(--logo-light);
+}
+
+.nav-logo img.nav-logo--dark { opacity: calc(1 - var(--logo-light)); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 14px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: 0.938rem;
+  font-weight: 500;
+  color: var(--bar-ink);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.25s var(--ease), color 0.32s var(--ease);
+}
+
+.nav-link:hover,
+.nav-link.is-open {
+  background: var(--bar-hover);
+  color: var(--bar-ink-strong);
+}
+
+.nav-chevron {
+  width: 12px;
+  height: 12px;
+  opacity: 0.6;
+  transition: transform 0.25s var(--ease);
+}
+.nav-link.is-open .nav-chevron {
+  transform: rotate(180deg);
+}
+
+.nav-link--ai {
+  position: relative;
+  padding: 10px 26px;
+  color: var(--white);
+  font-weight: 600;
+  background: var(--grad-pill);
+  box-shadow: 0 8px 24px -6px rgba(37, 99, 235, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+.nav-link--ai:hover,
+.nav-link--ai.is-open {
+  background: var(--grad-pill);
+  color: var(--white);
+  filter: brightness(1.06);
+}
+
+.nav-spark {
+  width: 11px;
+  height: 11px;
+  color: #b9f2ff;
+  animation: spark-pulse 2.6s var(--ease) infinite;
+}
+
+@keyframes spark-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(0.9) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.15) rotate(25deg); }
+}
+
+/* at the top this is a glass pill on the hero; once the bar has a
+   surface it goes back to the solid ink button */
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 14px 28px;
+  border-radius: var(--r-pill);
+  /* the same brand pill as the AI link (.nav-link--ai above), so the
+     bar's two calls to action read as a pair rather than one glass
+     button and one gradient one */
+  background: var(--grad-pill);
+  border: 1px solid transparent;
+  color: var(--white);
+  font-size: 0.938rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px -6px rgba(37, 99, 235, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease),
+    filter 0.32s var(--ease);
+}
+.nav-cta:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  box-shadow: 0 14px 32px -8px rgba(37, 99, 235, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+/* =================================================================
+   Mega menu shell
+================================================================= */
+.nav-mega {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 1320px;
+  /* the padding is the hover bridge between the bar and the panel */
+  padding-top: 12px;
+}
+
+/* Full-bleed state: the wrap has no gutter of its own, so the dropdown
+   and the drawer keep themselves off the window edges. */
+.nav-wrap:not(.is-scrolled) .nav-mega {
+  max-width: calc(1320px + 2 * var(--gutter));
+  padding-inline: var(--gutter);
+}
+.nav-wrap:not(.is-scrolled) .nav-drawer {
+  width: calc(100% - 2 * var(--gutter));
+}
+
+.nav-mega-panel {
+  position: relative;
+  overflow: hidden;
+  border-radius: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 243, 253, 0.9) 100%);
+  backdrop-filter: blur(26px) saturate(170%);
+  -webkit-backdrop-filter: blur(26px) saturate(170%);
+  box-shadow:
+    0 40px 90px -34px rgba(11, 26, 77, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  animation: mega-in 0.28s var(--ease) both;
+}
+
+/* the accent rail that replaces the reference's flat grey block */
+.nav-mega-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: var(--grad-ink);
+}
+
+@keyframes mega-in {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: none; }
+}
+
+.mega-label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 18px;
+}
+
+/* shared badges */
+.mega-badge {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 3px 9px;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 0.656rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--electric);
+  vertical-align: middle;
+}
+.mega-badge--hot {
+  background: var(--grad-gold);
+  color: var(--ink-strong);
+}
+
+/* shared photo / gradient tile */
+.nav-thumb {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.nav-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.nav-thumb--blue { background: linear-gradient(145deg, #5aa9ff, #1d4ed8 55%, #1e3fd8); }
+.nav-thumb--violet { background: linear-gradient(145deg, #60a5fa, #1c53d1 52%, #1d4ed8); }
+.nav-thumb--cyan { background: linear-gradient(145deg, #4fe0f5, #2f9dff 50%, #1b3ecf); }
+
+/* =================================================================
+   Featured layout — About Us, Resources
+================================================================= */
+.mega-featured {
+  display: grid;
+  grid-template-columns: minmax(210px, 0.85fr) minmax(0, 3fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  padding: 30px clamp(1.5rem, 2.5vw, 2.25rem) 32px;
+}
+
+.mega-cats {
+  position: relative;
+  padding-right: clamp(1.5rem, 3vw, 3rem);
+}
+.mega-cats::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--rule), transparent);
+}
+.mega-cats ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.mega-cats a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ink-strong);
+  transition: background 0.22s var(--ease), color 0.22s var(--ease);
+}
+.mega-cats a svg {
+  width: 16px;
+  height: 16px;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.22s var(--ease), transform 0.22s var(--ease);
+}
+.mega-cats a:hover {
+  background: rgba(37, 99, 235, 0.09);
+  color: var(--electric);
+}
+.mega-cats a:hover svg {
+  opacity: 1;
+  transform: none;
+}
+
+.mega-cards-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.mega-card {
+  display: block;
+  transition: transform 0.25s var(--ease);
+}
+.mega-card:hover {
+  transform: translateY(-4px);
+}
+.mega-card .nav-thumb {
+  box-shadow: 0 18px 36px -22px rgba(11, 26, 77, 0.8);
+  transition: box-shadow 0.25s var(--ease);
+}
+.mega-card:hover .nav-thumb {
+  box-shadow: 0 24px 44px -20px rgba(37, 99, 235, 0.65);
+}
+
+.mega-card-title {
+  display: block;
+  margin-top: 13px;
+  font-family: var(--font-display);
+  font-size: 0.938rem;
+  font-weight: 600;
+  color: var(--ink-strong);
+}
+
+.mega-card-tags {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 8px;
+}
+.mega-card-tags em {
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 0.563rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.mega-card-tags em.is-lead {
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  background: rgba(37, 99, 235, 0.13);
+  color: var(--electric);
+  font-weight: 600;
+}
+
+/* =================================================================
+   AI layout
+================================================================= */
+.mega-ai {
+  display: grid;
+  grid-template-columns: minmax(0, 2.1fr) minmax(210px, 0.95fr) minmax(200px, 0.9fr);
+  gap: clamp(1.25rem, 2.2vw, 2rem);
+  padding: 30px clamp(1.5rem, 2.5vw, 2.25rem) 32px;
+}
+
+.mega-ai-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--ink-strong);
+}
+.mega-ai-blurb {
+  max-width: 46ch;
+  margin-top: 8px;
+  font-size: 0.938rem;
+  line-height: 1.55;
+  color: var(--ink-muted);
+}
+
+.mega-ai-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.5vw, 2.25rem);
+  margin-top: 26px;
+}
+
+.mega-group-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 12px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--rule-soft);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink-strong);
+}
+.mega-group-icon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--grad-pill);
+  color: var(--white);
+  box-shadow: 0 8px 18px -8px rgba(37, 99, 235, 0.9);
+}
+.mega-group-icon svg {
+  width: 12px;
+  height: 12px;
+  animation: none;
+}
+
+.mega-group ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.mega-group a {
+  display: block;
+  padding: 8px 10px 8px 0;
+  font-size: 0.938rem;
+  color: var(--ink-body);
+  transition: color 0.2s var(--ease), padding-left 0.2s var(--ease);
+}
+.mega-group a:hover {
+  color: var(--electric);
+  padding-left: 6px;
+}
+
+.mega-spotlight {
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  overflow: hidden;
+  transition: border-color 0.25s var(--ease), transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.mega-spotlight .nav-thumb {
+  border-radius: 0;
+  aspect-ratio: 16 / 9;
+}
+.mega-spotlight:hover {
+  border-color: rgba(37, 99, 235, 0.4);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lift);
+}
+.mega-spotlight-body {
+  display: block;
+  padding: 14px 16px 18px;
+}
+.mega-spotlight-body em {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--grad-pill);
+  color: var(--white);
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 0.563rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.mega-spotlight-body strong {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--font-display);
+  font-size: 0.938rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink-strong);
+}
+
+.mega-promo {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px;
+  border-radius: 16px;
+  background: linear-gradient(155deg, #2563eb 0%, #3f8dff 55%, #22d3ee 130%);
+  color: var(--white);
+  box-shadow: 0 24px 50px -24px rgba(37, 99, 235, 0.9);
+  transition: transform 0.25s var(--ease);
+}
+.mega-promo:hover {
+  transform: translateY(-3px);
+}
+.mega-promo-text {
+  font-family: var(--font-display);
+  font-size: 1.063rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+}
+.mega-promo-cta {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 9px;
+  padding: 11px 20px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.mega-promo-cta svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.25s var(--ease);
+}
+.mega-promo:hover .mega-promo-cta svg {
+  transform: translateX(3px);
+}
+
+/* =================================================================
+   Simple dropdown — Branches. Anchored to its own trigger rather than
+   the shared full-width mega panel: a small glass card, one column of
+   plain links, no cards or accent rail.
+================================================================= */
+.nav-item--simple { position: relative; }
+
+.nav-simple {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  min-width: 184px;
+  margin: 0;
+  padding: 8px;
+  list-style: none;
+  border-radius: var(--r-md);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.97) 0%, rgba(240, 243, 253, 0.94) 100%);
+  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  box-shadow: 0 20px 44px -18px rgba(11, 26, 77, 0.35);
+  animation: simple-in 0.22s var(--ease) both;
+}
+
+/* Its own keyframes, not the mega panel's. `mega-in` ends on
+   `transform: none`, and with `both` that end state is held — which
+   replaced the translateX(-50%) above and left the card hanging half
+   its own width to the right of the trigger it belongs to. The
+   centring has to be in every frame of the animation that moves it. */
+@keyframes simple-in {
+  from { opacity: 0; transform: translate(-50%, -10px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.nav-simple a {
+  display: block;
+  padding: 9px 14px;
+  border-radius: var(--r-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink-strong);
+  white-space: nowrap;
+  transition: background 0.18s var(--ease), color 0.18s var(--ease);
+}
+
+.nav-simple a:hover,
+.nav-simple a:focus-visible {
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--electric);
+}
+
+/* =================================================================
+   Column layout — Courses, Internship, After 12th
+================================================================= */
+/* The column menus run edge to edge rather than at the 1320px the
+   other panels use — five columns of course names need the width —
+   and never grow taller than the window: on a short screen the
+   columns scroll inside the panel while the footer stays put. */
+.nav-mega:has(.nav-mega-panel[data-kind='columns']),
+.nav-mega:has(.nav-mega-panel[data-kind='tiles']) {
+  max-width: none;
+  padding-inline: var(--gutter);
+}
+/* Once scrolled the wrap carries the gutter itself (--wrap-pad-x), so
+   adding it again here inset the panel by two gutters — it sat in a
+   different place, and at a different width, from the same menu opened
+   at the top of the page. One gutter in both states. */
+.nav-wrap.is-scrolled .nav-mega:has(.nav-mega-panel[data-kind='columns']),
+.nav-wrap.is-scrolled .nav-mega:has(.nav-mega-panel[data-kind='tiles']) {
+  padding-inline: 0;
+}
+.nav-mega-panel[data-kind='columns'],
+.nav-mega-panel[data-kind='tiles'] {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - var(--nav-h) - 36px);
+  max-height: calc(100dvh - var(--nav-h) - 36px);
+}
+.mega-columns-wrap {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.mega-columns {
+  display: grid;
+  gap: clamp(1rem, 2vw, 2rem);
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 20px clamp(1.25rem, 2vw, 2rem) 16px;
+}
+.mega-columns[data-count='3'] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.mega-columns[data-count='4'] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.mega-columns[data-count='5'] { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+.mega-col-no {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.688rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-muted);
+}
+
+.mega-col-title {
+  margin-top: 4px;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink-strong);
+}
+
+.mega-col-title a { color: inherit; }
+.mega-col-title a:hover { color: var(--electric); }
+.drawer-group a { color: inherit; }
+
+.mega-col-blurb {
+  margin-top: 3px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.813rem;
+  line-height: 1.4;
+  color: var(--ink-muted);
+}
+
+.mega-col ul {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.mega-col a {
+  display: block;
+  padding: 4px 8px 4px 10px;
+  font-size: 0.906rem;
+  line-height: 1.35;
+  color: var(--ink-strong);
+  transition: color 0.2s var(--ease), padding-left 0.2s var(--ease);
+}
+.mega-col a:hover {
+  color: var(--electric);
+  padding-left: 15px;
+}
+/* a badge stays on the same line as its course name wherever it fits */
+.mega-col .mega-badge {
+  margin-left: 6px;
+  padding: 1px 7px;
+  font-size: 0.594rem;
+  white-space: nowrap;
+}
+
+.mega-foot {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 10px clamp(1.25rem, 2vw, 2rem);
+  border-top: 1px solid var(--rule-soft);
+  background: rgba(37, 99, 235, 0.05);
+}
+
+.mega-quote {
+  font-size: 0.875rem;
+  font-style: italic;
+  color: var(--ink-body);
+}
+.mega-quote span {
+  margin-right: 8px;
+  font-family: Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 0;
+  vertical-align: -0.35em;
+  color: rgba(37, 99, 235, 0.45);
+  font-style: normal;
+}
+.mega-quote b {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--ink-strong);
+}
+
+.mega-foot-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.906rem;
+  font-weight: 600;
+  color: var(--electric);
+  white-space: nowrap;
+}
+.mega-foot-link svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.25s var(--ease);
+}
+.mega-foot-link:hover svg {
+  transform: translateX(4px);
+}
+
+/* =================================================================
+   Tile layout — Internship & Training
+================================================================= */
+.mega-tiles-wrap {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.mega-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  margin: 0;
+  padding: 20px clamp(1.25rem, 2vw, 2rem) 14px;
+  list-style: none;
+}
+
+.mega-tile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--rule-soft);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--ink-strong);
+  transition:
+    transform 0.25s var(--ease),
+    border-color 0.25s var(--ease),
+    background 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
+}
+.mega-tile:hover,
+.mega-tile:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(37, 99, 235, 0.28);
+  background: var(--white);
+  box-shadow: 0 14px 30px -20px rgba(11, 26, 77, 0.45);
+}
+
+.mega-tile-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--electric);
+  transition: background 0.25s var(--ease), color 0.25s var(--ease);
+}
+.mega-tile-icon svg { width: 18px; height: 18px; }
+.mega-tile:hover .mega-tile-icon {
+  background: var(--electric);
+  color: var(--white);
+}
+
+.mega-tile-label {
+  min-width: 0;
+  font-size: 0.906rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.mega-tile-badge {
+  margin-left: auto;
+  padding: 2px 9px;
+  border-radius: var(--r-pill);
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--electric);
+  font-size: 0.656rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* the training formats, as a row of links under the tiles */
+.mega-formats {
+  flex: none;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  padding: 4px clamp(1.25rem, 2vw, 2rem) 16px;
+}
+.mega-formats .mega-label { margin: 0; }
+.mega-formats ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.mega-formats a {
+  display: inline-block;
+  padding: 5px 12px;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-pill);
+  font-size: 0.813rem;
+  color: var(--ink-body);
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease), background 0.2s var(--ease);
+}
+.mega-formats a:hover {
+  color: var(--electric);
+  border-color: rgba(37, 99, 235, 0.35);
+  background: rgba(37, 99, 235, 0.06);
+}
+
+@media (max-width: 1500px) {
+  .mega-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* =================================================================
+   Mobile drawer
+================================================================= */
+.nav-burger {
+  display: none;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-pill);
+  background: var(--ctl-bg);
+  border: 1px solid var(--ctl-line);
+  backdrop-filter: var(--ctl-blur);
+  -webkit-backdrop-filter: var(--ctl-blur);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  flex: none;
+  transition: background 0.32s var(--ease), border-color 0.32s var(--ease);
+}
+
+.burger-bar {
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--white);
+  transition: transform 0.3s var(--ease), opacity 0.2s linear;
+}
+.is-hidden { opacity: 0; }
+.is-x-top { transform: translateY(7px) rotate(45deg); }
+.is-x-bottom { transform: translateY(-7px) rotate(-45deg); }
+
+.nav-drawer {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 1320px;
+  margin-top: 12px;
+  max-height: calc(100vh - var(--nav-h) - 56px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 14px;
+  border-radius: var(--r-lg);
+  background: rgba(243, 245, 253, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-pill);
+  animation: mega-in 0.26s var(--ease) both;
+}
+
+.drawer-list {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+}
+.drawer-list > li + li {
+  border-top: 1px solid var(--rule-soft);
+}
+
+.drawer-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 15px 14px;
+  border-radius: var(--r-sm);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ink-strong);
+  text-align: left;
+}
+.drawer-top .nav-chevron {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+.drawer-list > li.is-open .drawer-top .nav-chevron {
+  transform: rotate(180deg);
+}
+.drawer-top.is-ai {
+  background: var(--grad-pill);
+  color: var(--white);
+  font-weight: 600;
+}
+
+.drawer-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.34s var(--ease);
+}
+.drawer-panel-inner {
+  overflow: hidden;
+  visibility: hidden;
+  transition: visibility 0s linear 0.34s;
+}
+.drawer-list > li.is-open .drawer-panel {
+  grid-template-rows: 1fr;
+}
+.drawer-list > li.is-open .drawer-panel-inner {
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.drawer-group {
+  margin: 12px 0 4px;
+  padding: 0 14px;
+  font-family: var(--font-mono);
+  font-size: 0.563rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.drawer-sub {
+  list-style: none;
+  margin: 0 0 10px;
+  padding: 0 0 0 14px;
+  border-left: 2px solid rgba(37, 99, 235, 0.18);
+  margin-left: 14px;
+}
+.drawer-sub a {
+  display: block;
+  padding: 10px 12px;
+  border-radius: var(--r-sm);
+  font-size: 0.938rem;
+  color: var(--ink-body);
+}
+.drawer-sub a:hover {
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--electric);
+}
+
+.nav-drawer-cta {
+  display: block;
+  text-align: center;
+  padding: 15px;
+  border-radius: var(--r-pill);
+  background: var(--ink);
+  color: var(--white);
+  font-weight: 600;
+}
+
+/* =================================================================
+   Breakpoints
+================================================================= */
+/* the full-bleed top state grows with the window, but its own side
+   padding (the gutter) still eats into that room — wide enough to
+   need trimmed spacing well above the point the pill (capped at
+   --bar-max) would. 1500 covers that gap with margin. */
+@media (max-width: 1500px) {
+  .nav-links { gap: 0; }
+  .nav-link { padding: 10px 11px; font-size: 0.875rem; }
+  .nav-link--ai { padding: 10px 20px; }
+  .nav-cta { padding: 13px 22px; font-size: 0.875rem; }
+  .nav-bar { gap: 14px; }
+}
+
+/* below this, ten nav items plus the logo and CTA no longer fit at any
+   spacing this side of illegible — the drawer accordions take over
+   instead of squeezing further. Kept in sync with DESKTOP in
+   Navbar.jsx and the --nav-h breakpoint in tokens.css. */
+@media (max-width: 1319px) {
+  .nav-links,
+  .nav-cta {
+    display: none;
+  }
+  .nav-burger {
+    display: flex;
+  }
+  .nav-bar {
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .nav-wrap { --logo-h: 32px; }
+  .nav-wrap.is-scrolled {
+    --bar-pad-l: 20px;
+    --bar-pad-r: 10px;
+    --logo-h: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-wrap { --bar-pad-y: 10px; --logo-h: 27px; }
+  .nav-wrap.is-scrolled {
+    --wrap-pad-y: 10px;
+    --bar-pad-y: 8px;
+    --bar-pad-l: 16px;
+    --bar-pad-r: 8px;
+    --logo-h: 24px;
+  }
+  .drawer-top { padding: 14px 12px; font-size: 0.938rem; }
+  .drawer-sub { margin-left: 10px; padding-left: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-wrap,
+  .nav-bar { transition: none; }
+  .nav-mega-panel,
+  .nav-simple,
+  .nav-drawer { animation: none; }
+  .nav-spark { animation: none; }
+  .drawer-panel { transition: none; }
+}

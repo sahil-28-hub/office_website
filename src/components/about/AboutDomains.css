@@ -1,0 +1,85 @@
+/* ==================================================================
+   §9 — building skills across technology domains.
+================================================================== */
+
+.apdom-head { max-width: 48ch; }
+
+.apdom-towers {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-top: clamp(36px, 4.6vw, 62px);
+}
+
+.apdom-tower {
+  display: flex;
+  flex-direction: column;
+  padding: 26px 24px 20px;
+  overflow: hidden;
+}
+
+/* a tinted wash at the head of each tower, one hue per family */
+.apdom-tower::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 150px;
+  border-radius: inherit;
+  background: radial-gradient(120% 100% at 50% 0%, var(--tone, rgba(37, 99, 235, 0.2)), transparent 70%);
+  opacity: 0.6;
+  pointer-events: none;
+  transition: opacity 0.5s var(--ease);
+}
+
+.apdom-tower:hover::before { opacity: 1; }
+
+.apdom-tower[data-tone='technology'] { --tone: rgba(37, 99, 235, 0.24); }
+.apdom-tower[data-tone='development'] { --tone: rgba(34, 211, 238, 0.22); }
+.apdom-tower[data-tone='creative'] { --tone: rgba(28, 83, 209, 0.24); }
+.apdom-tower[data-tone='technical'] { --tone: rgba(12, 31, 108, 0.18); }
+
+.apdom-tower header { position: relative; }
+
+.apdom-tower h3 {
+  margin-top: 10px;
+  font-size: 1.18rem;
+  letter-spacing: -0.03em;
+  color: var(--ap-title);
+}
+
+.apdom-tower ul {
+  position: relative;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--ap-line);
+}
+
+.apdom-tower li { border-bottom: 1px solid var(--ap-line); }
+.apdom-tower li:last-child { border-bottom: 0; }
+
+.apdom-tower a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 2px;
+  font-size: 0.925rem;
+  color: var(--ap-text);
+  transition: color 0.35s var(--ease), padding-left 0.35s var(--ease);
+}
+
+.apdom-tower a svg {
+  flex: none;
+  opacity: 0;
+  transform: translate(-4px, 4px);
+  transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
+}
+
+.apdom-tower a:hover { color: var(--indigo); padding-left: 8px; }
+
+.apdom-tower a:hover svg,
+.apdom-tower a:focus-visible svg { opacity: 1; transform: none; }
+
+@media (max-width: 1080px) { .apdom-towers { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .apdom-towers { grid-template-columns: minmax(0, 1fr); } }

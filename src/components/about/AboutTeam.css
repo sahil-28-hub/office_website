@@ -1,0 +1,169 @@
+/* ==================================================================
+   The team row — cut-outs standing on the floor of the section, each
+   with a name, a role and a dashed arrow pointing at them.
+================================================================== */
+
+.apteam {
+  position: relative;
+  overflow: hidden;
+  /* the people stand on the bottom edge, so no bottom padding */
+  padding-bottom: 0;
+  background: #f6f7fa;
+}
+
+/* the soft cyan bloom behind the middle of the row */
+.apteam-glow {
+  position: absolute;
+  top: 34%;
+  left: 50%;
+  width: min(560px, 70vw);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.2) 0%, rgba(37, 99, 235, 0.07) 45%, transparent 70%);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+/* ---------------- rail ---------------- */
+.apteam-rail {
+  position: relative;
+  margin-top: clamp(36px, 4vw, 56px);
+  /* fade the row out at both sides, as it drifts */
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+.apteam-track {
+  display: flex;
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  animation: apteam-drift 70s linear infinite;
+}
+.apteam-rail:hover .apteam-track { animation-play-state: paused; }
+
+@keyframes apteam-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+.apteam-track > li {
+  flex: none;
+  /* five across a wide screen, as in the reference */
+  width: clamp(240px, 20vw, 360px);
+}
+
+/* ---------------- one person ---------------- */
+.apteam-person {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  height: clamp(440px, 36vw, 600px);
+}
+
+/* Name, role and arrow sit in a fixed-height block bottom-aligned
+   above the figure, so a two-line role pushes the name up instead of
+   pushing the person down — every figure starts at the same line. */
+.apteam-person figcaption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  flex: none;
+  height: 128px;
+  padding-inline: 14px;
+  text-align: center;
+}
+
+.apteam-person strong {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 1.25vw, 1.35rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--electric);
+}
+
+.apteam-person span {
+  max-width: 24ch;
+  margin-top: 4px;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--ink-body);
+}
+
+.apteam-arrow {
+  width: 34px;
+  height: 30px;
+  margin-top: 8px;
+  color: #8a93a8;
+  /* the curve hangs to the left of centre, pointing down-left */
+  translate: -14px 0;
+}
+.apteam-arrow.is-flipped {
+  transform: scaleX(-1);
+  translate: 14px 0;
+}
+
+/* The figure: scaled to fill the remaining height from the top, and
+   cut off by the bottom of the section, so everyone stands on the same
+   floor at the same scale. */
+.apteam-person img {
+  display: block;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: auto;
+  max-width: 100%;
+  height: 100%;
+  margin-top: 6px;
+  object-fit: cover;
+  object-position: top center;
+  filter: drop-shadow(0 22px 26px rgba(11, 26, 77, 0.16));
+  user-select: none;
+  transition: transform 0.5s var(--ease);
+}
+.apteam-person:hover img { transform: translateY(-6px); }
+
+/* the member's area — hidden until the person is hovered */
+.apteam-area {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  z-index: 2;
+  translate: -50% 8px;
+  padding: 6px 14px;
+  border-radius: var(--r-pill);
+  background: var(--ink-strong);
+  color: var(--white);
+  font-size: 0.78rem;
+  font-style: normal;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 12px 26px -14px rgba(11, 26, 77, 0.7);
+  transition: opacity 0.3s var(--ease), translate 0.3s var(--ease);
+}
+.apteam-person:hover .apteam-area { opacity: 1; translate: -50% 0; }
+
+@media (max-width: 640px) {
+  .apteam-track > li { width: 220px; }
+  .apteam-person { height: 420px; }
+  .apteam-person figcaption { height: 116px; }
+}
+
+/* reduced motion: no drift, a row you scroll yourself */
+@media (prefers-reduced-motion: reduce) {
+  .apteam-rail {
+    overflow-x: auto;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+  .apteam-track { animation: none; }
+  .apteam-track > li[aria-hidden='true'] { display: none; }
+  .apteam-person img { transition: none; }
+}

@@ -1,0 +1,45 @@
+/* ==================================================================
+   College Partnerships — page-specific adjustments on top of the kit.
+================================================================== */
+
+.tc-pt-points { margin-top: 0; }
+
+.tc-pt-programmes { overflow: hidden; }
+
+.tc-pt-glow {
+  position: absolute;
+  left: -12%;
+  bottom: -20%;
+  width: min(640px, 70vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(95px);
+  opacity: 0.36;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.45), transparent 68%);
+}
+
+/* the two responsibility columns */
+.tc-pt-needs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: clamp(16px, 2vw, 24px);
+  margin-top: clamp(38px, 4.4vw, 60px);
+}
+
+.tc-pt-need { gap: 16px; }
+.tc-pt-need:hover { transform: translateY(-4px); }
+
+.tc-pt-partners { overflow: hidden; }
+
+.tc-pt-desk {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(28px, 4.4vw, 66px);
+}
+
+.tc-pt-desk .tc-kv { margin-top: 0; }
+
+@media (max-width: 900px) {
+  .tc-pt-desk { grid-template-columns: minmax(0, 1fr); }
+}

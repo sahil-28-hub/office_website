@@ -1,0 +1,50 @@
+.cbc {
+  position: absolute;
+  top: calc(var(--nav-h) + 22px);
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+
+.cbc-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.01em;
+}
+
+.cbc-list li a {
+  color: var(--mist-dim);
+  transition: color 0.25s var(--ease);
+}
+.cbc-list li a:hover {
+  color: var(--cyan);
+}
+
+.cbc-sep {
+  color: rgba(255, 255, 255, 0.22);
+}
+
+.cbc-current {
+  color: var(--mist);
+  max-width: 40ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 620px) {
+  .cbc {
+    top: calc(var(--nav-h) + 14px);
+  }
+  .cbc-current {
+    max-width: 22ch;
+  }
+}

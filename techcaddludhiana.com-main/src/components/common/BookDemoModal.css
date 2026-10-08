@@ -1,0 +1,424 @@
+/* =================================================================
+   Book Demo modal — auto-opens 30s after the app mounts, or on demand
+   from Navbar's "Book Demo" buttons (see BookDemoModal.jsx). Two
+   panels: a dark trust panel, and a bright form panel with a simple
+   arithmetic human-check gating the submit button.
+================================================================= */
+
+.bdm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 4vw, 2.5rem);
+  background: rgba(5, 6, 20, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: bdm-fade-in 0.25s var(--ease) both;
+}
+
+@keyframes bdm-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.bdm {
+  position: relative;
+  width: min(100%, 920px);
+  max-height: min(92vh, 780px);
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  border-radius: clamp(18px, 2.5vw, 28px);
+  box-shadow: 0 60px 120px -30px rgba(4, 5, 20, 0.7);
+  animation: bdm-pop-in 0.32s var(--ease) both;
+
+  /* still scrollable on short viewports, but the bar itself is hidden —
+     it cut across the form's rounded right edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.bdm::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+@keyframes bdm-pop-in {
+  from { opacity: 0; transform: translateY(18px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+.bdm-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--white);
+  transition: background 0.25s var(--ease), transform 0.25s var(--ease);
+}
+.bdm-close:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: rotate(90deg);
+}
+.bdm-close svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------------- left: trust panel ---------------- */
+.bdm-left {
+  padding: clamp(1.75rem, 3vw, 2.75rem);
+  background: linear-gradient(160deg, var(--indigo) 0%, var(--ink-deep) 100%);
+  color: var(--mist);
+}
+
+.bdm-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: clamp(1.375rem, 2.4vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--white);
+}
+.bdm-wave {
+  display: inline-block;
+  font-size: 1.2em;
+  transform-origin: 70% 70%;
+  animation: bdm-wave 2.4s ease-in-out infinite;
+}
+@keyframes bdm-wave {
+  0%, 38%, 100% { transform: rotate(0deg); }
+  4% { transform: rotate(16deg); }
+  10% { transform: rotate(-8deg); }
+  16% { transform: rotate(16deg); }
+  22% { transform: rotate(-4deg); }
+  28% { transform: rotate(10deg); }
+  34% { transform: rotate(0deg); }
+}
+
+.bdm-lead {
+  margin-top: 12px;
+  font-size: 0.938rem;
+  line-height: 1.6;
+  color: var(--mist);
+}
+
+.bdm-quote {
+  margin: clamp(1.25rem, 2.5vw, 1.75rem) 0 0;
+  padding: 18px 20px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--hairline);
+  background: rgba(255, 255, 255, 0.06);
+}
+.bdm-quote p {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--white);
+}
+.bdm-quote footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+.bdm-quote-avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--mist);
+}
+.bdm-quote-avatar svg {
+  width: 17px;
+  height: 17px;
+}
+.bdm-quote footer b {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--white);
+}
+.bdm-quote footer i {
+  display: block;
+  margin-top: 1px;
+  font-style: normal;
+  font-size: 0.75rem;
+  color: var(--mist-dim);
+}
+
+.bdm-google {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 12px 16px;
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.92);
+}
+/* direct child only — a plain descendant selector here also matched the
+   first <svg> inside .bdm-stars (it is its parent's first child), which
+   blew that one star up to 22px while the other four stayed 15px */
+.bdm-google > svg:first-child {
+  width: 22px;
+  height: 22px;
+  flex: none;
+}
+.bdm-google-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: var(--ink-strong);
+}
+.bdm-google-label svg {
+  width: 15px;
+  height: 15px;
+}
+.bdm-stars {
+  display: inline-flex;
+  gap: 2px;
+  margin-left: auto;
+}
+.bdm-stars svg {
+  width: 15px;
+  height: 15px;
+  fill: #ffb100;
+}
+
+.bdm-fallback {
+  margin-top: 16px;
+  font-size: 0.813rem;
+  line-height: 1.6;
+  color: var(--mist-dim);
+}
+.bdm-fallback a {
+  color: var(--cyan);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* ---------------- right: form panel ---------------- */
+.bdm-right {
+  padding: clamp(1.75rem, 3vw, 2.75rem);
+  background: linear-gradient(155deg, var(--electric) 0%, var(--violet) 100%);
+  color: var(--white);
+}
+
+.bdm-right-title {
+  font-size: clamp(1.25rem, 2.2vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.3;
+  padding-right: 40px;
+}
+
+.bdm-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+.bdm-field {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: var(--r-md);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.938rem;
+  transition: background 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+.bdm-field::placeholder {
+  color: rgba(255, 255, 255, 0.75);
+}
+.bdm-field:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.bdm-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='white' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 18px;
+  padding-right: 40px;
+}
+.bdm-select:invalid {
+  color: rgba(255, 255, 255, 0.75);
+}
+.bdm-select option {
+  color: var(--ink-strong);
+}
+
+/* The course list is fetched on first open (see BookDemoModal.jsx), so
+   for a moment this field has nothing to offer. A shimmer across it
+   says "filling in" rather than "broken". */
+.bdm-select.is-loading {
+  cursor: progress;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='white' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 8 4 4 4-4'/%3E%3C/svg%3E"),
+    linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.13) 42%, rgba(255, 255, 255, 0.13) 58%, transparent 80%);
+  background-repeat: no-repeat, no-repeat;
+  background-position: right 14px center, 130% 0;
+  background-size: 18px, 260% 100%;
+  animation: sk-sweep 1.5s var(--ease) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bdm-select.is-loading { animation: none; }
+}
+
+.bdm-captcha {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.bdm-captcha label {
+  font-size: 0.813rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* Off-screen rather than display:none. A bot that checks for the
+   obvious tricks skips a hidden field but fills one that is
+   technically in the layout — and no sighted or screen-reader visitor
+   can reach it either way. */
+.bdm-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.bdm-error {
+  margin-top: -4px;
+  font-size: 0.813rem;
+  font-weight: 600;
+  color: #fff3b0;
+}
+
+.bdm-sent {
+  margin-top: -4px;
+  font-size: 0.813rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #8ef0c4;
+}
+
+.bdm-assurance {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 4px;
+  padding: 11px 16px;
+  border-radius: var(--r-pill);
+  background: rgba(154, 230, 74, 0.94);
+  color: #1c3300;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+.bdm-assurance svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+.bdm-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 6px;
+  padding: 15px 24px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--indigo);
+  font-weight: 700;
+  font-size: 0.938rem;
+  transition: transform 0.25s var(--ease), opacity 0.25s var(--ease);
+}
+.bdm-submit svg {
+  width: 17px;
+  height: 17px;
+  transition: transform 0.25s var(--ease);
+}
+.bdm-submit:not(:disabled):hover {
+  transform: translateY(-2px);
+}
+.bdm-submit:not(:disabled):hover svg {
+  transform: translateX(3px);
+}
+.bdm-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ---------------- responsive ---------------- */
+@media (max-width: 760px) {
+  .bdm {
+    grid-template-columns: minmax(0, 1fr);
+    max-height: 94vh;
+  }
+  .bdm-right-title {
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .bdm-overlay {
+    padding: 0.75rem;
+  }
+  .bdm-left,
+  .bdm-right {
+    padding: 1.5rem 1.25rem;
+  }
+  .bdm-close {
+    top: 12px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bdm-overlay,
+  .bdm,
+  .bdm-close,
+  .bdm-wave {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* The field the server rejected. The error sentence under the form is
+   set in #fff3b0, so the border that points at the offending input is
+   the same colour — the message and the box it refers to read as one
+   thing rather than two unrelated warnings. */
+.bdm-field.is-invalid {
+  border-color: #fff3b0;
+  background: rgba(255, 243, 176, 0.14);
+}
+.bdm-field.is-invalid:focus {
+  border-color: #fff3b0;
+  background: rgba(255, 243, 176, 0.2);
+}
